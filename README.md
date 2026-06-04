@@ -1,237 +1,415 @@
-# Navin - Decentralized Delivery Tracking Platform
+ ⚓️ AnchorFlow
 
-[![CI](https://github.com/Navin-xmr/navin-contracts/actions/workflows/test.yml/badge.svg)](https://github.com/Navin-xmr/navin-contracts/actions)
+**Real-time fiat corridor health monitoring and smart routing for Stellar anchors.**
 
-**Navin** is a decentralized delivery tracking platform built on the Stellar blockchain. It empowers corporations and logistics companies to track foodstuff and other deliverable items in real-time with complete transparency and security.
+AnchorFlow continuously probes anchors across every registered corridor, aggregates live fee and reliability data, and exposes a routing API that always returns the best available anchor for a given asset pair and destination country. A Soroban smart contract acts as the on-chain source of truth — health attestations are written every epoch and queryable by any contract on Stellar, with no trust in AnchorFlow's server required.
 
-## Overview
+> Organization: **StellarForge** — forging the infrastructure layer of the Stellar ecosystem.  
+> License: MIT · Built on Stellar
 
-In today's supply chain ecosystem, transparency and accountability are critical. Navin leverages Stellar's fast, low-cost blockchain infrastructure to provide:
+---
 
-- **Real-time Tracking**: Monitor deliveries from origin to destination
-- **Transparent Operations**: All stakeholders can verify delivery status on-chain
-- **Secure Data**: Cryptographically secured delivery records and proof of custody
-- **Cost-Effective**: Built on Stellar's efficient blockchain infrastructure
-- **Scalable**: Designed to handle high-volume delivery operations
+## The Problem
 
-## Use Cases
+Stellar's anchor network enables fiat settlement across 60+ countries, but it is largely unmonitored. Developers often hardcode one anchor per corridor and have little visibility when a service degrades. SEP-24 flows can silently fail, fee estimates drift over time, and there is no public infrastructure that tells developers or end users:
 
-- Food delivery tracking and verification
-- Pharmaceutical supply chain management
-- Perishable goods monitoring
-- Multi-party logistics coordination
-- Proof of delivery and custody chain
+- Whether a corridor is operational
+- Which anchor currently offers the best route
+- What the real cost of a transfer is
+- How reliable a corridor has been historically
+- Which fallback route should be used when an anchor is unavailable
 
-## Project Structure
+AnchorFlow solves this visibility gap.
 
-This repository contains Soroban smart contracts for the Navin platform:
+---
+
+## What AnchorFlow Does
+
+| Without AnchorFlow | With AnchorFlow |
+|-------------------|-----------------|
+| HTTP 503 errors with no fallback | Automatic rerouting to the healthiest anchor |
+| Fee data becomes outdated | Live normalized fee monitoring |
+| One hardcoded anchor per corridor | Dynamic routing based on health scores |
+| No reliability history | On-chain audit trail of anchor performance |
+| Corridor outages discovered by users | Continuous proactive monitoring |
+
+---
+
+## Key Features
+
+### ⚡ Real-Time Anchor Monitoring
+
+- Continuous SEP-6, SEP-24, and SEP-31 health checks
+- Latency measurement
+- Uptime tracking
+- Error-rate monitoring
+- Historical reliability scoring
+
+### 🧭 Smart Routing Engine
+
+- Automatic anchor selection
+- Health-based route optimization
+- Fee-aware routing decisions
+- Automatic fallback support
+- Country and asset-specific routing
+
+### ⛓️ On-Chain Health Attestations
+
+- Health scores written to Soroban every epoch
+- Publicly verifiable monitoring data
+- Immutable reliability history
+- Queryable by any Soroban contract
+
+### 📊 Developer Dashboard
+
+- Live corridor coverage map
+- Fee comparison tools
+- Health timelines
+- Routing API playground
+- Embeddable status widgets
+
+---
+
+## Architecture
 
 ```text
-.
-├── contracts
-│   ├── shipment            # Core logistics and escrow contract
-│   │   ├── src
-│   │   │   ├── lib.rs      # Main shipment logic
-│   │   │   ├── storage.rs  # Data persistence helpers
-│   │   │   ├── events.rs   # Hash-and-Emit event publishing
-│   │   │   ├── types.rs    # Domain models and storage keys
-│   │   │   └── test.rs     # Contract tests
-│   │   └── Cargo.toml
-│   └── token               # Payment token contract
-│       ├── src
-│       │   ├── lib.rs      # Token entrypoints
-│       │   ├── storage.rs  # Balance and allowance storage
-│       │   ├── types.rs    # Token types
-│       │   └── test.rs     # Token tests
-│       └── Cargo.toml
-├── Cargo.toml              # Workspace configuration
-├── Makefile                # Build and test commands
-├── CONTRIBUTING.md         # Contribution guidelines
-└── README.md
+Stellar Horizon + SEP Servers
+  (stellar.toml discovery · SEP-6/24/31 endpoints)
+          │
+          │ polled every 60s
+          ▼
+Prober + Health Engine (Node.js)
+  ├─ Synthetic SEP-24 probes
+  ├─ Latency measurement
+  ├─ Error tracking
+  ├─ Uptime monitoring
+  ├─ Fee normalization
+  ├─ Health score calculation
+  └─ PostgreSQL time-series storage
+          │
+          │ REST API
+          ▼
+React Dashboard (Vite + TanStack Query)
+  ├─ Live corridor map
+  ├─ Anchor health analytics
+  ├─ Routing playground
+  └─ Embeddable status widgets
+          ▲
+          │
+Soroban Smart Contract (Rust)
+  ├─ Anchor Registry
+  ├─ Health Attestations
+  ├─ Routing Hints
+  └─ Public Verification Layer
 ```
+
+---
+
+## Soroban Contract
+
+The Soroban contract serves as the trust-minimized source of truth for anchor health data.
+
+### Core Components
+
+#### Anchor Registry
+
+Stores registered anchors and supported corridors.
+
+#### Health Attestations
+
+Stores signed health scores submitted every monitoring epoch.
+
+#### Routing Hints
+
+Provides route recommendations directly on-chain.
+
+---
+
+## Soroban Contract API
+
+| Function | Description |
+|----------|-------------|
+| `register_anchor(id, meta)` | Register an anchor and its metadata |
+| `attest_health(anchor_id, score, ts)` | Record a health attestation |
+| `get_health(anchor_id)` | Retrieve latest health score |
+| `get_route(asset, country_code)` | Return highest-ranked route |
+| `list_anchors(asset)` | List compatible anchors |
+| `health_history(anchor_id, from, limit)` | Retrieve historical health data |
+
+---
+
+## REST API
+
+### Anchors
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/anchors` | List monitored anchors |
+| `GET /api/anchors/:id/health` | Health history and metrics |
+| `POST /api/anchors/register` | Register a new anchor |
+
+### Routing
+
+| Endpoint | Description |
+|----------|-------------|
+| `POST /api/route` | Get optimal route |
+| `GET /api/corridors` | Corridor coverage information |
+
+### Fees
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/fees?asset=&country=` | Compare live fees across anchors |
+
+---
+
+## Frontend Pages
+
+### `/`
+Global dashboard showing:
+
+- Active corridors
+- Network health
+- Coverage statistics
+- Anchor rankings
+
+### `/anchors/:id`
+
+Displays:
+
+- Health score history
+- Latency charts
+- Fee trends
+- Supported corridors
+
+### `/route`
+
+Interactive routing sandbox:
+
+- Select asset
+- Choose destination country
+- View recommended anchor
+- Compare fees
+
+### `/corridors`
+
+Coverage matrix displaying:
+
+- Active routes
+- Available anchors
+- Reliability metrics
+
+### `/embed`
+
+Generate embeddable status badges for:
+
+- Wallets
+- Exchanges
+- Payment applications
+- Stellar-based platforms
+
+---
+
+## SEP Standards Supported
+
+### SEP-6
+
+Hosted deposit and withdrawal monitoring.
+
+### SEP-24
+
+Interactive deposit and withdrawal monitoring using synthetic transaction probes.
+
+### SEP-31
+
+Cross-border payment corridor monitoring.
+
+### SEP-41
+
+Asset event decoding and token metadata normalization.
+
+---
+
+## Technology Stack
+
+| Layer | Technology |
+|---------|------------|
+| Blockchain | Stellar |
+| Smart Contracts | Soroban (Rust) |
+| Monitoring Engine | Node.js |
+| Database | PostgreSQL |
+| Frontend | React |
+| Build Tool | Vite |
+| Data Fetching | TanStack Query |
+| APIs | REST |
+| Standards | SEP-6, SEP-24, SEP-31, SEP-41 |
+
+---
 
 ## Quick Start
 
 ### Prerequisites
 
-- [Rust](https://www.rust-lang.org/tools/install) (latest stable)
-- [Stellar CLI](https://developers.stellar.org/docs/build/smart-contracts/getting-started/setup)
-- Make (optional, for convenience commands)
+- Rust
+- Stellar CLI
+- Node.js 20+
+- PostgreSQL
 
-### Installation
-
-```bash
-# Fork  the repository
-# Then clone your fork into your local environment
-git clone https://github.com/yourusername/navin-contracts.git
-cd navin-contracts
-
-# Add wasm32 target
-rustup target add wasm32-unknown-unknown
-```
-
-### Build
+### Clone Repository
 
 ```bash
-# Using Make
-make build
+git clone https://github.com/stellarforge/anchorflow
+cd anchorflow
 ```
 
-OR
-
-```
-# Using cargo
-cargo build --target wasm32-unknown-unknown --release
-```
-
-```
-# Or directly with Stellar CLI
-stellar contract build
-```
-
-### Test
+### Configure Environment
 
 ```bash
-# Run all tests
-make test
-
-# Or directly with cargo
-cargo test
+cp .env.example .env
 ```
 
-### Format & Lint
+Configure:
 
-```bash
-# Format code
-make fmt
-
+```env
+HORIZON_URL=
+DATABASE_URL=
+SOROBAN_RPC_URL=
+ANCHORFLOW_CONTRACT_ID=
 ```
-
-```
-# OR
-cargo fmt
-```
-
-```
-# Check formatting
-make fmt-check
-
-```
-
-```
-# OR
-cargo check --all
-```
-
-```
-# Run clippy lints
-make lint
-```
-
-## Development
-
-For detailed contribution guidelines, please see [CONTRIBUTING.md](CONTRIBUTING.md).
-
-### Running Locally
-
-1. Build the contracts:
-
-   ```bash
-   make build
-   ```
-
-2. Run tests:
-
-   ```bash
-   make test
-   ```
-
-3. Deploy to local network:
-
-   ```bash
-   make deploy-local
-   ```
-
-## Deployment
-
-For deploying contracts to Stellar testnet, see the [Deployment Guide](docs/deployment.md).
-
-Quick deployment:
-
-```bash
-# Build contracts
-./scripts/build.sh
-
-# Deploy to testnet
-./scripts/deploy-testnet.sh
-
-# Initialize contracts
-./scripts/init-testnet.sh
-```
-
-## Documentation
-
-### Frontend Integration
-
-- **[Freighter Integration Checklist](docs/freighter-integration-checklist.md)** - End-to-end checklist for frontend teams: preflight checks, signing, error handling, on-chain verification, and common failure modes
-- **[Client Examples](docs/client-examples.md)** - Copy-paste Rust contract call shapes for common shipment operations
-
-### Operational Guides
-
-- **[TTL Maintenance Playbook](contracts/shipment/docs/TTL_MAINTENANCE_PLAYBOOK.md)** - Complete operational procedures for maintaining contract state TTL health, including routine maintenance, monitoring, and emergency response
-- **[TTL Quick Reference](contracts/shipment/docs/TTL_QUICK_REFERENCE.md)** - Quick reference card for common TTL operations and emergency procedures
-- **[TTL Health Summary](contracts/shipment/docs/TTL_HEALTH_SUMMARY.md)** - Technical documentation for the TTL health monitoring query
-
-### For Operators
-
-If you're responsible for maintaining a deployed Navin contract:
-
-1. **Start here**: [TTL Quick Reference](contracts/shipment/docs/TTL_QUICK_REFERENCE.md) for common operations
-2. **Deep dive**: [TTL Maintenance Playbook](contracts/shipment/docs/TTL_MAINTENANCE_PLAYBOOK.md) for complete procedures
-3. **Set up monitoring**: Follow the automated monitoring setup in the playbook
-4. **Emergency response**: Keep the quick reference handy for incident response
-
-## Architecture
-
-Navin's smart contracts handle:
-
-- **Asset Management**: Secure storage and transfer of delivery tokens
-- **Access Control**: Role-based permissions for different stakeholders
-- **Transaction Logging**: Immutable audit trail of all operations
-- **Asset Locking**: Time-based locks for escrow and guarantees
-- **TTL Management**: Automated state persistence with configurable TTL thresholds
-
-## Technology Stack
-
-- **Blockchain**: Stellar (Soroban smart contracts)
-- **Language**: Rust
-- **SDK**: Soroban SDK v22.0.0
-- **Testing**: Soroban test utilities
-
-## Contributing
-
-We welcome contributions! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for details on:
-
-- Setting up your development environment
-- Code style and standards
-- Testing requirements
-- Submitting pull requests
-
-## Security
-
-Security is paramount for Navin. If you discover a security vulnerability, please email <navinxmr@gmail.com> instead of using the issue tracker.
-
-## Resources
-
-- [Stellar Documentation](https://developers.stellar.org/)
-- [Soroban Smart Contracts](https://soroban.stellar.org/)
-- [Stellar CLI Reference](https://developers.stellar.org/docs/tools/developer-tools)
-
-## Community
-
-- [Twitter](https://twitter.com/navinxmr)
-- [Telegram Group Chat](https://t.me/+3svwFsQME6k1YjI0)
 
 ---
 
-**Built with ❤️ on Stellar**
+## Build and Deploy
+
+### Build Contract
+
+```bash
+make build
+```
+
+### Deploy Contract
+
+```bash
+make deploy
+```
+
+After deployment, copy the generated contract ID into:
+
+```env
+ANCHORFLOW_CONTRACT_ID=
+```
+
+---
+
+## Start Services
+
+### Monitoring Engine
+
+```bash
+make engine-install
+make engine
+```
+
+### Frontend Dashboard
+
+```bash
+make frontend-install
+make frontend
+```
+
+Open:
+
+```text
+http://localhost:5174
+```
+
+### Run Everything
+
+```bash
+make install
+make dev
+```
+
+---
+
+## Validated Need
+
+As of June 2026, there is no public infrastructure dedicated to monitoring Stellar anchor health, corridor availability, and real-time routing quality.
+
+Developers frequently encounter:
+
+- Silent corridor failures
+- Unexpected fee changes
+- Degraded SEP-24 experiences
+- Missing fallback routes
+- Limited visibility into anchor reliability
+
+AnchorFlow provides the missing observability layer for the Stellar ecosystem by making anchor performance transparent, measurable, and verifiable.
+
+Just as blockchain ecosystems rely on price oracles for trustworthy market data, Stellar applications need trustworthy infrastructure data to route payments effectively.
+
+---
+
+## Future Roadmap
+
+### Phase 1
+
+- Anchor monitoring engine
+- Health scoring system
+- REST API
+- Dashboard
+
+### Phase 2
+
+- Soroban health attestations
+- Public corridor explorer
+- Historical analytics
+
+### Phase 3
+
+- Decentralized attestation network
+- Reputation system
+- Multi-region monitoring nodes
+
+### Phase 4
+
+- Predictive corridor health
+- AI-assisted routing recommendations
+- Enterprise SLA monitoring
+
+---
+
+## Contributing
+
+We welcome contributions from developers, infrastructure operators, and members of the Stellar ecosystem.
+
+```bash
+git clone https://github.com/stellarforge/anchorflow
+cd anchorflow
+make install
+make dev
+```
+
+### Contribution Areas
+
+- Monitoring infrastructure
+- Soroban smart contracts
+- Frontend development
+- API development
+- Documentation
+- Testing
+- DevOps
+
+Please open an issue before starting major work and include tests for all new functionality.
+
+---
+
+## License
+
+MIT License
+
+---
+
+### Built by StellarForge ⚒️
+
+Forging the infrastructure layer of the Stellar ecosystem.
