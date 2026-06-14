@@ -6,6 +6,9 @@ echo "Building Soroban contracts..."
 # Build both contracts
 stellar contract build
 
+
+
+
 # Verify WASM files exist
 WASM_DIR="target/wasm32-unknown-unknown/release"
 TOKEN_WASM="$WASM_DIR/navin_token.wasm"

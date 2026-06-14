@@ -3,6 +3,8 @@
 
 # Default target
 help:
+
+
 	@echo "Navin Smart Contracts - Available Commands"
 	@echo ""
 	@echo "  make generate-schema-shipment - Generate shipment contract ABI schema"

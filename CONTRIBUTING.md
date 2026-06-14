@@ -1,4 +1,4 @@
-# Contributing to Navin
+# Contributing to ANCHOR-FLOW
 
 Thank you for your interest in contributing to Navin! We truly appreciate it!!
 This guide will help you get started and ensure your contributions can be smoothly integrated.
@@ -29,7 +29,7 @@ Before contributing, ensure you have the following installed:
 2. Clone your fork locally:
 
    ```bash
-   git clone https://github.com/YOUR-USERNAME/navin-contracts.git
+   git clone https://github.com/YOUR-USERNAME/ANCHOR-FLOW-contracts.git
    cd navin-contracts
    ```
 
