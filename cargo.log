@@ -12,6 +12,8 @@ warning: unused import: `crate::test_utils::*`
 3 | use crate::test_utils::*;
   |     ^^^^^^^^^^^^^^^^^^^^
 
+
+
 warning: use of deprecated method `soroban_sdk::Env::register_stellar_asset_contract`: use [Env::register_stellar_asset_contract_v2]
   --> contracts/shipment/src/test_token_compatibility.rs:39:17
    |

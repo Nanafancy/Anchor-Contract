@@ -4,6 +4,9 @@
 
 The Navin team takes security vulnerabilities seriously. We appreciate your efforts to responsibly disclose your findings.
 
+
+
+
 ### Please DO NOT:
 
 - Open a public GitHub issue for security vulnerabilities
