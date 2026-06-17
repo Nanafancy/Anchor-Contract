@@ -190,6 +190,10 @@ When comparing a new run against this baseline:
 - New `env.events().publish()` calls (each costs ~10 k instructions)
 - Increased `BytesN` or `Symbol` allocations
 
+
+
+
+
 ### Common causes of memory regressions
 
 - Cloning large `Vec` or `Map` values instead of borrowing

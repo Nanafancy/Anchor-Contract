@@ -4,6 +4,8 @@ Short, practical snippets for common shipment contract calls. Copy the call shap
 
 ## Table of Contents
 
+
+
 1. [Setup](#setup)
 2. [Initialization](#initialization)
 3. [Shipment Management](#shipment-management)

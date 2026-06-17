@@ -6,6 +6,9 @@ This guide walks you through deploying the Navin shipment tracking contracts to 
 
 Before deploying, ensure you have:
 
+
+
+
 1. **Rust toolchain** installed with the `wasm32-unknown-unknown` target:
 
    ```bash
