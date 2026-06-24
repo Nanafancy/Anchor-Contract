@@ -1,4 +1,4 @@
-# Soroban Budget Baseline Report
+# Soroban Budget Baseline Reports
 
 Contract: **shipment**
 SDK version: **soroban-sdk 22.0.0**
