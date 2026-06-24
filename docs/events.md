@@ -1,6 +1,6 @@
 # Shipment Contract — Event Schema Reference
 
-> **Architecture note:** Navin uses a **Hash-and-Emit** pattern. Heavy payloads (GPS traces,
+> **Architectures note:** Navin uses a **Hash-and-Emit** pattern. Heavy payloads (GPS traces,
 > sensor readings, dispute evidence, milestone metadata) are stored **off-chain**. The contract
 > emits only the `shipment_id`, relevant identifiers, and a `BytesN<32>` SHA-256 hash of the
 > full payload. The backend indexer verifies integrity by re-hashing the stored payload and
