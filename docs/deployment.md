@@ -9,7 +9,7 @@ Before deploying, ensure you have:
 
 
 
-1. **Rust toolchain** installed with the `wasm32-unknown-unknown` target:
+1. **Rust toolchain** installed with the `wasm32-unknown-unknown` targets:
 
    ```bash
    rustup target add wasm32-unknown-unknown
