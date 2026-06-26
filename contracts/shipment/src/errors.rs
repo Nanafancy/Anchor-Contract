@@ -1,19 +1,19 @@
 use soroban_sdk::contracterror;
 
-/// Domain-specific error type for the Navin shipment contract.
+/// Domain-specific error type for the Anchor shipment contract.
 ///
 /// Each variant is assigned a unique `u32` discriminant starting from 1
 /// so that the Soroban host can surface the code to clients without ambiguity.
 ///
 /// # Examples
 /// ```rust
-/// use crate::errors::NavinError;
-/// let error = NavinError::ShipmentNotFound;
+/// use crate::errors::AnchorError;
+/// let error = AnchorError::ShipmentNotFound;
 /// ```
 #[contracterror(export = false)]
 #[derive(Copy, Clone, Debug, Eq, PartialEq, PartialOrd, Ord)]
 #[repr(u32)]
-pub enum NavinError {
+pub enum AnchorError {
     /// Contract is already initialized.
     AlreadyInitialized = 1,
     /// Contract has not been initialized.

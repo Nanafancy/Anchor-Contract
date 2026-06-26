@@ -20,9 +20,9 @@ extern crate std;
 use crate::{
     test_utils,
     types::{SettlementOperation, SettlementState, ShipmentStatus},
-    NavinError, NavinShipment, NavinShipmentClient,
+    AnchorError, AnchorShipment, AnchorShipmentClient,
 };
-use navin_token::NavinTokenClient;
+use Anchor_token::AnchorTokenClient;
 use soroban_sdk::{
     testutils::Address as _, token::StellarAssetClient, Address, BytesN, Env, IntoVal, Vec,
 };
@@ -71,12 +71,12 @@ fn deploy_sac(env: &Env, admin: &Address) -> Address {
         .address()
 }
 
-/// Deploy a fresh NavinToken, initialize it, and return its address.
+/// Deploy a fresh AnchorToken, initialize it, and return its address.
 fn deploy_nvn(env: &Env, admin: &Address) -> Address {
-    let addr = env.register(navin_token::NavinToken, ());
-    NavinTokenClient::new(env, &addr).initialize(
+    let addr = env.register(Anchor_token::AnchorToken, ());
+    AnchorTokenClient::new(env, &addr).initialize(
         admin,
-        &soroban_sdk::String::from_str(env, "Navin Token"),
+        &soroban_sdk::String::from_str(env, "Anchor Token"),
         &soroban_sdk::String::from_str(env, "NVN"),
         &1_000_000_000,
     );
@@ -87,7 +87,7 @@ fn deploy_failing_token(env: &Env, _admin: &Address) -> Address {
     env.register(mock_fail::MockFailingToken {}, ())
 }
 
-fn inject_escrow(env: &Env, client: &NavinShipmentClient<'static>, id: u64, amount: i128) {
+fn inject_escrow(env: &Env, client: &AnchorShipmentClient<'static>, id: u64, amount: i128) {
     env.as_contract(&client.address, || {
         let mut shipment = crate::storage::get_shipment(env, id).unwrap();
         shipment.escrow_amount = amount;
@@ -102,9 +102,9 @@ fn mint_sac(env: &Env, token: &Address, to: &Address, amount: i128) {
     StellarAssetClient::new(env, token).mint(to, &amount);
 }
 
-/// Mint `amount` NavinToken tokens to `to` (NavinToken mint takes `(admin, to, amount)`).
+/// Mint `amount` AnchorToken tokens to `to` (AnchorToken mint takes `(admin, to, amount)`).
 fn mint_nvn(env: &Env, token: &Address, admin: &Address, to: &Address, amount: i128) {
-    NavinTokenClient::new(env, token).mint(admin, to, &amount);
+    AnchorTokenClient::new(env, token).mint(admin, to, &amount);
 }
 
 fn balance(env: &Env, token: &Address, who: &Address) -> i128 {
@@ -124,9 +124,9 @@ struct MixedCtx {
     token_sac: Address,
     token_nvn: Address,
     /// Shipment contract initialised with token_sac
-    client_sac: NavinShipmentClient<'static>,
+    client_sac: AnchorShipmentClient<'static>,
     /// Shipment contract initialised with token_nvn
-    client_nvn: NavinShipmentClient<'static>,
+    client_nvn: AnchorShipmentClient<'static>,
 }
 
 fn setup() -> MixedCtx {
@@ -139,15 +139,15 @@ fn setup() -> MixedCtx {
     let token_nvn = deploy_nvn(&env, &admin);
 
     // Two independent shipment contract instances, each bound to a different token
-    let addr_sac = env.register(NavinShipment, ());
-    let client_sac = NavinShipmentClient::new(&env, &addr_sac);
+    let addr_sac = env.register(AnchorShipment, ());
+    let client_sac = AnchorShipmentClient::new(&env, &addr_sac);
     client_sac.initialize(&admin, &token_sac);
     client_sac.add_company(&admin, &company);
     client_sac.add_carrier(&admin, &carrier);
     client_sac.add_carrier_to_whitelist(&company, &carrier);
 
-    let addr_nvn = env.register(NavinShipment, ());
-    let client_nvn = NavinShipmentClient::new(&env, &addr_nvn);
+    let addr_nvn = env.register(AnchorShipment, ());
+    let client_nvn = AnchorShipmentClient::new(&env, &addr_nvn);
     client_nvn.initialize(&admin, &token_nvn);
     client_nvn.add_company(&admin, &company);
     client_nvn.add_carrier(&admin, &carrier);
@@ -340,15 +340,15 @@ fn test_happy_and_failing_token_escrow_and_settlement_flows_are_isolated() {
     let token_sac = deploy_sac(&env, &admin);
     let token_bad = deploy_failing_token(&env, &admin);
 
-    let addr_sac = env.register(NavinShipment, ());
-    let client_sac = NavinShipmentClient::new(&env, &addr_sac);
+    let addr_sac = env.register(AnchorShipment, ());
+    let client_sac = AnchorShipmentClient::new(&env, &addr_sac);
     client_sac.initialize(&admin, &token_sac);
     client_sac.add_company(&admin, &company);
     client_sac.add_carrier(&admin, &carrier);
     client_sac.add_carrier_to_whitelist(&company, &carrier);
 
-    let addr_bad = env.register(NavinShipment, ());
-    let client_bad = NavinShipmentClient::new(&env, &addr_bad);
+    let addr_bad = env.register(AnchorShipment, ());
+    let client_bad = AnchorShipmentClient::new(&env, &addr_bad);
     client_bad.initialize(&admin, &token_bad);
     client_bad.add_company(&admin, &company);
     client_bad.add_carrier(&admin, &carrier);
@@ -402,7 +402,7 @@ fn test_happy_and_failing_token_escrow_and_settlement_flows_are_isolated() {
         .try_deposit_escrow(&company, &id_bad_deposit, &amount)
         .unwrap_err()
         .unwrap();
-    assert_eq!(err, NavinError::TokenTransferFailed);
+    assert_eq!(err, AnchorError::TokenTransferFailed);
     assert_eq!(client_bad.get_escrow_balance(&id_bad_deposit), 0);
 
     let id_bad_release = client_bad.create_shipment(
@@ -424,7 +424,7 @@ fn test_happy_and_failing_token_escrow_and_settlement_flows_are_isolated() {
         .try_confirm_delivery(&receiver, &id_bad_release, &dummy_hash(&env, 105))
         .unwrap_err()
         .unwrap();
-    assert_eq!(err, NavinError::TokenTransferFailed);
+    assert_eq!(err, AnchorError::TokenTransferFailed);
     assert_eq!(
         client_bad.get_shipment(&id_bad_release).status,
         ShipmentStatus::InTransit
@@ -444,7 +444,7 @@ fn test_happy_and_failing_token_escrow_and_settlement_flows_are_isolated() {
         .try_refund_escrow(&company, &id_bad_refund)
         .unwrap_err()
         .unwrap();
-    assert_eq!(err, NavinError::TokenTransferFailed);
+    assert_eq!(err, AnchorError::TokenTransferFailed);
     assert_eq!(
         client_bad.get_shipment(&id_bad_refund).status,
         ShipmentStatus::Created

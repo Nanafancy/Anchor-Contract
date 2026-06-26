@@ -17,7 +17,7 @@
 
 extern crate std;
 
-use crate::{NavinError, NavinShipment, NavinShipmentClient, ShipmentStatus};
+use crate::{AnchorError, AnchorShipment, AnchorShipmentClient, ShipmentStatus};
 use soroban_sdk::{
     contract, contractimpl, symbol_short,
     testutils::{Address as _, Ledger as _},
@@ -35,10 +35,10 @@ impl MilestoneFuzzToken {
     pub fn transfer(_env: Env, _from: Address, _to: Address, _amount: i128) {}
 }
 
-fn setup() -> (Env, NavinShipmentClient<'static>, Address) {
+fn setup() -> (Env, AnchorShipmentClient<'static>, Address) {
     let (env, admin) = crate::test_utils::setup_env();
     let token = env.register(MilestoneFuzzToken {}, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
     client.initialize(&admin, &token);
     client.set_shipment_limit(&admin, &10_000u32);
     (env, client, admin)
@@ -444,14 +444,14 @@ fn fuzz_milestone_order_enforced() {
         // beta before alpha must fail
         assert_eq!(
             client.try_release_milestone_payment(&carrier, &id, &symbol_short!("beta")),
-            Err(Ok(NavinError::InvalidStatus)),
+            Err(Ok(AnchorError::InvalidStatus)),
             "iteration {i}: beta before alpha must be rejected"
         );
 
         // gamma before alpha must fail
         assert_eq!(
             client.try_release_milestone_payment(&carrier, &id, &symbol_short!("gamma")),
-            Err(Ok(NavinError::InvalidStatus)),
+            Err(Ok(AnchorError::InvalidStatus)),
             "iteration {i}: gamma before alpha must be rejected"
         );
 

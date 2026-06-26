@@ -1,11 +1,11 @@
-# Navin Contract Integration Guide
+# Anchor Contract Integration Guide
 
-Complete guide for integrating the Navin shipment tracking smart contract with your Express.js backend using the Stellar JavaScript/TypeScript SDK.
+Complete guide for integrating the Anchor shipment tracking smart contract with your Express.js backend using the Stellar JavaScript/TypeScript SDK.
 
 ## Table of Contents
-# Navin Contract Integration Guide
+# Anchor Contract Integration Guide
 
-Complete guide for integrating the Navin shipment tracking smart contract with your Express.js backend using the Stellar JavaScript/TypeScript SDK.
+Complete guide for integrating the Anchor shipment tracking smart contract with your Express.js backend using the Stellar JavaScript/TypeScript SDK.
 
 ## Table of Contents
 
@@ -112,7 +112,7 @@ When parser logic changes, regenerate and re-validate against these fixture outp
 
 ## Architecture Overview
 
-Navin uses a **Hash-and-Emit** architecture:
+Anchor uses a **Hash-and-Emit** architecture:
 
 - **On-chain**: Contract stores only critical data (shipment IDs, addresses, status, escrow amounts) and emits events with data hashes
 - **Off-chain**: Backend (MongoDB) stores full shipment details (GPS coordinates, sensor readings, photos, metadata)
@@ -1016,7 +1016,7 @@ NODE_ENV=development
 STELLAR_SECRET_KEY=SXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 SHIPMENT_CONTRACT_ID=CXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 TOKEN_CONTRACT_ID=CXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-MONGODB_URI=mongodb://localhost:27017/navin
+MONGODB_URI=mongodb://localhost:27017/Anchor
 ```
 
 ## Best Practices
@@ -1031,7 +1031,7 @@ MONGODB_URI=mongodb://localhost:27017/navin
 
 ## Error Code Mapping
 
-Every contract invocation that fails returns a Soroban `ContractError` whose numeric code maps to a `NavinError` variant. The authoritative mapping — including user-facing category and retry guidance — lives in
+Every contract invocation that fails returns a Soroban `ContractError` whose numeric code maps to a `AnchorError` variant. The authoritative mapping — including user-facing category and retry guidance — lives in
 [`contracts/shipment/src/error_map.rs`](../contracts/shipment/src/error_map.rs).
 
 ### Categories
@@ -1195,7 +1195,7 @@ describe("Shipment Integration", () => {
 });
 ```
 
-This integration guide provides complete TypeScript examples for interacting with the Navin shipment contract, including contract invocation, event listening, and transaction verification patterns that your Express backend can use.
+This integration guide provides complete TypeScript examples for interacting with the Anchor shipment contract, including contract invocation, event listening, and transaction verification patterns that your Express backend can use.
 
 1. [Architecture Overview](#architecture-overview)
 2. [Setup & Configuration](#setup--configuration)
@@ -1207,7 +1207,7 @@ This integration guide provides complete TypeScript examples for interacting wit
 
 ## Architecture Overview
 
-Navin uses a **Hash-and-Emit** architecture:
+Anchor uses a **Hash-and-Emit** architecture:
 
 - **On-chain**: Contract stores only critical data (shipment IDs, addresses, status, escrow amounts) and emits events with data hashes
 - **Off-chain**: Backend (MongoDB) stores full shipment details (GPS coordinates, sensor readings, photos, metadata)
@@ -2111,7 +2111,7 @@ NODE_ENV=development
 STELLAR_SECRET_KEY=SXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 SHIPMENT_CONTRACT_ID=CXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 TOKEN_CONTRACT_ID=CXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-MONGODB_URI=mongodb://localhost:27017/navin
+MONGODB_URI=mongodb://localhost:27017/Anchor
 ```
 
 ## Best Practices
@@ -2173,4 +2173,4 @@ describe("Shipment Integration", () => {
 });
 ```
 
-This integration guide provides complete TypeScript examples for interacting with the Navin shipment contract, including contract invocation, event listening, and transaction verification patterns that your Express backend can use.
+This integration guide provides complete TypeScript examples for interacting with the Anchor shipment contract, including contract invocation, event listening, and transaction verification patterns that your Express backend can use.

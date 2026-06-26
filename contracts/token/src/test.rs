@@ -2,19 +2,19 @@
 
 extern crate std;
 
-use crate::{test_utils::setup_env, NavinToken, NavinTokenClient};
+use crate::{test_utils::setup_env, AnchorToken, AnchorTokenClient};
 use soroban_sdk::{testutils::Address as _, Address, Env, String, Symbol};
 
-fn setup_token_env() -> (Env, NavinTokenClient<'static>, Address) {
+fn setup_token_env() -> (Env, AnchorTokenClient<'static>, Address) {
     let (env, admin) = setup_env();
-    let contract_id = env.register(NavinToken, ());
-    let client = NavinTokenClient::new(&env, &contract_id);
+    let contract_id = env.register(AnchorToken, ());
+    let client = AnchorTokenClient::new(&env, &contract_id);
 
     (env, client, admin)
 }
 
-fn initialize_token(client: &NavinTokenClient, env: &Env, admin: &Address, total_supply: i128) {
-    let name = String::from_str(env, "NavinToken");
+fn initialize_token(client: &AnchorTokenClient, env: &Env, admin: &Address, total_supply: i128) {
+    let name = String::from_str(env, "AnchorToken");
     let symbol = String::from_str(env, "NVN");
     client.initialize(admin, &name, &symbol, &total_supply);
 }
@@ -29,7 +29,7 @@ fn test_initialize() {
     initialize_token(&client, &env, &admin, 1_000_000);
 
     assert_eq!(client.get_admin(), admin);
-    assert_eq!(client.name(), String::from_str(&env, "NavinToken"));
+    assert_eq!(client.name(), String::from_str(&env, "AnchorToken"));
     assert_eq!(client.symbol(), String::from_str(&env, "NVN"));
     assert_eq!(client.total_supply(), 1_000_000);
     assert_eq!(client.balance(&admin), 1_000_000);
@@ -299,7 +299,7 @@ fn test_allowlist_updates_reflected_immediately() {
     initialize_token(&client, &env, &admin, 1_000_000);
 
     let key = Symbol::new(&env, "twitter");
-    let value = String::from_str(&env, "@navin");
+    let value = String::from_str(&env, "@Anchor");
 
     // Add key and set metadata
     client.add_allowed_metadata_key(&admin, &key);
@@ -313,7 +313,7 @@ fn test_allowlist_updates_reflected_immediately() {
     assert_eq!(client.get_metadata(&key), Some(value.clone()));
 
     // But setting new value should fail
-    let new_value = String::from_str(&env, "@newnavin");
+    let new_value = String::from_str(&env, "@newAnchor");
     let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
         client.set_metadata(&admin, &key, &new_value);
     }));

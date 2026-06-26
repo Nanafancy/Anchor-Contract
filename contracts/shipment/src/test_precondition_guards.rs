@@ -8,7 +8,7 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::{test_utils, NavinError, NavinShipment, NavinShipmentClient, ShipmentStatus};
+    use crate::{test_utils, AnchorError, AnchorShipment, AnchorShipmentClient, ShipmentStatus};
     use soroban_sdk::{contract, contractimpl, testutils::Address as _, Address, BytesN, Env, Vec};
 
     #[contract]
@@ -23,10 +23,10 @@ mod tests {
         }
     }
 
-    fn setup() -> (Env, NavinShipmentClient<'static>, Address, Address, Address) {
+    fn setup() -> (Env, AnchorShipmentClient<'static>, Address, Address, Address) {
         let (env, admin) = test_utils::setup_env();
-        let contract_id = env.register(NavinShipment, ());
-        let client = NavinShipmentClient::new(&env, &contract_id);
+        let contract_id = env.register(AnchorShipment, ());
+        let client = AnchorShipmentClient::new(&env, &contract_id);
 
         let token_id = env.register(MockToken, ());
         client.initialize(&admin, &token_id);
@@ -53,12 +53,12 @@ mod tests {
     fn require_initialized_blocks_uninitialized_contract() {
         let env = Env::default();
         env.mock_all_auths();
-        let contract_id = env.register(NavinShipment, ());
-        let client = NavinShipmentClient::new(&env, &contract_id);
+        let contract_id = env.register(AnchorShipment, ());
+        let client = AnchorShipmentClient::new(&env, &contract_id);
 
         // Any method that calls require_initialized should return NotInitialized.
         let result = client.try_get_admin();
-        assert_eq!(result, Err(Ok(NavinError::NotInitialized)));
+        assert_eq!(result, Err(Ok(AnchorError::NotInitialized)));
     }
 
     // ── require_not_paused ───────────────────────────────────────────────────
@@ -80,7 +80,7 @@ mod tests {
             &Vec::new(&env),
             &deadline,
         );
-        assert_eq!(result, Err(Ok(NavinError::ContractPaused)));
+        assert_eq!(result, Err(Ok(AnchorError::ContractPaused)));
     }
 
     // ── require_admin ────────────────────────────────────────────────────────
@@ -91,7 +91,7 @@ mod tests {
 
         // set_shipment_limit uses require_admin internally.
         let result = client.try_set_shipment_limit(&company, &10);
-        assert_eq!(result, Err(Ok(NavinError::Unauthorized)));
+        assert_eq!(result, Err(Ok(AnchorError::Unauthorized)));
     }
 
     #[test]
@@ -116,7 +116,7 @@ mod tests {
             &Vec::new(&env),
             &deadline,
         );
-        assert_eq!(result, Err(Ok(NavinError::Unauthorized)));
+        assert_eq!(result, Err(Ok(AnchorError::Unauthorized)));
     }
 
     // ── require_role (Carrier) ───────────────────────────────────────────────
@@ -139,7 +139,7 @@ mod tests {
         let hash2 = make_hash(&env, 4);
         // company is not the carrier — should be Unauthorized.
         let result = client.try_update_status(&company, &id, &ShipmentStatus::InTransit, &hash2);
-        assert_eq!(result, Err(Ok(NavinError::Unauthorized)));
+        assert_eq!(result, Err(Ok(AnchorError::Unauthorized)));
     }
 
     // ── require_active_company ───────────────────────────────────────────────
@@ -160,7 +160,7 @@ mod tests {
             &Vec::new(&env),
             &deadline,
         );
-        assert_eq!(result, Err(Ok(NavinError::CompanySuspended)));
+        assert_eq!(result, Err(Ok(AnchorError::CompanySuspended)));
     }
 
     // ── require_active_carrier ───────────────────────────────────────────────
@@ -184,7 +184,7 @@ mod tests {
 
         let hash2 = make_hash(&env, 7);
         let result = client.try_update_status(&carrier, &id, &ShipmentStatus::InTransit, &hash2);
-        assert_eq!(result, Err(Ok(NavinError::CarrierSuspended)));
+        assert_eq!(result, Err(Ok(AnchorError::CarrierSuspended)));
     }
 
     // ── require_shipment (via get_shipment) ──────────────────────────────────
@@ -193,7 +193,7 @@ mod tests {
     fn require_shipment_returns_not_found_for_missing_id() {
         let (_env, client, _admin, _company, _carrier) = setup();
         let result = client.try_get_shipment(&9999);
-        assert!(matches!(result, Err(Ok(NavinError::ShipmentNotFound))));
+        assert!(matches!(result, Err(Ok(AnchorError::ShipmentNotFound))));
     }
 
     // ── require_not_finalized ────────────────────────────────────────────────
@@ -224,6 +224,6 @@ mod tests {
         // Shipment is now finalized (auto-finalized on Delivered with no escrow) — further mutations should fail.
         let h5 = make_hash(&env, 12);
         let result = client.try_cancel_shipment(&company, &id, &h5);
-        assert_eq!(result, Err(Ok(NavinError::ShipmentFinalized)));
+        assert_eq!(result, Err(Ok(AnchorError::ShipmentFinalized)));
     }
 }

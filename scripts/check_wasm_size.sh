@@ -3,7 +3,7 @@ set -e
 
 # Configuration: [filename]:[limit_in_kb]
 BUDGETS=(
-    "navin_token.wasm:25"
+    "Anchor_token.wasm:25"
     "shipment.wasm:200"
 )
 

@@ -1,7 +1,7 @@
-# Storage Layout — NavinShipment Contract
+# Storage Layout — AnchorShipment Contract
 
 > **Audit Date:** 2026-02-26  
-> **Contract:** `NavinShipment`  
+> **Contract:** `AnchorShipment`  
 > **File Audited:** `contracts/shipment/src/storage.rs`
 
 ---

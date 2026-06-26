@@ -6,7 +6,7 @@ This document describes the preflight helper system that gates state-changing (m
 
 ## Problem Statement
 
-The Navin shipment contract uses a two-tier storage model:
+The Anchor shipment contract uses a two-tier storage model:
 - **Persistent Storage**: For active shipments (expensive, long TTL)
 - **Temporary Storage**: For archived shipments (cheaper, shorter TTL)
 
@@ -20,7 +20,7 @@ Added `ShipmentUnavailable` error (code 42) to explicitly signal when shipment s
 
 ```rust
 #[contracterror]
-pub enum NavinError {
+pub enum AnchorError {
     // ... existing variants ...
     /// Shipment state is unavailable due to archival or expiration.
     ShipmentUnavailable = 42,
@@ -47,7 +47,7 @@ Added `preflight_check_shipment_available()` in `validation.rs`:
 pub fn preflight_check_shipment_available(
     env: &Env,
     shipment_id: u64,
-) -> Result<Shipment, NavinError>
+) -> Result<Shipment, AnchorError>
 ```
 
 ### Error Hierarchy
@@ -125,13 +125,13 @@ pub fn update_status(
     shipment_id: u64,
     new_status: ShipmentStatus,
     data_hash: BytesN<32>,
-) -> Result<(), NavinError> {
+) -> Result<(), AnchorError> {
     require_initialized(&env)?;
     caller.require_auth();
 
     // ❌ Could retrieve archived shipment from temporary storage
     let mut shipment = storage::get_shipment(&env, shipment_id)
-        .ok_or(NavinError::ShipmentNotFound)?;
+        .ok_or(AnchorError::ShipmentNotFound)?;
     
     // ... rest of logic ...
 }
@@ -146,7 +146,7 @@ pub fn update_status(
     shipment_id: u64,
     new_status: ShipmentStatus,
     data_hash: BytesN<32>,
-) -> Result<(), NavinError> {
+) -> Result<(), AnchorError> {
     require_initialized(&env)?;
     caller.require_auth();
 

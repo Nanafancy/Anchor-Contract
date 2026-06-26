@@ -17,7 +17,7 @@
 //! - Comprehensive state transition tests
 //! - Clear error messages
 
-use crate::{errors::NavinError, types::*};
+use crate::{errors::AnchorError, types::*};
 use soroban_sdk::{contracttype, Address, Env};
 
 /// Circuit breaker states
@@ -159,7 +159,7 @@ impl CircuitBreakerTracker {
         &mut self,
         config: &CircuitBreakerConfig,
         current_time: u64,
-    ) -> Result<(), NavinError> {
+    ) -> Result<(), AnchorError> {
         match self.state {
             CircuitBreakerState::Closed => Ok(()),
             CircuitBreakerState::Open => {
@@ -170,7 +170,7 @@ impl CircuitBreakerTracker {
                     self.half_open_requests = 1;
                     Ok(())
                 } else {
-                    Err(NavinError::CircuitBreakerOpen)
+                    Err(AnchorError::CircuitBreakerOpen)
                 }
             }
             CircuitBreakerState::HalfOpen => {
@@ -179,7 +179,7 @@ impl CircuitBreakerTracker {
                     self.half_open_requests += 1;
                     Ok(())
                 } else {
-                    Err(NavinError::CircuitBreakerOpen)
+                    Err(AnchorError::CircuitBreakerOpen)
                 }
             }
         }
@@ -220,8 +220,8 @@ impl CircuitBreakerTracker {
 ///
 /// # Returns
 /// * `Ok(())` if operation should proceed
-/// * `Err(NavinError::CircuitBreakerOpen)` if breaker is open
-pub fn check_transfer_allowed(env: &Env, config: &CircuitBreakerConfig) -> Result<(), NavinError> {
+/// * `Err(AnchorError::CircuitBreakerOpen)` if breaker is open
+pub fn check_transfer_allowed(env: &Env, config: &CircuitBreakerConfig) -> Result<(), AnchorError> {
     let current_time = env.ledger().timestamp();
     let breaker_key = DataKey::CircuitBreakerState;
 
@@ -292,12 +292,12 @@ pub fn record_transfer_failure(env: &Env, config: &CircuitBreakerConfig) {
 ///
 /// # Returns
 /// * `Ok(())` on success
-/// * `Err(NavinError)` if not authorized
-pub fn manual_reset(env: &Env, admin: &Address) -> Result<(), NavinError> {
+/// * `Err(AnchorError)` if not authorized
+pub fn manual_reset(env: &Env, admin: &Address) -> Result<(), AnchorError> {
     // Verify admin authorization
     admin.require_auth();
     if !crate::storage::is_admin(env, admin) {
-        return Err(NavinError::Unauthorized);
+        return Err(AnchorError::Unauthorized);
     }
 
     let breaker_key = DataKey::CircuitBreakerState;

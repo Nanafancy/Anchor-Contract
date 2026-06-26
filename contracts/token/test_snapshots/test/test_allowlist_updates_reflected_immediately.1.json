@@ -44,7 +44,7 @@
                   "symbol": "twitter"
                 },
                 {
-                  "string": "@navin"
+                  "string": "@Anchor"
                 }
               ]
             }
@@ -253,7 +253,7 @@
                           ]
                         },
                         "val": {
-                          "string": "@navin"
+                          "string": "@Anchor"
                         }
                       },
                       {
@@ -265,7 +265,7 @@
                           ]
                         },
                         "val": {
-                          "string": "NavinToken"
+                          "string": "AnchorToken"
                         }
                       },
                       {

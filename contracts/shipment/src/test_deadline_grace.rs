@@ -13,7 +13,7 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::{test_utils, NavinShipment, NavinShipmentClient, ShipmentStatus};
+    use crate::{test_utils, AnchorShipment, AnchorShipmentClient, ShipmentStatus};
     use soroban_sdk::{contract, contractimpl, testutils::Address as _, Address, BytesN, Env, Vec};
 
     #[contract]
@@ -27,10 +27,10 @@ mod tests {
         }
     }
 
-    fn setup() -> (Env, NavinShipmentClient<'static>, Address) {
+    fn setup() -> (Env, AnchorShipmentClient<'static>, Address) {
         let (env, admin) = test_utils::setup_env();
-        let contract_id = env.register(NavinShipment, ());
-        let client = NavinShipmentClient::new(&env, &contract_id);
+        let contract_id = env.register(AnchorShipment, ());
+        let client = AnchorShipmentClient::new(&env, &contract_id);
         let token_id = env.register(MockToken, ());
         client.initialize(&admin, &token_id);
         (env, client, admin)
@@ -39,7 +39,7 @@ mod tests {
     /// Helper: create a shipment with a specific deadline. Returns shipment_id.
     fn create_with_deadline(
         env: &Env,
-        client: &NavinShipmentClient<'static>,
+        client: &AnchorShipmentClient<'static>,
         admin: &Address,
         seed: u8,
         deadline: u64,
@@ -64,7 +64,7 @@ mod tests {
 
     /// Helper: configure a grace period of `grace` seconds and return the
     /// updated config.
-    fn set_grace(client: &NavinShipmentClient<'static>, admin: &Address, grace: u64) {
+    fn set_grace(client: &AnchorShipmentClient<'static>, admin: &Address, grace: u64) {
         let mut cfg = client.get_contract_config();
         cfg.deadline_grace_seconds = grace;
         client.update_config(admin, &cfg);
@@ -279,7 +279,7 @@ mod tests {
     /// ShipmentAlreadyCompleted regardless of the grace period.
     #[test]
     fn check_deadline_on_already_cancelled_shipment_returns_already_completed() {
-        use crate::NavinError;
+        use crate::AnchorError;
         let (env, client, admin) = setup();
         let now = env.ledger().timestamp();
         let deadline = now + 1000;
@@ -297,7 +297,7 @@ mod tests {
         let result = client.try_check_deadline(&id);
         assert_eq!(
             result,
-            Err(Ok(NavinError::ShipmentAlreadyCompleted)),
+            Err(Ok(AnchorError::ShipmentAlreadyCompleted)),
             "check_deadline on an already-cancelled shipment must return ShipmentAlreadyCompleted"
         );
     }
@@ -308,7 +308,7 @@ mod tests {
     /// ShipmentNotFound.
     #[test]
     fn check_deadline_on_non_existent_shipment_returns_not_found() {
-        use crate::NavinError;
+        use crate::AnchorError;
         let (env, client, _admin) = setup();
 
         // Advance past any possible deadline.
@@ -317,7 +317,7 @@ mod tests {
         let result = client.try_check_deadline(&9999u64);
         assert_eq!(
             result,
-            Err(Ok(NavinError::ShipmentNotFound)),
+            Err(Ok(AnchorError::ShipmentNotFound)),
             "check_deadline on a non-existent shipment must return ShipmentNotFound"
         );
     }

@@ -24,7 +24,7 @@
 
 extern crate std;
 
-use crate::{NavinShipment, NavinShipmentClient};
+use crate::{AnchorShipment, AnchorShipmentClient};
 use soroban_sdk::{
     contract, contractimpl,
     testutils::{Address as _, Ledger as _},
@@ -52,7 +52,7 @@ impl WalletAuthToken {
 
 struct TestContext {
     env: Env,
-    client: NavinShipmentClient<'static>,
+    client: AnchorShipmentClient<'static>,
     admin: Address,
     company: Address,
     carrier: Address,
@@ -62,7 +62,7 @@ struct TestContext {
 fn setup_full() -> TestContext {
     let (env, admin) = crate::test_utils::setup_env();
     let token = env.register(WalletAuthToken {}, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
     client.initialize(&admin, &token);
 
     let company = Address::generate(&env);

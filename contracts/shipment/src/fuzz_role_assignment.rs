@@ -19,7 +19,7 @@
 
 extern crate std;
 
-use crate::{NavinShipment, NavinShipmentClient};
+use crate::{AnchorShipment, AnchorShipmentClient};
 use soroban_sdk::{
     contract, contractimpl,
     testutils::{Address as _, Ledger as _},
@@ -37,10 +37,10 @@ impl RoleAssignFuzzToken {
     pub fn transfer(_env: Env, _from: Address, _to: Address, _amount: i128) {}
 }
 
-fn setup() -> (Env, NavinShipmentClient<'static>, Address) {
+fn setup() -> (Env, AnchorShipmentClient<'static>, Address) {
     let (env, admin) = crate::test_utils::setup_env();
     let token = env.register(RoleAssignFuzzToken {}, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
     client.initialize(&admin, &token);
     client.set_shipment_limit(&admin, &10_000u32);
     (env, client, admin)

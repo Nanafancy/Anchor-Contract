@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Environment variables with defaults
-STELLAR_IDENTITY="${STELLAR_IDENTITY:-navin-testnet}"
+STELLAR_IDENTITY="${STELLAR_IDENTITY:-Anchor-testnet}"
 STELLAR_RPC_URL="${STELLAR_RPC_URL:-https://soroban-testnet.stellar.org:443}"
 STELLAR_NETWORK_PASSPHRASE="${STELLAR_NETWORK_PASSPHRASE:-Test SDF Network ; September 2015}"
 
@@ -29,7 +29,7 @@ fi
 
 # Verify WASM files exist
 WASM_DIR="target/wasm32-unknown-unknown/release"
-TOKEN_WASM="$WASM_DIR/navin_token.wasm"
+TOKEN_WASM="$WASM_DIR/Anchor_token.wasm"
 SHIPMENT_WASM="$WASM_DIR/shipment.wasm"
 
 if [[ ! -f "$TOKEN_WASM" ]]; then

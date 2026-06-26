@@ -1,7 +1,7 @@
 # Shipment Contract Call Argument Conventions
 
 This document defines the canonical argument ordering expected by external
-integrators and contract clients for `NavinShipment`.
+integrators and contract clients for `AnchorShipment`.
 
 ## Ordering Rules
 

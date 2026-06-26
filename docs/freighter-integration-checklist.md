@@ -1,6 +1,6 @@
 # Freighter Integration Checklist
 
-Practical checklist for frontend teams integrating [Freighter](https://www.freighter.app/) with Navin contract calls.
+Practical checklist for frontend teams integrating [Freighter](https://www.freighter.app/) with Anchor contract calls.
 
 ---
 
@@ -62,7 +62,7 @@ if (!signedXdr) throw new Error('User rejected or signing failed');
 
 - [ ] Submit via `server.sendTransaction(signedTx)` and check `status !== 'ERROR'`
 - [ ] Poll `server.getTransaction(hash)` until status is `SUCCESS` or `FAILED` (not `NOT_FOUND`)
-- [ ] On `FAILED`, decode the result XDR to extract the `NavinError` code
+- [ ] On `FAILED`, decode the result XDR to extract the `AnchorError` code
 
 ```typescript
 const send = await server.sendTransaction(signedTx);
@@ -83,7 +83,7 @@ if (result.status === SorobanRpc.Api.GetTransactionStatus.FAILED) {
 
 ### Contract Error Code Reference
 
-Map `NavinError` codes surfaced in failed transactions to user-facing messages:
+Map `AnchorError` codes surfaced in failed transactions to user-facing messages:
 
 | Code | Name | User Message |
 |------|------|-------------|

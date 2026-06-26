@@ -2,7 +2,7 @@
 
 extern crate std;
 
-use crate::{test_utils, NavinShipment, NavinShipmentClient, ShipmentStatus};
+use crate::{test_utils, AnchorShipment, AnchorShipmentClient, ShipmentStatus};
 use soroban_sdk::{
     contract, contractimpl, contracttype,
     testutils::{Address as _, AuthorizedFunction},
@@ -56,7 +56,7 @@ impl TokenSpy {
 
 struct Ctx {
     env: Env,
-    client: NavinShipmentClient<'static>,
+    client: AnchorShipmentClient<'static>,
     token_spy: TokenSpyClient<'static>,
     admin: Address,
     company: Address,
@@ -77,8 +77,8 @@ fn setup() -> Ctx {
     let token_id = env.register(TokenSpy, ());
     let token_spy = TokenSpyClient::new(&env, &token_id);
 
-    let shipment_id = env.register(NavinShipment, ());
-    let client = NavinShipmentClient::new(&env, &shipment_id);
+    let shipment_id = env.register(AnchorShipment, ());
+    let client = AnchorShipmentClient::new(&env, &shipment_id);
     client.initialize(&admin, &token_id);
     client.add_company(&admin, &company);
     client.add_carrier(&admin, &carrier);
@@ -316,10 +316,10 @@ mod multisig_order_helpers {
 }
 
 /// Helper: set up a 2-of-3 multisig environment (3 admins, threshold 2).
-fn setup_multisig_2of3() -> (Env, NavinShipmentClient<'static>, Address, Address, Address) {
+fn setup_multisig_2of3() -> (Env, AnchorShipmentClient<'static>, Address, Address, Address) {
     let (env, admin) = test_utils::setup_env();
     let token_id = env.register(multisig_order_helpers::MultiSigOrderToken {}, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
     client.initialize(&admin, &token_id);
 
     let admin2 = Address::generate(&env);
@@ -388,7 +388,7 @@ fn proposal_second_approver_appended_after_first() {
     // Note: init_multisig can only be called once per contract instance,
     // so we create a fresh client here.
     let token_id2 = env.register(multisig_order_helpers::MultiSigOrderToken {}, ());
-    let client2 = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client2 = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
     client2.initialize(&admin, &token_id2);
     client2.init_multisig(&admin, &admins, &3);
 

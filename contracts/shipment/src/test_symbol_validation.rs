@@ -1,6 +1,6 @@
 extern crate std;
 
-use crate::errors::NavinError;
+use crate::errors::AnchorError;
 use crate::validation::{validate_metadata_symbols, validate_milestone_symbols, validate_symbol};
 use soroban_sdk::{Env, Symbol, Vec};
 
@@ -97,7 +97,7 @@ fn test_invalid_13_chars_at_boundary() {
     let s: std::string::String = "A".repeat(13);
     assert_eq!(
         validate_symbol(&env, &sym(&env, &s)),
-        Err(NavinError::InvalidShipmentInput),
+        Err(AnchorError::InvalidShipmentInput),
         "13-char symbol must be rejected"
     );
 }
@@ -108,7 +108,7 @@ fn test_invalid_17_chars_toolongsymbolname() {
     // "TOOLONGSYMBOLNAME" = 17 chars
     assert_eq!(
         validate_symbol(&env, &sym(&env, "TOOLONGSYMBNAME")),
-        Err(NavinError::InvalidShipmentInput),
+        Err(AnchorError::InvalidShipmentInput),
         "15-char symbol must be rejected"
     );
 }
@@ -120,7 +120,7 @@ fn test_invalid_30_chars_rejected() {
     let s: std::string::String = "A".repeat(30);
     assert_eq!(
         validate_symbol(&env, &sym(&env, &s)),
-        Err(NavinError::InvalidShipmentInput),
+        Err(AnchorError::InvalidShipmentInput),
         "30-char symbol must be rejected"
     );
 }
@@ -131,7 +131,7 @@ fn test_invalid_25_chars_rejected() {
     let s: std::string::String = "B".repeat(25);
     assert_eq!(
         validate_symbol(&env, &sym(&env, &s)),
-        Err(NavinError::InvalidShipmentInput),
+        Err(AnchorError::InvalidShipmentInput),
         "25-char symbol must be rejected"
     );
 }
@@ -145,7 +145,7 @@ fn test_oversized_symbol_returns_invalid_input_error() {
     let err = validate_symbol(&env, &sym(&env, &s)).unwrap_err();
     assert_eq!(
         err,
-        NavinError::InvalidShipmentInput,
+        AnchorError::InvalidShipmentInput,
         "Oversized symbol must map to InvalidShipmentInput, not any other error variant"
     );
 }
@@ -182,7 +182,7 @@ fn test_milestone_with_13_char_symbol_rejected() {
     milestones.push_back((sym(&env, &long_name), 100));
     assert_eq!(
         validate_milestone_symbols(&env, &milestones),
-        Err(NavinError::InvalidShipmentInput),
+        Err(AnchorError::InvalidShipmentInput),
         "Milestone with 13-char symbol must be rejected"
     );
 }
@@ -195,7 +195,7 @@ fn test_milestone_duplicate_12_char_symbols_rejected() {
     milestones.push_back((sym(&env, "VERYLONGNAME"), 50));
     assert_eq!(
         validate_milestone_symbols(&env, &milestones),
-        Err(NavinError::DuplicatePaymentMilestone),
+        Err(AnchorError::DuplicatePaymentMilestone),
         "Duplicate 12-char milestone symbols must be rejected"
     );
 }
@@ -228,7 +228,7 @@ fn test_metadata_oversized_key_rejected() {
     let val = sym(&env, "OK");
     assert_eq!(
         validate_metadata_symbols(&env, &key, &val),
-        Err(NavinError::InvalidShipmentInput),
+        Err(AnchorError::InvalidShipmentInput),
         "Metadata with oversized key must be rejected"
     );
 }
@@ -241,7 +241,7 @@ fn test_metadata_oversized_value_rejected() {
     let val = sym(&env, &long);
     assert_eq!(
         validate_metadata_symbols(&env, &key, &val),
-        Err(NavinError::InvalidShipmentInput),
+        Err(AnchorError::InvalidShipmentInput),
         "Metadata with oversized value must be rejected"
     );
 }
@@ -255,7 +255,7 @@ fn test_metadata_both_oversized_rejected() {
     let val = sym(&env, &v);
     assert_eq!(
         validate_metadata_symbols(&env, &key, &val),
-        Err(NavinError::InvalidShipmentInput),
+        Err(AnchorError::InvalidShipmentInput),
         "Metadata with both oversized key and value must be rejected"
     );
 }
@@ -287,7 +287,7 @@ fn test_lengths_13_to_17_all_rejected() {
         let s: std::string::String = "A".repeat(len);
         assert_eq!(
             validate_symbol(&env, &sym(&env, &s)),
-            Err(NavinError::InvalidShipmentInput),
+            Err(AnchorError::InvalidShipmentInput),
             "Symbol of length {} must be rejected",
             len
         );
@@ -429,7 +429,7 @@ fn test_regression_13_chars_always_rejected() {
     let s: std::string::String = "Z".repeat(13);
     assert_eq!(
         validate_symbol(&env, &sym(&env, &s)),
-        Err(crate::errors::NavinError::InvalidShipmentInput),
+        Err(crate::errors::AnchorError::InvalidShipmentInput),
         "regression: 13-char symbol must always map to InvalidShipmentInput"
     );
 }
@@ -485,7 +485,7 @@ fn test_event_topic_too_long_rejected() {
     let s: std::string::String = "E".repeat(13);
     assert_eq!(
         validate_symbol(&env, &sym(&env, &s)),
-        Err(crate::errors::NavinError::InvalidShipmentInput),
+        Err(crate::errors::AnchorError::InvalidShipmentInput),
         "event topic symbol > 12 chars must be rejected"
     );
 }
@@ -555,7 +555,7 @@ fn test_metadata_key_13_chars_rejected() {
     let val = sym(&env, "fine");
     assert_eq!(
         validate_metadata_symbols(&env, &key, &val),
-        Err(crate::errors::NavinError::InvalidShipmentInput),
+        Err(crate::errors::AnchorError::InvalidShipmentInput),
         "13-char metadata key must be rejected"
     );
 }
@@ -567,7 +567,7 @@ fn test_metadata_value_20_chars_rejected() {
     let val = sym(&env, "AAAAAAAAAAAAAAAAAAAA"); // 20 chars
     assert_eq!(
         validate_metadata_symbols(&env, &key, &val),
-        Err(crate::errors::NavinError::InvalidShipmentInput),
+        Err(crate::errors::AnchorError::InvalidShipmentInput),
         "20-char metadata value must be rejected"
     );
 }
@@ -634,7 +634,7 @@ fn test_milestone_17_char_symbol_rejected() {
     milestones.push_back((sym(&env, &long), 100));
     assert_eq!(
         validate_milestone_symbols(&env, &milestones),
-        Err(NavinError::InvalidShipmentInput),
+        Err(AnchorError::InvalidShipmentInput),
         "Milestone with 17-char symbol must be rejected"
     );
 }
@@ -647,7 +647,7 @@ fn test_milestone_25_char_symbol_rejected() {
     milestones.push_back((sym(&env, &long), 100));
     assert_eq!(
         validate_milestone_symbols(&env, &milestones),
-        Err(NavinError::InvalidShipmentInput),
+        Err(AnchorError::InvalidShipmentInput),
         "Milestone with 25-char symbol must be rejected"
     );
 }
@@ -660,7 +660,7 @@ fn test_milestone_30_char_symbol_rejected() {
     milestones.push_back((sym(&env, &long), 100));
     assert_eq!(
         validate_milestone_symbols(&env, &milestones),
-        Err(NavinError::InvalidShipmentInput),
+        Err(AnchorError::InvalidShipmentInput),
         "Milestone with 30-char symbol must be rejected"
     );
 }
@@ -700,7 +700,7 @@ fn test_metadata_key_17_chars_rejected() {
     let val = sym(&env, "fine");
     assert_eq!(
         validate_metadata_symbols(&env, &key, &val),
-        Err(NavinError::InvalidShipmentInput),
+        Err(AnchorError::InvalidShipmentInput),
         "17-char metadata key must be rejected"
     );
 }
@@ -712,7 +712,7 @@ fn test_metadata_value_17_chars_rejected() {
     let val = sym(&env, &std::string::String::from("V").repeat(17));
     assert_eq!(
         validate_metadata_symbols(&env, &key, &val),
-        Err(NavinError::InvalidShipmentInput),
+        Err(AnchorError::InvalidShipmentInput),
         "17-char metadata value must be rejected"
     );
 }
@@ -724,7 +724,7 @@ fn test_metadata_key_25_chars_rejected() {
     let val = sym(&env, "fine");
     assert_eq!(
         validate_metadata_symbols(&env, &key, &val),
-        Err(NavinError::InvalidShipmentInput),
+        Err(AnchorError::InvalidShipmentInput),
         "25-char metadata key must be rejected"
     );
 }
@@ -736,7 +736,7 @@ fn test_metadata_value_25_chars_rejected() {
     let val = sym(&env, &std::string::String::from("V").repeat(25));
     assert_eq!(
         validate_metadata_symbols(&env, &key, &val),
-        Err(NavinError::InvalidShipmentInput),
+        Err(AnchorError::InvalidShipmentInput),
         "25-char metadata value must be rejected"
     );
 }
@@ -748,7 +748,7 @@ fn test_metadata_key_30_chars_rejected() {
     let val = sym(&env, "fine");
     assert_eq!(
         validate_metadata_symbols(&env, &key, &val),
-        Err(NavinError::InvalidShipmentInput),
+        Err(AnchorError::InvalidShipmentInput),
         "30-char metadata key must be rejected"
     );
 }
@@ -760,7 +760,7 @@ fn test_metadata_value_30_chars_rejected() {
     let val = sym(&env, &std::string::String::from("V").repeat(30));
     assert_eq!(
         validate_metadata_symbols(&env, &key, &val),
-        Err(NavinError::InvalidShipmentInput),
+        Err(AnchorError::InvalidShipmentInput),
         "30-char metadata value must be rejected"
     );
 }
@@ -807,7 +807,7 @@ fn test_metadata_value_over_maximum_rejected() {
     let val = sym(&env, &long);
     assert_eq!(
         validate_metadata_symbols(&env, &key, &val),
-        Err(NavinError::InvalidShipmentInput),
+        Err(AnchorError::InvalidShipmentInput),
         "13-char metadata value must be rejected (one over the limit)"
     );
 }
@@ -834,7 +834,7 @@ fn test_metadata_key_over_maximum_rejected() {
     let val = sym(&env, "ok");
     assert_eq!(
         validate_metadata_symbols(&env, &key, &val),
-        Err(NavinError::InvalidShipmentInput),
+        Err(AnchorError::InvalidShipmentInput),
         "13-char metadata key must be rejected (one over the limit)"
     );
 }
@@ -850,7 +850,7 @@ fn test_metadata_overlong_error_variant_is_invalid_shipment_input() {
     let err = validate_metadata_symbols(&env, &key, &val).unwrap_err();
     assert_eq!(
         err,
-        NavinError::InvalidShipmentInput,
+        AnchorError::InvalidShipmentInput,
         "overlong metadata value must map to InvalidShipmentInput"
     );
 }
@@ -873,7 +873,7 @@ fn test_metadata_value_boundary_sweep() {
         let s: std::string::String = "A".repeat(len);
         assert_eq!(
             validate_metadata_symbols(&env, &key, &sym(&env, &s)),
-            Err(NavinError::InvalidShipmentInput),
+            Err(AnchorError::InvalidShipmentInput),
             "metadata value of length {len} must be rejected"
         );
     }
@@ -891,7 +891,7 @@ fn test_metadata_symbol_collision_single_char_rejected() {
     let s = sym(&env, "w");
     assert_eq!(
         validate_metadata_symbols(&env, &s, &s),
-        Err(NavinError::MetadataSymbolCollision),
+        Err(AnchorError::MetadataSymbolCollision),
         "Identical single-char key and value must be rejected as a collision"
     );
 }
@@ -903,7 +903,7 @@ fn test_metadata_symbol_collision_multi_char_rejected() {
     let s = sym(&env, "weight");
     assert_eq!(
         validate_metadata_symbols(&env, &s, &s),
-        Err(NavinError::MetadataSymbolCollision),
+        Err(AnchorError::MetadataSymbolCollision),
         "Identical multi-char key and value must be rejected as a collision"
     );
 }
@@ -915,7 +915,7 @@ fn test_metadata_symbol_collision_max_length_rejected() {
     let s = sym(&env, "ABCDEFGHIJKL");
     assert_eq!(
         validate_metadata_symbols(&env, &s, &s),
-        Err(NavinError::MetadataSymbolCollision),
+        Err(AnchorError::MetadataSymbolCollision),
         "Identical max-length key and value must be rejected as a collision"
     );
 }
@@ -950,12 +950,12 @@ fn test_metadata_symbol_no_collision_similar_names_pass() {
 fn test_metadata_symbol_collision_via_set_shipment_metadata() {
     // End-to-end: calling set_shipment_metadata with key==value must return
     // MetadataSymbolCollision at the contract level.
-    use crate::{test_utils, NavinShipment, NavinShipmentClient};
+    use crate::{test_utils, AnchorShipment, AnchorShipmentClient};
     use soroban_sdk::{testutils::Address as _, Address, Vec as SorobanVec};
 
     let (env, admin) = test_utils::setup_env();
-    let contract_id = env.register(NavinShipment, ());
-    let client = NavinShipmentClient::new(&env, &contract_id);
+    let contract_id = env.register(AnchorShipment, ());
+    let client = AnchorShipmentClient::new(&env, &contract_id);
 
     let token = env.register_stellar_asset_contract_v2(admin.clone());
     client.initialize(&admin, &token.address());
@@ -983,7 +983,7 @@ fn test_metadata_symbol_collision_via_set_shipment_metadata() {
     let result = client.try_set_shipment_metadata(&company, &shipment_id, &colliding, &colliding);
     assert_eq!(
         result,
-        Err(Ok(crate::NavinError::MetadataSymbolCollision)),
+        Err(Ok(crate::AnchorError::MetadataSymbolCollision)),
         "set_shipment_metadata with key==value must return MetadataSymbolCollision"
     );
 }

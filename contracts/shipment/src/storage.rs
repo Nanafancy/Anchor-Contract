@@ -1,4 +1,4 @@
-use crate::{errors::NavinError, types::*};
+use crate::{errors::AnchorError, types::*};
 use soroban_sdk::{Address, BytesN, Env};
 
 /// Check if the contract has been initialized (admin set).
@@ -1151,11 +1151,11 @@ pub fn get_total_escrow_volume(env: &Env) -> i128 {
 }
 
 /// Add an amount to the total escrow volume.
-pub fn add_total_escrow_volume(env: &Env, amount: i128) -> Result<(), NavinError> {
+pub fn add_total_escrow_volume(env: &Env, amount: i128) -> Result<(), AnchorError> {
     let current = get_total_escrow_volume(env);
     let updated = current
         .checked_add(amount)
-        .ok_or(NavinError::ArithmeticError)?;
+        .ok_or(AnchorError::ArithmeticError)?;
     env.storage()
         .instance()
         .set(&DataKey::TotalEscrowVolume, &updated);
@@ -1968,7 +1968,7 @@ mod tests {
 
     fn with_contract_env() -> (Env, Address) {
         let (env, _) = test_utils::setup_env();
-        let contract_id = env.register(crate::NavinShipment, ());
+        let contract_id = env.register(crate::AnchorShipment, ());
         (env, contract_id)
     }
 

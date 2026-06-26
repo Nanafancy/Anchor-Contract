@@ -33,7 +33,7 @@
 
 extern crate std;
 
-use crate::{NavinShipment, NavinShipmentClient, ShipmentStatus};
+use crate::{AnchorShipment, AnchorShipmentClient, ShipmentStatus};
 use soroban_sdk::{
     contract, contractimpl, testutils::Address as _, Address, BytesN, Env, Symbol,
     Vec as SorobanVec,
@@ -62,12 +62,12 @@ impl MockToken {
 /// `Env::default()` starts with the budget meter active; we just need to
 /// call `reset_unlimited()` on the env before each operation under test so
 /// that setup work is not counted.
-fn setup_env() -> (Env, NavinShipmentClient<'static>, Address, Address) {
+fn setup_env() -> (Env, AnchorShipmentClient<'static>, Address, Address) {
     let env = Env::default();
     env.mock_all_auths();
     let admin = Address::generate(&env);
     let token_contract = env.register(MockToken {}, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
     (env, client, admin, token_contract)
 }
 

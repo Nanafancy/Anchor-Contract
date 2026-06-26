@@ -8,7 +8,7 @@ stellar contract build
 
 # Verify WASM files exist
 WASM_DIR="target/wasm32-unknown-unknown/release"
-TOKEN_WASM="$WASM_DIR/navin_token.wasm"
+TOKEN_WASM="$WASM_DIR/Anchor_token.wasm"
 SHIPMENT_WASM="$WASM_DIR/shipment.wasm"
 
 if [[ ! -f "$TOKEN_WASM" ]]; then
