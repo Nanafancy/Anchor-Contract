@@ -4,7 +4,7 @@
 mod tests {
     use crate::test_utils::*;
     use crate::types::*;
-    use crate::{NavinShipment, NavinShipmentClient};
+    use crate::{AnchorShipment, AnchorShipmentClient};
     use soroban_sdk::{contract, contractimpl, testutils::Address as _, Address, BytesN, Env, Vec};
 
     #[contract]
@@ -21,10 +21,10 @@ mod tests {
         }
     }
 
-    fn setup_test_env() -> (Env, NavinShipmentClient<'static>, Address, Address) {
+    fn setup_test_env() -> (Env, AnchorShipmentClient<'static>, Address, Address) {
         let (env, admin) = setup_env();
         let token_contract = env.register(MockToken {}, ());
-        let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+        let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
         (env, client, admin, token_contract)
     }
 
@@ -275,7 +275,7 @@ mod tests {
         let update_result =
             client.try_update_status(&carrier, &shipment_id, &ShipmentStatus::InTransit, &hash);
         assert!(
-            matches!(update_result, Err(Ok(crate::NavinError::ShipmentFinalized))),
+            matches!(update_result, Err(Ok(crate::AnchorError::ShipmentFinalized))),
             "update_status must still be rejected after pause/unpause cycle"
         );
 
@@ -283,7 +283,7 @@ mod tests {
         assert!(
             matches!(
                 deposit_result,
-                Err(Ok(crate::NavinError::ShipmentFinalized))
+                Err(Ok(crate::AnchorError::ShipmentFinalized))
             ),
             "deposit_escrow must still be rejected after pause/unpause cycle"
         );

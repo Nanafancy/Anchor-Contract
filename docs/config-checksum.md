@@ -61,7 +61,7 @@ This ensures the checksum is always in sync with the current config.
 
 Retrieves the stored checksum from instance storage. Returns `None` if not yet computed.
 
-#### `get_config_checksum(env: Env) -> Result<BytesN<32>, NavinError>` (Contract Method)
+#### `get_config_checksum(env: Env) -> Result<BytesN<32>, AnchorError>` (Contract Method)
 
 Public contract query that:
 1. Requires contract initialization
@@ -167,7 +167,7 @@ Located in `contracts/shipment/src/test.rs`:
 - Verified by `test_checksum_serialization_order_matters`
 
 ✅ **Checksum is exposed via query**
-- Public contract method: `get_config_checksum(env: Env) -> Result<BytesN<32>, NavinError>`
+- Public contract method: `get_config_checksum(env: Env) -> Result<BytesN<32>, AnchorError>`
 - Verified by `test_config_checksum_exposed_via_query`
 
 ## Backward Compatibility

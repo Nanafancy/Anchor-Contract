@@ -104,7 +104,7 @@ fn create_settlement(
     amount: i128,
     from: &Address,
     to: &Address,
-) -> Result<u64, NavinError>
+) -> Result<u64, AnchorError>
 ```
 
 **Behavior:**
@@ -123,7 +123,7 @@ fn complete_settlement(
     env: &Env,
     settlement_id: u64,
     shipment_id: u64,
-) -> Result<(), NavinError>
+) -> Result<(), AnchorError>
 ```
 
 **Behavior:**
@@ -140,7 +140,7 @@ fn fail_settlement(
     settlement_id: u64,
     shipment_id: u64,
     error_code: u32,
-) -> Result<(), NavinError>
+) -> Result<(), AnchorError>
 ```
 
 **Behavior:**
@@ -245,14 +245,14 @@ match transfer_result {
 Retrieve a settlement record by ID.
 
 ```rust
-pub fn get_settlement(env: Env, settlement_id: u64) -> Result<SettlementRecord, NavinError>
+pub fn get_settlement(env: Env, settlement_id: u64) -> Result<SettlementRecord, AnchorError>
 ```
 
 #### `get_active_settlement`
 Get the active settlement ID for a shipment.
 
 ```rust
-pub fn get_active_settlement(env: Env, shipment_id: u64) -> Result<Option<u64>, NavinError>
+pub fn get_active_settlement(env: Env, shipment_id: u64) -> Result<Option<u64>, AnchorError>
 ```
 
 #### `get_settlement_count`
@@ -272,7 +272,7 @@ pub fn cancel_active_settlement(
     env: Env,
     caller: Address,
     shipment_id: u64,
-) -> Result<(), NavinError>
+) -> Result<(), AnchorError>
 ```
 
 **Authorization:**
@@ -357,7 +357,7 @@ If persistent failure tracking is required, the implementation would need to:
 
 2. **Return settlement state instead of Result**:
    ```rust
-   pub fn deposit_escrow(...) -> Result<SettlementRecord, NavinError>
+   pub fn deposit_escrow(...) -> Result<SettlementRecord, AnchorError>
    ```
 
 3. **Emit events for failures**:

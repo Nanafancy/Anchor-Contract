@@ -6,7 +6,7 @@
 
 extern crate std;
 
-use crate::{NavinShipment, NavinShipmentClient};
+use crate::{AnchorShipment, AnchorShipmentClient};
 use soroban_sdk::{
     contract, contractimpl,
     testutils::{Address as _, AuthorizedFunction, Ledger as _},
@@ -34,16 +34,16 @@ impl MockToken {
 // Test Setup Helpers
 // ─────────────────────────────────────────────────────────────────────────────
 
-fn setup_env() -> (Env, NavinShipmentClient<'static>, Address, Address) {
+fn setup_env() -> (Env, AnchorShipmentClient<'static>, Address, Address) {
     let (env, admin) = crate::test_utils::setup_env();
     let token_contract = env.register(MockToken {}, ());
-    let contract_id = env.register(NavinShipment, ());
-    let client = NavinShipmentClient::new(&env, &contract_id);
+    let contract_id = env.register(AnchorShipment, ());
+    let client = AnchorShipmentClient::new(&env, &contract_id);
     client.initialize(&admin, &token_contract);
     (env, client, admin, token_contract)
 }
 
-fn contract_id(client: &NavinShipmentClient<'static>) -> Address {
+fn contract_id(client: &AnchorShipmentClient<'static>) -> Address {
     client.address.clone()
 }
 
@@ -109,8 +109,8 @@ fn test_add_company_mismatched_args_fails() {
     let company1 = Address::generate(&env);
     let company2 = Address::generate(&env);
     let token = env.register(MockToken {}, ());
-    let contract_id = env.register(NavinShipment, ());
-    let client = NavinShipmentClient::new(&env, &contract_id);
+    let contract_id = env.register(AnchorShipment, ());
+    let client = AnchorShipmentClient::new(&env, &contract_id);
 
     // Mock auth for (admin, company1) only
     env.mock_all_auths();

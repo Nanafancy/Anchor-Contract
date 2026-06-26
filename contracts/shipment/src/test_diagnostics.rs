@@ -2,7 +2,7 @@ use crate::{
     config,
     test_utils::{advance_ledger_time, setup_env},
     types::ShipmentStatus,
-    NavinShipment, NavinShipmentClient,
+    AnchorShipment, AnchorShipmentClient,
 };
 use soroban_sdk::{contract, contractimpl, testutils::Address as _, Address, BytesN, Env, Vec};
 
@@ -26,11 +26,11 @@ impl MockToken {
     }
 }
 
-fn prepare_test() -> (Env, NavinShipmentClient<'static>, Address, Address) {
+fn prepare_test() -> (Env, AnchorShipmentClient<'static>, Address, Address) {
     let (env, admin) = setup_env();
     let token = env.register(MockToken {}, ());
-    let cid = env.register(NavinShipment, ());
-    let client = NavinShipmentClient::new(&env, &cid);
+    let cid = env.register(AnchorShipment, ());
+    let client = AnchorShipmentClient::new(&env, &cid);
     client.initialize(&admin, &token);
     (env, client, admin, token)
 }

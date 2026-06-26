@@ -5,7 +5,7 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::{test_utils, NavinError, NavinShipment, NavinShipmentClient};
+    use crate::{test_utils, AnchorError, AnchorShipment, AnchorShipmentClient};
     use soroban_sdk::{
         contract, contractimpl,
         testutils::{Address as _, Ledger as _},
@@ -25,15 +25,15 @@ mod tests {
     }
     fn setup() -> (
         Env,
-        NavinShipmentClient<'static>,
+        AnchorShipmentClient<'static>,
         Address,
         Address,
         Address,
         Address,
     ) {
         let (env, admin) = test_utils::setup_env();
-        let contract_id = env.register(NavinShipment, ());
-        let client = NavinShipmentClient::new(&env, &contract_id);
+        let contract_id = env.register(AnchorShipment, ());
+        let client = AnchorShipmentClient::new(&env, &contract_id);
         let token_id = env.register(MockToken, ());
         client.initialize(&admin, &token_id);
 
@@ -56,11 +56,11 @@ mod tests {
 
     fn create_one(
         env: &Env,
-        client: &NavinShipmentClient,
+        client: &AnchorShipmentClient,
         company: &Address,
         carrier: &Address,
         seed: u8,
-    ) -> Result<u64, crate::NavinError> {
+    ) -> Result<u64, crate::AnchorError> {
         let hash = make_hash(env, seed);
         let deadline = future_deadline(env);
         match client.try_create_shipment(
@@ -107,7 +107,7 @@ mod tests {
 
         // 4th attempt within the same window should fail.
         let result = create_one(&env, &client, &company, &carrier, 4);
-        assert_eq!(result, Err(NavinError::CreationQuotaExceeded));
+        assert_eq!(result, Err(AnchorError::CreationQuotaExceeded));
     }
 
     // ── quota resets after window expires ────────────────────────────────────
@@ -126,7 +126,7 @@ mod tests {
 
         // Confirm quota is exhausted.
         let result = create_one(&env, &client, &company, &carrier, 3);
-        assert_eq!(result, Err(NavinError::CreationQuotaExceeded));
+        assert_eq!(result, Err(AnchorError::CreationQuotaExceeded));
 
         // Advance past the window (3600 seconds).
         env.ledger().with_mut(|l| l.timestamp += 3600);
@@ -189,7 +189,7 @@ mod tests {
         let (_env, client, admin, _company, _carrier, _token) = setup();
 
         let result = client.try_set_creation_quota(&admin, &5, &0);
-        assert_eq!(result, Err(Ok(NavinError::InvalidConfig)));
+        assert_eq!(result, Err(Ok(AnchorError::InvalidConfig)));
     }
 
     #[test]
@@ -205,7 +205,7 @@ mod tests {
         let (_env, client, _admin, company, _carrier, _token) = setup();
 
         let result = client.try_set_creation_quota(&company, &5, &3600);
-        assert_eq!(result, Err(Ok(NavinError::Unauthorized)));
+        assert_eq!(result, Err(Ok(AnchorError::Unauthorized)));
     }
 
     // ── batch creation respects quota ────────────────────────────────────────
@@ -232,7 +232,7 @@ mod tests {
 
         // Batch of 3 exceeds quota of 2.
         let result = client.try_create_shipments_batch(&company, &inputs);
-        assert_eq!(result, Err(Ok(NavinError::CreationQuotaExceeded)));
+        assert_eq!(result, Err(Ok(AnchorError::CreationQuotaExceeded)));
     }
 
     // ── multiple companies have independent quotas ───────────────────────────
@@ -254,7 +254,7 @@ mod tests {
 
         // Company 1 should be blocked.
         let result = create_one(&env, &client, &company1, &carrier, 3);
-        assert_eq!(result, Err(NavinError::CreationQuotaExceeded));
+        assert_eq!(result, Err(AnchorError::CreationQuotaExceeded));
 
         // Company 2 should still have full quota available.
         assert!(create_one(&env, &client, &company2, &carrier, 4).is_ok());
@@ -279,7 +279,7 @@ mod tests {
 
         // Should still be blocked (within window).
         let result = create_one(&env, &client, &company, &carrier, 2);
-        assert_eq!(result, Err(NavinError::CreationQuotaExceeded));
+        assert_eq!(result, Err(AnchorError::CreationQuotaExceeded));
 
         // Advance exactly to window boundary.
         env.ledger().with_mut(|l| l.timestamp = initial_time + 3600);
@@ -306,7 +306,7 @@ mod tests {
 
         // Next attempt should fail because new quota is 1 and we've already used 2.
         let result = create_one(&env, &client, &company, &carrier, 3);
-        assert_eq!(result, Err(NavinError::CreationQuotaExceeded));
+        assert_eq!(result, Err(AnchorError::CreationQuotaExceeded));
 
         // Increase quota back to 5.
         client.set_creation_quota(&admin, &5, &3600);
@@ -351,7 +351,7 @@ mod tests {
         // Try immediately after — should fail.
         env.ledger().with_mut(|l| l.timestamp += 1);
         let result = create_one(&env, &client, &company, &carrier, 2);
-        assert_eq!(result, Err(NavinError::CreationQuotaExceeded));
+        assert_eq!(result, Err(AnchorError::CreationQuotaExceeded));
 
         // Advance past the short window.
         env.ledger().with_mut(|l| l.timestamp = initial_time + 101);
@@ -393,7 +393,7 @@ mod tests {
 
         // The 4th active shipment must be rejected with ShipmentLimitReached
         let result = create_one(&env, &client, &company, &carrier, 4);
-        assert_eq!(result, Err(NavinError::ShipmentLimitReached));
+        assert_eq!(result, Err(AnchorError::ShipmentLimitReached));
     }
 
     #[test]
@@ -411,7 +411,7 @@ mod tests {
 
         // 3rd is rejected
         let result = create_one(&env, &client, &company, &carrier, 3);
-        assert_eq!(result, Err(NavinError::ShipmentLimitReached));
+        assert_eq!(result, Err(AnchorError::ShipmentLimitReached));
 
         // Lift limit to 5
         client.set_shipment_limit(&admin, &5);
@@ -450,7 +450,7 @@ mod tests {
 
         // Attempt to create another shipment should fail
         let result = create_one(&env, &client, &company, &carrier, 4);
-        assert_eq!(result, Err(NavinError::CreationQuotaExceeded));
+        assert_eq!(result, Err(AnchorError::CreationQuotaExceeded));
     }
 
     /// Test: Change config to increase quota limit and confirm the limit updates immediately.
@@ -475,7 +475,7 @@ mod tests {
 
         // Next attempt should fail
         let result = create_one(&env, &client, &company, &carrier, 3);
-        assert_eq!(result, Err(NavinError::CreationQuotaExceeded));
+        assert_eq!(result, Err(AnchorError::CreationQuotaExceeded));
 
         // ── Config Change: Increase limit to 5 ──
         client.set_creation_quota(&admin, &5, &3600);
@@ -525,7 +525,7 @@ mod tests {
 
         // Next attempt should now fail with new stricter limit
         let result = create_one(&env, &client, &company, &carrier, 4);
-        assert_eq!(result, Err(NavinError::CreationQuotaExceeded));
+        assert_eq!(result, Err(AnchorError::CreationQuotaExceeded));
     }
 
     /// Test: Quota reset path - reach limit, wait for window to expire, then create again.
@@ -546,7 +546,7 @@ mod tests {
 
         // Verify limit reached
         let result = create_one(&env, &client, &company, &carrier, 3);
-        assert_eq!(result, Err(NavinError::CreationQuotaExceeded));
+        assert_eq!(result, Err(AnchorError::CreationQuotaExceeded));
 
         // Advance time to just before window expiry
         env.ledger()
@@ -554,7 +554,7 @@ mod tests {
 
         // Should still be blocked
         let result = create_one(&env, &client, &company, &carrier, 4);
-        assert_eq!(result, Err(NavinError::CreationQuotaExceeded));
+        assert_eq!(result, Err(AnchorError::CreationQuotaExceeded));
 
         // Advance time to exactly window expiry (deterministic reset point)
         env.ledger()
@@ -601,7 +601,7 @@ mod tests {
 
         // Verify limit reached
         let result = create_one(&env, &client, &company, &carrier, 3);
-        assert_eq!(result, Err(NavinError::CreationQuotaExceeded));
+        assert_eq!(result, Err(AnchorError::CreationQuotaExceeded));
 
         // ── Config Change: Disable quota (set to 0) ──
         client.set_creation_quota(&admin, &0, &0);
@@ -651,7 +651,7 @@ mod tests {
 
         // Verify limit is now enforced
         let result = create_one(&env, &client, &company, &carrier, 8);
-        assert_eq!(result, Err(NavinError::CreationQuotaExceeded));
+        assert_eq!(result, Err(AnchorError::CreationQuotaExceeded));
     }
 
     /// Test: Config change modifies window duration with active quota usage.
@@ -736,7 +736,7 @@ mod tests {
 
         // Should now be blocked
         let result = create_one(&env, &client, &company, &carrier, 3);
-        assert_eq!(result, Err(NavinError::CreationQuotaExceeded));
+        assert_eq!(result, Err(AnchorError::CreationQuotaExceeded));
 
         // Config 4: increase to max 10
         client.set_creation_quota(&admin, &10, &3600);

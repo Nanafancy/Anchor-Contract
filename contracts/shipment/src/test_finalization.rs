@@ -1,4 +1,4 @@
-use crate::{NavinShipment, NavinShipmentClient, ShipmentStatus};
+use crate::{AnchorShipment, AnchorShipmentClient, ShipmentStatus};
 use soroban_sdk::{testutils::Address as _, Address, BytesN, Env, Symbol, Vec};
 
 #[soroban_sdk::contract]
@@ -12,11 +12,11 @@ impl MockToken {
     pub fn transfer(_env: Env, _from: Address, _to: Address, _amount: i128) {}
 }
 
-fn setup_shipment_env() -> (Env, NavinShipmentClient<'static>, Address, Address) {
+fn setup_shipment_env() -> (Env, AnchorShipmentClient<'static>, Address, Address) {
     let (env, admin) = crate::test_utils::setup_env();
 
     let token_contract = env.register(MockToken {}, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
 
     (env, client, admin, token_contract)
 }
@@ -142,7 +142,7 @@ fn test_mutation_rejected_after_finalization() {
 /// Returns (shipment_id, company, receiver, carrier, data_hash).
 fn create_and_finalize(
     env: &Env,
-    client: &NavinShipmentClient<'static>,
+    client: &AnchorShipmentClient<'static>,
     admin: &Address,
     token_contract: &Address,
 ) -> (u64, Address, Address, Address, BytesN<32>) {
@@ -183,7 +183,7 @@ fn test_update_status_rejected_after_finalization() {
         &data_hash,
     );
     assert!(
-        matches!(result, Err(Ok(crate::NavinError::ShipmentFinalized))),
+        matches!(result, Err(Ok(crate::AnchorError::ShipmentFinalized))),
         "update_status must be rejected with ShipmentFinalized after finalization"
     );
 }
@@ -196,7 +196,7 @@ fn test_deposit_escrow_rejected_after_finalization() {
 
     let result = client.try_deposit_escrow(&company, &shipment_id, &1000_i128);
     assert!(
-        matches!(result, Err(Ok(crate::NavinError::ShipmentFinalized))),
+        matches!(result, Err(Ok(crate::AnchorError::ShipmentFinalized))),
         "deposit_escrow must be rejected with ShipmentFinalized after finalization"
     );
 }
@@ -209,7 +209,7 @@ fn test_raise_dispute_rejected_after_finalization() {
 
     let result = client.try_raise_dispute(&company, &shipment_id, &data_hash);
     assert!(
-        matches!(result, Err(Ok(crate::NavinError::ShipmentFinalized))),
+        matches!(result, Err(Ok(crate::AnchorError::ShipmentFinalized))),
         "raise_dispute must be rejected with ShipmentFinalized after finalization"
     );
 }
@@ -223,7 +223,7 @@ fn test_cancel_shipment_rejected_after_finalization() {
     // Attempting to cancel an already-finalized shipment must be rejected.
     let result = client.try_cancel_shipment(&company, &shipment_id, &data_hash);
     assert!(
-        matches!(result, Err(Ok(crate::NavinError::ShipmentFinalized))),
+        matches!(result, Err(Ok(crate::AnchorError::ShipmentFinalized))),
         "cancel_shipment must be rejected with ShipmentFinalized on already-finalized shipment"
     );
 }
@@ -241,7 +241,7 @@ fn test_set_metadata_rejected_after_finalization() {
         &Symbol::new(&env, "val"),
     );
     assert!(
-        matches!(result, Err(Ok(crate::NavinError::ShipmentFinalized))),
+        matches!(result, Err(Ok(crate::AnchorError::ShipmentFinalized))),
         "set_shipment_metadata must be rejected after finalization"
     );
 }
@@ -263,21 +263,21 @@ fn test_lockout_is_stable_across_reruns() {
                     &ShipmentStatus::InTransit,
                     &data_hash
                 ),
-                Err(Ok(crate::NavinError::ShipmentFinalized))
+                Err(Ok(crate::AnchorError::ShipmentFinalized))
             ),
             "update_status lockout must be stable"
         );
         assert!(
             matches!(
                 client.try_deposit_escrow(&company, &shipment_id, &500_i128),
-                Err(Ok(crate::NavinError::ShipmentFinalized))
+                Err(Ok(crate::AnchorError::ShipmentFinalized))
             ),
             "deposit_escrow lockout must be stable"
         );
         assert!(
             matches!(
                 client.try_raise_dispute(&company, &shipment_id, &data_hash),
-                Err(Ok(crate::NavinError::ShipmentFinalized))
+                Err(Ok(crate::AnchorError::ShipmentFinalized))
             ),
             "raise_dispute lockout must be stable"
         );

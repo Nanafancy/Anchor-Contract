@@ -16,11 +16,11 @@ Short, practical snippets for common shipment contract calls. Copy the call shap
 
 ```rust
 use soroban_sdk::{testutils::Address as _, Address, BytesN, Env, Symbol, Vec};
-use shipment::{NavinShipment, NavinShipmentClient};
+use shipment::{AnchorShipment, AnchorShipmentClient};
 
 let env = Env::default();
-let contract_id = env.register(NavinShipment, ());
-let client = NavinShipmentClient::new(&env, &contract_id);
+let contract_id = env.register(AnchorShipment, ());
+let client = AnchorShipmentClient::new(&env, &contract_id);
 
 let admin = Address::generate(&env);
 let company = Address::generate(&env);
@@ -196,7 +196,7 @@ println!("Active shipments: {}", active);
 
 ## Error Handling
 
-All contract calls that return `Result<T, NavinError>` can fail. Handle errors gracefully:
+All contract calls that return `Result<T, AnchorError>` can fail. Handle errors gracefully:
 
 ```rust
 match client.try_deposit_escrow(&company, &shipment_id, &0) {

@@ -7,7 +7,7 @@
 
 #![cfg(test)]
 
-use crate::{NavinError, NavinShipment, NavinShipmentClient, ShipmentStatus};
+use crate::{AnchorError, AnchorShipment, AnchorShipmentClient, ShipmentStatus};
 use soroban_sdk::testutils::Address as _;
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, BytesN, Env, Symbol, Vec};
 
@@ -26,10 +26,10 @@ impl MilestoneOrderToken {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-fn setup() -> (Env, NavinShipmentClient<'static>, Address) {
+fn setup() -> (Env, AnchorShipmentClient<'static>, Address) {
     let (env, admin) = crate::test_utils::setup_env();
     let token = env.register(MilestoneOrderToken, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
     client.initialize(&admin, &token);
     (env, client, admin)
 }
@@ -42,7 +42,7 @@ fn data_hash(env: &Env, seed: u8) -> BytesN<32> {
 /// and an escrow deposit. Returns (shipment_id, company, carrier).
 fn create_milestone_shipment(
     env: &Env,
-    client: &NavinShipmentClient<'static>,
+    client: &AnchorShipmentClient<'static>,
     admin: &Address,
 ) -> (u64, Address, Address) {
     let company = Address::generate(env);
@@ -125,7 +125,7 @@ fn test_release_out_of_order_second_before_first_fails() {
     let result = client.try_release_milestone_payment(&carrier, &id, &symbol_short!("beta"));
     assert_eq!(
         result,
-        Err(Ok(NavinError::InvalidStatus)),
+        Err(Ok(AnchorError::InvalidStatus)),
         "releasing beta before alpha must be rejected"
     );
 }
@@ -139,7 +139,7 @@ fn test_release_out_of_order_third_first_fails() {
     let result = client.try_release_milestone_payment(&carrier, &id, &symbol_short!("gamma"));
     assert_eq!(
         result,
-        Err(Ok(NavinError::InvalidStatus)),
+        Err(Ok(AnchorError::InvalidStatus)),
         "releasing gamma before alpha and beta must be rejected"
     );
 }
@@ -157,7 +157,7 @@ fn test_release_third_blocked_after_one_paid() {
     let result = client.try_release_milestone_payment(&carrier, &id, &symbol_short!("gamma"));
     assert_eq!(
         result,
-        Err(Ok(NavinError::InvalidStatus)),
+        Err(Ok(AnchorError::InvalidStatus)),
         "gamma must still be blocked when only alpha is paid"
     );
 
@@ -180,7 +180,7 @@ fn test_release_same_milestone_twice_fails() {
     let result = client.try_release_milestone_payment(&carrier, &id, &symbol_short!("alpha"));
     assert_eq!(
         result,
-        Err(Ok(NavinError::MilestoneAlreadyPaid)),
+        Err(Ok(AnchorError::MilestoneAlreadyPaid)),
         "releasing alpha a second time must return MilestoneAlreadyPaid"
     );
 }
@@ -301,7 +301,7 @@ fn test_two_milestone_order_enforced() {
 
     // second before first must fail
     let result = client.try_release_milestone_payment(&carrier, &id, &symbol_short!("second"));
-    assert_eq!(result, Err(Ok(NavinError::InvalidStatus)));
+    assert_eq!(result, Err(Ok(AnchorError::InvalidStatus)));
 
     // first succeeds
     client.release_milestone_payment(&carrier, &id, &symbol_short!("first"));
@@ -320,5 +320,5 @@ fn test_unknown_milestone_rejected() {
 
     let bogus: Symbol = Symbol::new(&env, "bogus");
     let result = client.try_release_milestone_payment(&carrier, &id, &bogus);
-    assert_eq!(result, Err(Ok(NavinError::InvalidShipmentInput)));
+    assert_eq!(result, Err(Ok(AnchorError::InvalidShipmentInput)));
 }

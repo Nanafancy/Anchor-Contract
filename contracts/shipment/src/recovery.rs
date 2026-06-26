@@ -16,7 +16,7 @@
 //! - Escrow consistency verified before and after operations
 //! - All operations emit recovery events for audit trail
 
-use crate::{errors::NavinError, events, storage, types::*};
+use crate::{errors::AnchorError, events, storage, types::*};
 use soroban_sdk::{Address, BytesN, Env};
 
 /// Recovery reason types for audit trail
@@ -46,7 +46,7 @@ pub enum RecoveryReason {
 ///
 /// # Returns
 /// * `Ok(())` on successful recovery
-/// * `Err(NavinError)` if recovery fails
+/// * `Err(AnchorError)` if recovery fails
 ///
 /// # Safety Checks
 /// - Admin authorization required
@@ -65,12 +65,12 @@ pub fn recover_shipment(
     shipment_id: u64,
     target_status: ShipmentStatus,
     reason_hash: &BytesN<32>,
-) -> Result<(), NavinError> {
+) -> Result<(), AnchorError> {
     // Verify admin authorization
     admin.require_auth();
     crate::require_role(env, admin, Role::Company)?;
     if !storage::is_admin(env, admin) {
-        return Err(NavinError::Unauthorized);
+        return Err(AnchorError::Unauthorized);
     }
 
     // Validate reason hash is not all-zeros
@@ -78,16 +78,16 @@ pub fn recover_shipment(
 
     // Retrieve shipment
     let mut shipment =
-        storage::get_shipment(env, shipment_id).ok_or(NavinError::ShipmentNotFound)?;
+        storage::get_shipment(env, shipment_id).ok_or(AnchorError::ShipmentNotFound)?;
 
     // Verify shipment is not already in target state
     if shipment.status == target_status {
-        return Err(NavinError::InvalidStatus);
+        return Err(AnchorError::InvalidStatus);
     }
 
     // Validate target status is reachable from current state
     if !is_valid_recovery_transition(&shipment.status, &target_status) {
-        return Err(NavinError::InvalidStatus);
+        return Err(AnchorError::InvalidStatus);
     }
 
     // Store old state for audit
@@ -127,7 +127,7 @@ pub fn recover_shipment(
 ///
 /// # Returns
 /// * `Ok(())` on successful unlock
-/// * `Err(NavinError)` if unlock fails
+/// * `Err(AnchorError)` if unlock fails
 ///
 /// # Safety Checks
 /// - Admin authorization required
@@ -140,12 +140,12 @@ pub fn unlock_escrow(
     admin: &Address,
     shipment_id: u64,
     reason_hash: &BytesN<32>,
-) -> Result<(), NavinError> {
+) -> Result<(), AnchorError> {
     // Verify admin authorization
     admin.require_auth();
     crate::require_role(env, admin, Role::Company)?;
     if !storage::is_admin(env, admin) {
-        return Err(NavinError::Unauthorized);
+        return Err(AnchorError::Unauthorized);
     }
 
     // Validate reason hash
@@ -153,11 +153,11 @@ pub fn unlock_escrow(
 
     // Retrieve shipment
     let mut shipment =
-        storage::get_shipment(env, shipment_id).ok_or(NavinError::ShipmentNotFound)?;
+        storage::get_shipment(env, shipment_id).ok_or(AnchorError::ShipmentNotFound)?;
 
     // Verify escrow is locked (non-zero amount)
     if shipment.escrow_amount == 0 {
-        return Err(NavinError::EscrowLocked);
+        return Err(AnchorError::EscrowLocked);
     }
 
     // Store old escrow amount for audit
@@ -187,7 +187,7 @@ pub fn unlock_escrow(
 ///
 /// # Returns
 /// * `Ok(())` on successful clear
-/// * `Err(NavinError)` if clear fails
+/// * `Err(AnchorError)` if clear fails
 ///
 /// # Safety Checks
 /// - Admin authorization required
@@ -199,12 +199,12 @@ pub fn clear_finalization(
     admin: &Address,
     shipment_id: u64,
     reason_hash: &BytesN<32>,
-) -> Result<(), NavinError> {
+) -> Result<(), AnchorError> {
     // Verify admin authorization
     admin.require_auth();
     crate::require_role(env, admin, Role::Company)?;
     if !storage::is_admin(env, admin) {
-        return Err(NavinError::Unauthorized);
+        return Err(AnchorError::Unauthorized);
     }
 
     // Validate reason hash
@@ -212,11 +212,11 @@ pub fn clear_finalization(
 
     // Retrieve shipment
     let mut shipment =
-        storage::get_shipment(env, shipment_id).ok_or(NavinError::ShipmentNotFound)?;
+        storage::get_shipment(env, shipment_id).ok_or(AnchorError::ShipmentNotFound)?;
 
     // Verify shipment is finalized
     if !shipment.finalized {
-        return Err(NavinError::InvalidStatus);
+        return Err(AnchorError::InvalidStatus);
     }
 
     // Clear finalization flag
@@ -262,15 +262,15 @@ fn is_valid_recovery_transition(from: &ShipmentStatus, to: &ShipmentStatus) -> b
 ///
 /// Ensures that escrow amounts are valid and consistent with shipment state.
 #[allow(dead_code)]
-fn verify_escrow_consistency(_env: &Env, shipment: &Shipment) -> Result<(), NavinError> {
+fn verify_escrow_consistency(_env: &Env, shipment: &Shipment) -> Result<(), AnchorError> {
     // Escrow amount must be non-negative
     if shipment.escrow_amount < 0 {
-        return Err(NavinError::InvalidAmount);
+        return Err(AnchorError::InvalidAmount);
     }
 
     // Escrow amount cannot exceed total escrow
     if shipment.escrow_amount > shipment.total_escrow {
-        return Err(NavinError::InvalidAmount);
+        return Err(AnchorError::InvalidAmount);
     }
 
     // For terminal states, escrow should be zero or being released

@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-The Navin team takes security vulnerabilities seriously. We appreciate your efforts to responsibly disclose your findings.
+The Anchor team takes security vulnerabilities seriously. We appreciate your efforts to responsibly disclose your findings.
 
 ### Please DO NOT:
 
@@ -11,7 +11,7 @@ The Navin team takes security vulnerabilities seriously. We appreciate your effo
 
 ### Please DO:
 
-_Report security vulnerabilities to: navinxmr@gmail.com_
+_Report security vulnerabilities to: Anchorxmr@gmail.com_
 
 OR
 
@@ -75,10 +75,10 @@ We thank the following security researchers for responsibly disclosing vulnerabi
 
 ## Contact
 
-For security concerns: **navinxmr@gmail.com*
+For security concerns: **Anchorxmr@gmail.com*
 
 For general questions: Open a GitHub Discussion
 
 ---
 
-**Thank you for helping keep Navin secure!**
+**Thank you for helping keep Anchor secure!**

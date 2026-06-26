@@ -1,6 +1,6 @@
-# Contributing to Navin
+# Contributing to ANCHOR
 
-Thank you for your interest in contributing to Navin! We truly appreciate it!!
+Thank you for your interest in contributing to Anchor! We truly appreciate it!!
 This guide will help you get started and ensure your contributions can be smoothly integrated.
 
 ## Table of Contents
@@ -29,14 +29,14 @@ Before contributing, ensure you have the following installed:
 2. Clone your fork locally:
 
    ```bash
-   git clone https://github.com/YOUR-USERNAME/navin-contracts.git
-   cd navin-contracts
+   git clone https://github.com/YOUR-USERNAME/Anchor-contracts.git
+   cd Anchor-contracts
    ```
 
 3. Add the upstream repository: (So you can pull and sync new updates)
    NB: This is optional as you can just sync fork through github website
    ```bash
-   git remote add upstream https://github.com/Navin-xmr/navin-contracts.git
+   git remote add upstream https://github.com/Anchor-xmr/Anchor-contracts.git
    ```
 
 ## Development Setup
@@ -336,8 +336,8 @@ To ensure our contracts remain deployable on-chain, we enforce strict size limit
 #[test]
 fn test_withdraw_insufficient_funds() {
     let env = Env::default();
-   let contract_id = env.register_contract(None, NavinShipment);
-   let client = NavinShipmentClient::new(&env, &contract_id);
+   let contract_id = env.register_contract(None, AnchorShipment);
+   let client = AnchorShipmentClient::new(&env, &contract_id);
 
     let user = Address::generate(&env);
 
@@ -383,8 +383,8 @@ assert!(true, "Always passes");
 
 ## Getting Help
 
-- **Bugs**: Open an [Issue](https://github.com/Navin-xmr/navin-contracts/issues)
-- **Security**: Email navinxmr@gmail.com
+- **Bugs**: Open an [Issue](https://github.com/Anchor-xmr/Anchor-contracts/issues)
+- **Security**: Email Anchorxmr@gmail.com
 - **General**: Join our Telegram - [Telegram Group Chat](https://t.me/+3svwFsQME6k1YjI0)
 
 ## Review Process
@@ -423,5 +423,5 @@ git rebase main
 
 ---
 
-Thank you for contributing to Navin!
+Thank you for contributing to Anchor!
 Together, we're building a transparent and secure delivery tracking platform.

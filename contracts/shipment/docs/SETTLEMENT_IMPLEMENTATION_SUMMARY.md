@@ -119,10 +119,10 @@ This alternative is documented in `SETTLEMENT_STATE_MACHINE.md` for future consi
 
 ```rust
 /// Get a settlement record by ID
-pub fn get_settlement(env: Env, settlement_id: u64) -> Result<SettlementRecord, NavinError>
+pub fn get_settlement(env: Env, settlement_id: u64) -> Result<SettlementRecord, AnchorError>
 
 /// Get the active settlement ID for a shipment
-pub fn get_active_settlement(env: Env, shipment_id: u64) -> Result<Option<u64>, NavinError>
+pub fn get_active_settlement(env: Env, shipment_id: u64) -> Result<Option<u64>, AnchorError>
 
 /// Get the total number of settlements created
 pub fn get_settlement_count(env: Env) -> u64
@@ -136,7 +136,7 @@ pub fn cancel_active_settlement(
     env: Env,
     caller: Address,
     shipment_id: u64,
-) -> Result<(), NavinError>
+) -> Result<(), AnchorError>
 ```
 
 ## Error Codes

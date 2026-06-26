@@ -246,7 +246,7 @@
   },
   {
     "function_v0": {
-      "doc": "Pause the contract, disabling all state-changing operations.\\nOnly the admin can pause the contract. Read-only queries still work.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - The admin address pausing the contract.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok if successfully paused.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::Unauthorized` - If caller is not the admin.\\n\\n# Examples\\n```rust\\n// contract.pause(&env, &admin);\\n```",
+      "doc": "Pause the contract, disabling all state-changing operations.\\nOnly the admin can pause the contract. Read-only queries still work.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - The admin address pausing the contract.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok if successfully paused.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::Unauthorized` - If caller is not the admin.\\n\\n# Examples\\n```rust\\n// contract.pause(&env, &admin);\\n```",
       "name": "pause",
       "inputs": [
         {
@@ -265,7 +265,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -275,7 +275,7 @@
   },
   {
     "function_v0": {
-      "doc": "Unpause the contract, re-enabling state-changing operations.\\nOnly the admin can unpause the contract.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - The admin address unpausing the contract.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok if successfully unpaused.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::Unauthorized` - If caller is not the admin.\\n\\n# Examples\\n```rust\\n// contract.unpause(&env, &admin);\\n```",
+      "doc": "Unpause the contract, re-enabling state-changing operations.\\nOnly the admin can unpause the contract.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - The admin address unpausing the contract.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok if successfully unpaused.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::Unauthorized` - If caller is not the admin.\\n\\n# Examples\\n```rust\\n// contract.unpause(&env, &admin);\\n```",
       "name": "unpause",
       "inputs": [
         {
@@ -294,7 +294,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -304,7 +304,7 @@
   },
   {
     "function_v0": {
-      "doc": "Upgrade the contract to a new WASM implementation.\\nOnly the admin can trigger upgrades. State is preserved.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Contract admin executing the upgrade.\\n* `new_wasm_hash` - Hash pointer to the new WASM instance loaded on network.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on successful deployment upgrade instance.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::Unauthorized` - If caller isn't contract admin instance.\\n* `NavinError::CounterOverflow` - If total tracking version identifier pointer triggers overflow.\\n\\n# Examples\\n```rust\\n// contract.upgrade(env, admin, new_wasm_hash);\\n```",
+      "doc": "Upgrade the contract to a new WASM implementation.\\nOnly the admin can trigger upgrades. State is preserved.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Contract admin executing the upgrade.\\n* `new_wasm_hash` - Hash pointer to the new WASM instance loaded on network.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on successful deployment upgrade instance.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::Unauthorized` - If caller isn't contract admin instance.\\n* `AnchorError::CounterOverflow` - If total tracking version identifier pointer triggers overflow.\\n\\n# Examples\\n```rust\\n// contract.upgrade(env, admin, new_wasm_hash);\\n```",
       "name": "upgrade",
       "inputs": [
         {
@@ -332,7 +332,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -342,7 +342,7 @@
   },
   {
     "function_v0": {
-      "doc": "Returns the role assigned to a given address.\\nReturns Role::Unassigned if no role is assigned.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `address` - The address to check.\\n\\n# Returns\\n* `Result<Role, NavinError>` - The role assigned to the address.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// let role = contract.get_role(&env, &address);\\n```",
+      "doc": "Returns the role assigned to a given address.\\nReturns Role::Unassigned if no role is assigned.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `address` - The address to check.\\n\\n# Returns\\n* `Result<Role, AnchorError>` - The role assigned to the address.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// let role = contract.get_role(&env, &address);\\n```",
       "name": "get_role",
       "inputs": [
         {
@@ -361,7 +361,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -371,7 +371,7 @@
   },
   {
     "function_v0": {
-      "doc": "Get the contract admin address.\\n\\n# Arguments\\n* `env` - Execution environment.\\n\\n# Returns\\n* `Result<Address, NavinError>` - The current admin address.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// let admin = contract.get_admin(&env);\\n```",
+      "doc": "Get the contract admin address.\\n\\n# Arguments\\n* `env` - Execution environment.\\n\\n# Returns\\n* `Result<Address, AnchorError>` - The current admin address.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// let admin = contract.get_admin(&env);\\n```",
       "name": "get_admin",
       "inputs": [],
       "outputs": [
@@ -380,7 +380,7 @@
             "ok_type": "address",
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -390,7 +390,7 @@
   },
   {
     "function_v0": {
-      "doc": "Check if the contract is currently paused.\\nRead-only function, no authentication required.\\n\\n# Arguments\\n* `env` - Execution environment.\\n\\n# Returns\\n* `Result<bool, NavinError>` - True if paused, false otherwise.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// let paused = contract.is_paused(&env)?;\\n```",
+      "doc": "Check if the contract is currently paused.\\nRead-only function, no authentication required.\\n\\n# Arguments\\n* `env` - Execution environment.\\n\\n# Returns\\n* `Result<bool, AnchorError>` - True if paused, false otherwise.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// let paused = contract.is_paused(&env)?;\\n```",
       "name": "is_paused",
       "inputs": [],
       "outputs": [
@@ -399,7 +399,7 @@
             "ok_type": "bool",
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -409,7 +409,7 @@
   },
   {
     "function_v0": {
-      "doc": "Initialize the contract with an admin address and token contract address.\\nCan only be called once. Sets the admin and shipment counter to 0.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - The address designated as the administrator.\\n* `token_contract` - The address of the token contract used for escrow.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok if initialized.\\n\\n# Errors\\n* `NavinError::AlreadyInitialized` - If called when already initialized.\\n\\n# Examples\\n```rust\\n// contract.initialize(&env, &admin_addr, &token_addr);\\n```",
+      "doc": "Initialize the contract with an admin address and token contract address.\\nCan only be called once. Sets the admin and shipment counter to 0.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - The address designated as the administrator.\\n* `token_contract` - The address of the token contract used for escrow.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok if initialized.\\n\\n# Errors\\n* `AnchorError::AlreadyInitialized` - If called when already initialized.\\n\\n# Examples\\n```rust\\n// contract.initialize(&env, &admin_addr, &token_addr);\\n```",
       "name": "initialize",
       "inputs": [
         {
@@ -433,7 +433,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -443,7 +443,7 @@
   },
   {
     "function_v0": {
-      "doc": "Update ETA for a shipment.\\nOnly the designated registered carrier can update ETA.\\nETA must be strictly in the future.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `carrier` - Active assigned carrier modifying ETA.\\n* `shipment_id` - Identifiable tracker mapping to shipment.\\n* `eta_timestamp` - The estimated timestamp prediction in the future.\\n* `data_hash` - The mapped hash associated with the update.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on successful ETA registry.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::Unauthorized` - If caller isn't the assigned carrier.\\n* `NavinError::ShipmentNotFound` - If shipment instance targets missing entry.\\n* `NavinError::InvalidTimestamp` - If provided ETA is strictly in the past or present.\\n\\n# Examples\\n```rust\\n// contract.update_eta(&env, &carrier, 1, new_eta, &hash);\\n```",
+      "doc": "Update ETA for a shipment.\\nOnly the designated registered carrier can update ETA.\\nETA must be strictly in the future.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `carrier` - Active assigned carrier modifying ETA.\\n* `shipment_id` - Identifiable tracker mapping to shipment.\\n* `eta_timestamp` - The estimated timestamp prediction in the future.\\n* `data_hash` - The mapped hash associated with the update.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on successful ETA registry.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::Unauthorized` - If caller isn't the assigned carrier.\\n* `AnchorError::ShipmentNotFound` - If shipment instance targets missing entry.\\n* `AnchorError::InvalidTimestamp` - If provided ETA is strictly in the past or present.\\n\\n# Examples\\n```rust\\n// contract.update_eta(&env, &carrier, 1, new_eta, &hash);\\n```",
       "name": "update_eta",
       "inputs": [
         {
@@ -481,7 +481,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -491,7 +491,7 @@
   },
   {
     "function_v0": {
-      "doc": "Allow admin to grant Carrier role.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Contract admin executing the role grant.\\n* `carrier` - The address receiving the carrier role.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on successful role assignment.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::Unauthorized` - If called by a non-admin.\\n\\n# Examples\\n```rust\\n// contract.add_carrier(&env, &admin, &new_carrier_addr);\\n```",
+      "doc": "Allow admin to grant Carrier role.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Contract admin executing the role grant.\\n* `carrier` - The address receiving the carrier role.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on successful role assignment.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::Unauthorized` - If called by a non-admin.\\n\\n# Examples\\n```rust\\n// contract.add_carrier(&env, &admin, &new_carrier_addr);\\n```",
       "name": "add_carrier",
       "inputs": [
         {
@@ -515,7 +515,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -525,7 +525,7 @@
   },
   {
     "function_v0": {
-      "doc": "Allow admin to grant Company role.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Contract admin executing the role grant.\\n* `company` - The address receiving the company role.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on successful role assignment.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::Unauthorized` - If called by a non-admin.\\n\\n# Examples\\n```rust\\n// contract.add_company(&env, &admin, &new_company_addr);\\n```",
+      "doc": "Allow admin to grant Company role.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Contract admin executing the role grant.\\n* `company` - The address receiving the company role.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on successful role assignment.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::Unauthorized` - If called by a non-admin.\\n\\n# Examples\\n```rust\\n// contract.add_company(&env, &admin, &new_company_addr);\\n```",
       "name": "add_company",
       "inputs": [
         {
@@ -549,7 +549,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -559,7 +559,7 @@
   },
   {
     "function_v0": {
-      "doc": "Get the contract version number.\\n\\n# Arguments\\n* `env` - Execution environment.\\n\\n# Returns\\n* `Result<u32, NavinError>` - The version number of the contract.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// let version = contract.get_version(&env);\\n```",
+      "doc": "Get the contract version number.\\n\\n# Arguments\\n* `env` - Execution environment.\\n\\n# Returns\\n* `Result<u32, AnchorError>` - The version number of the contract.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// let version = contract.get_version(&env);\\n```",
       "name": "get_version",
       "inputs": [],
       "outputs": [
@@ -568,7 +568,7 @@
             "ok_type": "u32",
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -578,7 +578,7 @@
   },
   {
     "function_v0": {
-      "doc": "Revoke a previously assigned role from an address.\\n\\nOnly the admin can revoke roles. The admin cannot revoke their own role;\\nuse `transfer_admin` instead.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Contract admin executing the revocation.\\n* `target` - The address whose role is being revoked.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on successful role revocation.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::Unauthorized` - If called by a non-admin.\\n* `NavinError::CannotSelfRevoke` - If admin tries to revoke their own role.\\n\\n# Examples\\n```rust\\n// contract.revoke_role(&env, &admin, &target_addr);\\n```",
+      "doc": "Revoke a previously assigned role from an address.\\n\\nOnly the admin can revoke roles. The admin cannot revoke their own role;\\nuse `transfer_admin` instead.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Contract admin executing the revocation.\\n* `target` - The address whose role is being revoked.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on successful role revocation.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::Unauthorized` - If called by a non-admin.\\n* `AnchorError::CannotSelfRevoke` - If admin tries to revoke their own role.\\n\\n# Examples\\n```rust\\n// contract.revoke_role(&env, &admin, &target_addr);\\n```",
       "name": "revoke_role",
       "inputs": [
         {
@@ -602,7 +602,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -612,7 +612,7 @@
   },
   {
     "function_v0": {
-      "doc": "Allow admin to grant Guardian role.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Contract admin executing the role grant.\\n* `guardian` - The address receiving the guardian role.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on successful role assignment.",
+      "doc": "Allow admin to grant Guardian role.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Contract admin executing the role grant.\\n* `guardian` - The address receiving the guardian role.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on successful role assignment.",
       "name": "add_guardian",
       "inputs": [
         {
@@ -636,7 +636,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -646,7 +646,7 @@
   },
   {
     "function_v0": {
-      "doc": "Allow admin to grant Operator role.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Contract admin executing the role grant.\\n* `operator` - The address receiving the operator role.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on successful role assignment.",
+      "doc": "Allow admin to grant Operator role.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Contract admin executing the role grant.\\n* `operator` - The address receiving the operator role.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on successful role assignment.",
       "name": "add_operator",
       "inputs": [
         {
@@ -670,7 +670,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -680,7 +680,7 @@
   },
   {
     "function_v0": {
-      "doc": "Get a proposal by ID.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `proposal_id` - ID of the proposal.\\n\\n# Returns\\n* `Result<Proposal, NavinError>` - The proposal data.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::ProposalNotFound` - If proposal doesn't exist.\\n\\n# Examples\\n```rust\\n// let proposal = contract.get_proposal(&env, 1);\\n```",
+      "doc": "Get a proposal by ID.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `proposal_id` - ID of the proposal.\\n\\n# Returns\\n* `Result<Proposal, AnchorError>` - The proposal data.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::ProposalNotFound` - If proposal doesn't exist.\\n\\n# Examples\\n```rust\\n// let proposal = contract.get_proposal(&env, 1);\\n```",
       "name": "get_proposal",
       "inputs": [
         {
@@ -699,7 +699,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -709,7 +709,7 @@
   },
   {
     "function_v0": {
-      "doc": "Retrieve shipment details by ID.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - ID of the shipment to fetch.\\n\\n# Returns\\n* `Result<Shipment, NavinError>` - Reconstructed shipment struct.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::ShipmentNotFound` - If shipment does not exist.\\n\\n# Examples\\n```rust\\n// let shipment = contract.get_shipment(&env, 1);\\n```",
+      "doc": "Retrieve shipment details by ID.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - ID of the shipment to fetch.\\n\\n# Returns\\n* `Result<Shipment, AnchorError>` - Reconstructed shipment struct.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::ShipmentNotFound` - If shipment does not exist.\\n\\n# Examples\\n```rust\\n// let shipment = contract.get_shipment(&env, 1);\\n```",
       "name": "get_shipment",
       "inputs": [
         {
@@ -728,7 +728,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -738,7 +738,7 @@
   },
   {
     "function_v0": {
-      "doc": "Suspend a role temporarily (e.g., for investigation or compliance review).\\n\\nOnly the admin can suspend roles. Suspended addresses retain their role\\nassignment but cannot perform role-gated actions until reactivated.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Contract admin executing the suspension.\\n* `target` - The address whose role is being suspended.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on successful suspension.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::Unauthorized` - If called by a non-admin.\\n* `NavinError::CannotSelfRevoke` - If admin tries to suspend their own role.\\n\\n# Examples\\n```rust\\n// contract.suspend_role(&env, &admin, &target_addr);\\n```",
+      "doc": "Suspend a role temporarily (e.g., for investigation or compliance review).\\n\\nOnly the admin can suspend roles. Suspended addresses retain their role\\nassignment but cannot perform role-gated actions until reactivated.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Contract admin executing the suspension.\\n* `target` - The address whose role is being suspended.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on successful suspension.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::Unauthorized` - If called by a non-admin.\\n* `AnchorError::CannotSelfRevoke` - If admin tries to suspend their own role.\\n\\n# Examples\\n```rust\\n// contract.suspend_role(&env, &admin, &target_addr);\\n```",
       "name": "suspend_role",
       "inputs": [
         {
@@ -762,7 +762,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -772,7 +772,7 @@
   },
   {
     "function_v0": {
-      "doc": "Get aggregated analytics for the contract.\\n\\n# Arguments\\n* `env` - Execution environment.\\n\\n# Returns\\n* `Result<Analytics, NavinError>` - Aggregated analytics data.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.",
+      "doc": "Get aggregated analytics for the contract.\\n\\n# Arguments\\n* `env` - Execution environment.\\n\\n# Returns\\n* `Result<Analytics, AnchorError>` - Aggregated analytics data.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.",
       "name": "get_analytics",
       "inputs": [],
       "outputs": [
@@ -785,7 +785,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -795,7 +795,7 @@
   },
   {
     "function_v0": {
-      "doc": "Get a specific note hash for a shipment by its sequence index.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - ID of the shipment.\\n* `index` - The 0-based index of the note.\\n\\n# Returns\\n* `Result<Option<BytesN<32>>, NavinError>` - The note hash if found.",
+      "doc": "Get a specific note hash for a shipment by its sequence index.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - ID of the shipment.\\n* `index` - The 0-based index of the note.\\n\\n# Returns\\n* `Result<Option<BytesN<32>>, AnchorError>` - The note hash if found.",
       "name": "get_note_hash",
       "inputs": [
         {
@@ -823,7 +823,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -833,7 +833,7 @@
   },
   {
     "function_v0": {
-      "doc": "Initialize multi-signature configuration for critical admin actions.\\nOnly the current admin can call this. Must be called after contract initialization.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Current administrator address.\\n* `admins` - List of admin addresses for multi-sig (2-10 addresses).\\n* `threshold` - Number of approvals required (must be <= admin count).\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok if multi-sig is configured.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::Unauthorized` - If caller is not the admin.\\n* `NavinError::InvalidMultiSigConfig` - If config is invalid.\\n\\n# Examples\\n```rust\\n// let admins = vec![&env, admin1, admin2, admin3];\\n// contract.init_multisig(&env, &admin, &admins, 2);\\n```",
+      "doc": "Initialize multi-signature configuration for critical admin actions.\\nOnly the current admin can call this. Must be called after contract initialization.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Current administrator address.\\n* `admins` - List of admin addresses for multi-sig (2-10 addresses).\\n* `threshold` - Number of approvals required (must be <= admin count).\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok if multi-sig is configured.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::Unauthorized` - If caller is not the admin.\\n* `AnchorError::InvalidMultiSigConfig` - If config is invalid.\\n\\n# Examples\\n```rust\\n// let admins = vec![&env, admin1, admin2, admin3];\\n// contract.init_multisig(&env, &admin, &admins, 2);\\n```",
       "name": "init_multisig",
       "inputs": [
         {
@@ -866,7 +866,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -876,7 +876,7 @@
   },
   {
     "function_v0": {
-      "doc": "Raise a dispute for a shipment.\\nOnly the sender, receiver, or carrier can raise a dispute.\\nShipment must not be Cancelled or already Disputed.\\n\\n# Arguments\\n* `env` - Execution environment tracking context.\\n* `caller` - Identity specifying resolution event raising instances configuration contexts.\\n* `shipment_id` - Object tracker index identifying execution scope handlers.\\n* `reason_hash` - Encoded offchain metadata representation parameter validation identifier limits strings pointers.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on successful dispute registry logging.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::ShipmentNotFound` - If parameters index unresolvable target references configurations identifiers constraints matches.\\n* `NavinError::Unauthorized` - If resolving constraints mapping fails identifiers scopes validations check mapping instances boundaries checks definitions roles mapping assignments properties permissions restrictions validations pointers ide",
+      "doc": "Raise a dispute for a shipment.\\nOnly the sender, receiver, or carrier can raise a dispute.\\nShipment must not be Cancelled or already Disputed.\\n\\n# Arguments\\n* `env` - Execution environment tracking context.\\n* `caller` - Identity specifying resolution event raising instances configuration contexts.\\n* `shipment_id` - Object tracker index identifying execution scope handlers.\\n* `reason_hash` - Encoded offchain metadata representation parameter validation identifier limits strings pointers.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on successful dispute registry logging.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::ShipmentNotFound` - If parameters index unresolvable target references configurations identifiers constraints matches.\\n* `AnchorError::Unauthorized` - If resolving constraints mapping fails identifiers scopes validations check mapping instances boundaries checks definitions roles mapping assignments properties permissions restrictions validations pointers ide",
       "name": "raise_dispute",
       "inputs": [
         {
@@ -909,7 +909,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -919,7 +919,7 @@
   },
   {
     "function_v0": {
-      "doc": "Refund escrowed funds to the company if shipment is cancelled.\\nOnly the sender (Company) or admin can trigger refund.\\nShipment must be in Created or Cancelled status.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `caller` - Reference mapping handler execution triggers for scope access control checks.\\n* `shipment_id` - Identification marker mapping.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on successful refund sequence generation.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::ShipmentNotFound` - If valid identifiers track undefined mappings instances.\\n* `NavinError::Unauthorized` - If execution identity doesn't resolve matching configurations contexts mappings.\\n* `NavinError::InvalidStatus` - If mapping resolves illegal flow mappings configuration combinations triggers.\\n* `NavinError::InsufficientFunds` - If token escrow state points map uninitialized quantities values scope checks.\\n\\n# Examples\\n```rust\\n// contract.refund_escrow(env, sender, 1);\\n```",
+      "doc": "Refund escrowed funds to the company if shipment is cancelled.\\nOnly the sender (Company) or admin can trigger refund.\\nShipment must be in Created or Cancelled status.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `caller` - Reference mapping handler execution triggers for scope access control checks.\\n* `shipment_id` - Identification marker mapping.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on successful refund sequence generation.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::ShipmentNotFound` - If valid identifiers track undefined mappings instances.\\n* `AnchorError::Unauthorized` - If execution identity doesn't resolve matching configurations contexts mappings.\\n* `AnchorError::InvalidStatus` - If mapping resolves illegal flow mappings configuration combinations triggers.\\n* `AnchorError::InsufficientFunds` - If token escrow state points map uninitialized quantities values scope checks.\\n\\n# Examples\\n```rust\\n// contract.refund_escrow(env, sender, 1);\\n```",
       "name": "refund_escrow",
       "inputs": [
         {
@@ -943,7 +943,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -953,7 +953,7 @@
   },
   {
     "function_v0": {
-      "doc": "Update the contract configuration.\\nOnly the admin can update the configuration.\\nEmits a `config_updated` event on success.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Contract admin address.\\n* `new_config` - The new configuration to apply.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok if successfully updated.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::Unauthorized` - If caller is not the admin.\\n* `NavinError::InvalidConfig` - If the configuration is invalid.\\n\\n# Examples\\n```rust\\n// let mut config = ContractConfig::default();\\n// config.batch_operation_limit = 20;\\n// contract.update_config(&env, &admin, config);\\n```",
+      "doc": "Update the contract configuration.\\nOnly the admin can update the configuration.\\nEmits a `config_updated` event on success.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Contract admin address.\\n* `new_config` - The new configuration to apply.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok if successfully updated.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::Unauthorized` - If caller is not the admin.\\n* `AnchorError::InvalidConfig` - If the configuration is invalid.\\n\\n# Examples\\n```rust\\n// let mut config = ContractConfig::default();\\n// config.batch_operation_limit = 20;\\n// contract.update_config(&env, &admin, config);\\n```",
       "name": "update_config",
       "inputs": [
         {
@@ -981,7 +981,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -991,7 +991,7 @@
   },
   {
     "function_v0": {
-      "doc": "Update shipment status with transition validation.\\nOnly the carrier or admin can update the status.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `caller` - Carrier or admin address making the update.\\n* `shipment_id` - Current shipment identifier.\\n* `new_status` - The destination transitional status.\\n* `data_hash` - The off-chain data hash tracking context for update.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on valid transition.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::ShipmentNotFound` - If shipment doesn't exist.\\n* `NavinError::Unauthorized` - If caller is neither the carrier nor admin.\\n* `NavinError::CarrierSuspended` - If the assigned carrier is suspended.\\n* `NavinError::RateLimitExceeded` - If status was updated too recently (unless Admin).\\n* `NavinError::InvalidStatus` - If transitioning to an improperly sequenced state.\\n\\n# Examples\\n```rust\\n// contract.update_status(&env, &carrier, 1, ShipmentStatus::InTransit, &hash);\\n```",
+      "doc": "Update shipment status with transition validation.\\nOnly the carrier or admin can update the status.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `caller` - Carrier or admin address making the update.\\n* `shipment_id` - Current shipment identifier.\\n* `new_status` - The destination transitional status.\\n* `data_hash` - The off-chain data hash tracking context for update.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on valid transition.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::ShipmentNotFound` - If shipment doesn't exist.\\n* `AnchorError::Unauthorized` - If caller is neither the carrier nor admin.\\n* `AnchorError::CarrierSuspended` - If the assigned carrier is suspended.\\n* `AnchorError::RateLimitExceeded` - If status was updated too recently (unless Admin).\\n* `AnchorError::InvalidStatus` - If transitioning to an improperly sequenced state.\\n\\n# Examples\\n```rust\\n// contract.update_status(&env, &carrier, 1, ShipmentStatus::InTransit, &hash);\\n```",
       "name": "update_status",
       "inputs": [
         {
@@ -1033,7 +1033,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1043,7 +1043,7 @@
   },
   {
     "function_v0": {
-      "doc": "Approve a pending proposal. Only admins in the admin list can approve.\\nSame admin cannot approve twice.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `approver` - Admin address approving the proposal.\\n* `proposal_id` - ID of the proposal to approve.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok if approved successfully.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::NotAnAdmin` - If caller is not in the admin list.\\n* `NavinError::ProposalNotFound` - If proposal doesn't exist.\\n* `NavinError::ProposalExpired` - If proposal has expired.\\n* `NavinError::ProposalAlreadyExecuted` - If proposal was already executed.\\n* `NavinError::AlreadyApproved` - If admin already approved this proposal.\\n\\n# Examples\\n```rust\\n// contract.approve_action(&env, &admin2, 1);\\n```",
+      "doc": "Approve a pending proposal. Only admins in the admin list can approve.\\nSame admin cannot approve twice.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `approver` - Admin address approving the proposal.\\n* `proposal_id` - ID of the proposal to approve.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok if approved successfully.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::NotAnAdmin` - If caller is not in the admin list.\\n* `AnchorError::ProposalNotFound` - If proposal doesn't exist.\\n* `AnchorError::ProposalExpired` - If proposal has expired.\\n* `AnchorError::ProposalAlreadyExecuted` - If proposal was already executed.\\n* `AnchorError::AlreadyApproved` - If admin already approved this proposal.\\n\\n# Examples\\n```rust\\n// contract.approve_action(&env, &admin2, 1);\\n```",
       "name": "approve_action",
       "inputs": [
         {
@@ -1067,7 +1067,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1077,7 +1077,7 @@
   },
   {
     "function_v0": {
-      "doc": "Cancel a shipment and auto-refund escrow if its delivery deadline has passed.\\nPermissionless design \\xe2\\x80\\x94 can be triggered by any caller (e.g., automated cron/crank).\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - ID of the target shipment.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok if successfully cancelled and escrow refunded.\\n\\n# Errors\\n* `NavinError::NotExpired` - If the current ledger time hasn't passed the deadline.\\n* `NavinError::ShipmentAlreadyCompleted` - If the shipment is already in a terminal state.",
+      "doc": "Cancel a shipment and auto-refund escrow if its delivery deadline has passed.\\nPermissionless design \\xe2\\x80\\x94 can be triggered by any caller (e.g., automated cron/crank).\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - ID of the target shipment.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok if successfully cancelled and escrow refunded.\\n\\n# Errors\\n* `AnchorError::NotExpired` - If the current ledger time hasn't passed the deadline.\\n* `AnchorError::ShipmentAlreadyCompleted` - If the shipment is already in a terminal state.",
       "name": "check_deadline",
       "inputs": [
         {
@@ -1096,7 +1096,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1106,7 +1106,7 @@
   },
   {
     "function_v0": {
-      "doc": "Deposit escrow funds for a shipment.\\nOnly a Company can deposit, and the shipment must be in Created status.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `from` - Company address providing escrow.\\n* `shipment_id` - Target shipment.\\n* `amount` - Balance of tokens deposited into escrow.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on successful deposit.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::Unauthorized` - If caller isn't a Company.\\n* `NavinError::InvalidAmount` - If amount is zero, negative, or exceeds the maximum.\\n* `NavinError::ShipmentNotFound` - If shipment is untracked.\\n* `NavinError::InvalidStatus` - If shipment is not in `Created` status.\\n* `NavinError::EscrowLocked` - If escrow is already deposited for shipment.\\n\\n# Examples\\n```rust\\n// contract.deposit_escrow(&env, &company, 1, 5000000);\\n```",
+      "doc": "Deposit escrow funds for a shipment.\\nOnly a Company can deposit, and the shipment must be in Created status.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `from` - Company address providing escrow.\\n* `shipment_id` - Target shipment.\\n* `amount` - Balance of tokens deposited into escrow.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on successful deposit.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::Unauthorized` - If caller isn't a Company.\\n* `AnchorError::InvalidAmount` - If amount is zero, negative, or exceeds the maximum.\\n* `AnchorError::ShipmentNotFound` - If shipment is untracked.\\n* `AnchorError::InvalidStatus` - If shipment is not in `Created` status.\\n* `AnchorError::EscrowLocked` - If escrow is already deposited for shipment.\\n\\n# Examples\\n```rust\\n// contract.deposit_escrow(&env, &company, 1, 5000000);\\n```",
       "name": "deposit_escrow",
       "inputs": [
         {
@@ -1135,7 +1135,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1145,7 +1145,7 @@
   },
   {
     "function_v0": {
-      "doc": "Get the total number of notes appended to a shipment.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - ID of the shipment.\\n\\n# Returns\\n* `Result<u32, NavinError>` - Number of notes for the shipment.",
+      "doc": "Get the total number of notes appended to a shipment.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - ID of the shipment.\\n\\n# Returns\\n* `Result<u32, AnchorError>` - Number of notes for the shipment.",
       "name": "get_note_count",
       "inputs": [
         {
@@ -1160,7 +1160,7 @@
             "ok_type": "u32",
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1170,7 +1170,7 @@
   },
   {
     "function_v0": {
-      "doc": "Propose a critical admin action that requires multi-sig approval.\\nOnly admins in the admin list can propose actions.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `proposer` - Admin address creating the proposal.\\n* `action` - The action to be executed after approval.\\n\\n# Returns\\n* `Result<u64, NavinError>` - The proposal ID.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::NotAnAdmin` - If caller is not in the admin list.\\n\\n# Examples\\n```rust\\n// let action = AdminAction::Upgrade(new_wasm_hash);\\n// let proposal_id = contract.propose_action(&env, &admin, &action);\\n```",
+      "doc": "Propose a critical admin action that requires multi-sig approval.\\nOnly admins in the admin list can propose actions.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `proposer` - Admin address creating the proposal.\\n* `action` - The action to be executed after approval.\\n\\n# Returns\\n* `Result<u64, AnchorError>` - The proposal ID.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::NotAnAdmin` - If caller is not in the admin list.\\n\\n# Examples\\n```rust\\n// let action = AdminAction::Upgrade(new_wasm_hash);\\n// let proposal_id = contract.propose_action(&env, &admin, &action);\\n```",
       "name": "propose_action",
       "inputs": [
         {
@@ -1194,7 +1194,7 @@
             "ok_type": "u64",
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1204,7 +1204,7 @@
   },
   {
     "function_v0": {
-      "doc": "Release escrowed funds to the carrier after delivery confirmation.\\nOnly the receiver or admin can trigger release.\\nShipment must be in Delivered status.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `caller` - Originating user triggering escrow delivery (receiver/admin).\\n* `shipment_id` - Tracking assignment associated with delivery payload instances.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on successful asset delivery.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::ShipmentNotFound` - If tracking context specifies an invalid shipment.\\n* `NavinError::Unauthorized` - If caller isn't receiver or admin.\\n* `NavinError::InvalidStatus` - If contract expects specific lifecycle constraint and differs.\\n* `NavinError::InsufficientFunds` - If payload is fully released and balances are zeroed out.\\n\\n# Examples\\n```rust\\n// contract.release_escrow(env, receiver, 1);\\n```",
+      "doc": "Release escrowed funds to the carrier after delivery confirmation.\\nOnly the receiver or admin can trigger release.\\nShipment must be in Delivered status.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `caller` - Originating user triggering escrow delivery (receiver/admin).\\n* `shipment_id` - Tracking assignment associated with delivery payload instances.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on successful asset delivery.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::ShipmentNotFound` - If tracking context specifies an invalid shipment.\\n* `AnchorError::Unauthorized` - If caller isn't receiver or admin.\\n* `AnchorError::InvalidStatus` - If contract expects specific lifecycle constraint and differs.\\n* `AnchorError::InsufficientFunds` - If payload is fully released and balances are zeroed out.\\n\\n# Examples\\n```rust\\n// contract.release_escrow(env, receiver, 1);\\n```",
       "name": "release_escrow",
       "inputs": [
         {
@@ -1228,7 +1228,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1262,7 +1262,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1272,7 +1272,7 @@
   },
   {
     "function_v0": {
-      "doc": "Cancel a shipment before it is delivered.\\nOnly the Company (sender) or Admin can cancel.\\nShipment must not be Delivered or Disputed.\\nIf escrow exists, triggers automatic refund to the Company.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `caller` - Executing Company or Admin address.\\n* `shipment_id` - ID specifying cancelled shipment instance.\\n* `reason_hash` - The mapped hash associated to the cancellation context.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on cancellation.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::ShipmentNotFound` - If tracking context is invalid list element.\\n* `NavinError::Unauthorized` - If called by unauthorized accounts.\\n* `NavinError::ShipmentAlreadyCompleted` - If tracking context specified reached terminal states.\\n\\n# Examples\\n```rust\\n// contract.cancel_shipment(&env, &admin, 1, &hash);\\n```",
+      "doc": "Cancel a shipment before it is delivered.\\nOnly the Company (sender) or Admin can cancel.\\nShipment must not be Delivered or Disputed.\\nIf escrow exists, triggers automatic refund to the Company.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `caller` - Executing Company or Admin address.\\n* `shipment_id` - ID specifying cancelled shipment instance.\\n* `reason_hash` - The mapped hash associated to the cancellation context.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on cancellation.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::ShipmentNotFound` - If tracking context is invalid list element.\\n* `AnchorError::Unauthorized` - If called by unauthorized accounts.\\n* `AnchorError::ShipmentAlreadyCompleted` - If tracking context specified reached terminal states.\\n\\n# Examples\\n```rust\\n// contract.cancel_shipment(&env, &admin, 1, &hash);\\n```",
       "name": "cancel_shipment",
       "inputs": [
         {
@@ -1305,7 +1305,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1315,7 +1315,7 @@
   },
   {
     "function_v0": {
-      "doc": "Create a shipment and emit the shipment_created event.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `sender` - Company address creating the shipment.\\n* `receiver` - Destination address for the shipment.\\n* `carrier` - Carrier address assigned to the shipment.\\n* `data_hash` - Off-chain data hash of shipment details.\\n* `payment_milestones` - Schedule for escrow releases based on checkpoints.\\n* `deadline` - Timestamp after which shipment is considered expired and can be auto-cancelled.\\n\\n# Returns\\n* `Result<u64, NavinError>` - Newly created shipment ID.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::Unauthorized` - If caller isn't a Company.\\n* `NavinError::InvalidHash` - If data_hash is all zeros.\\n* `NavinError::MilestoneSumInvalid` - If milestone percentages do not equal 100%.\\n* `NavinError::CounterOverflow` - If total shipment count overflows max u64.\\n* `NavinError::InvalidTimestamp` - If the deadline is not strictly in the future.\\n\\n# Examples\\n```rust\\n// let id = con",
+      "doc": "Create a shipment and emit the shipment_created event.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `sender` - Company address creating the shipment.\\n* `receiver` - Destination address for the shipment.\\n* `carrier` - Carrier address assigned to the shipment.\\n* `data_hash` - Off-chain data hash of shipment details.\\n* `payment_milestones` - Schedule for escrow releases based on checkpoints.\\n* `deadline` - Timestamp after which shipment is considered expired and can be auto-cancelled.\\n\\n# Returns\\n* `Result<u64, AnchorError>` - Newly created shipment ID.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::Unauthorized` - If caller isn't a Company.\\n* `AnchorError::InvalidHash` - If data_hash is all zeros.\\n* `AnchorError::MilestoneSumInvalid` - If milestone percentages do not equal 100%.\\n* `AnchorError::CounterOverflow` - If total shipment count overflows max u64.\\n* `AnchorError::InvalidTimestamp` - If the deadline is not strictly in the future.\\n\\n# Examples\\n```rust\\n// let id = con",
       "name": "create_shipment",
       "inputs": [
         {
@@ -1370,7 +1370,7 @@
             "ok_type": "u64",
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1380,7 +1380,7 @@
   },
   {
     "function_v0": {
-      "doc": "Get the event count for a shipment.\\nReturns the number of events emitted for this shipment.\\nReturns 0 for brand-new shipments or shipments with no events yet.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - ID of the shipment.\\n\\n# Returns\\n* `Result<u32, NavinError>` - The number of events emitted for this shipment.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::ShipmentNotFound` - If shipment does not exist.\\n\\n# Examples\\n```rust\\n// let event_count = contract.get_event_count(&env, 1);\\n```",
+      "doc": "Get the event count for a shipment.\\nReturns the number of events emitted for this shipment.\\nReturns 0 for brand-new shipments or shipments with no events yet.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - ID of the shipment.\\n\\n# Returns\\n* `Result<u32, AnchorError>` - The number of events emitted for this shipment.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::ShipmentNotFound` - If shipment does not exist.\\n\\n# Examples\\n```rust\\n// let event_count = contract.get_event_count(&env, 1);\\n```",
       "name": "get_event_count",
       "inputs": [
         {
@@ -1395,7 +1395,7 @@
             "ok_type": "u32",
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1405,7 +1405,7 @@
   },
   {
     "function_v0": {
-      "doc": "Get the status hash for a shipment at a specific status point.\\nRead-only function, no authentication required.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - The ID of the shipment.\\n* `status` - The status to retrieve the hash for.\\n\\n# Returns\\n* `Result<BytesN<32>, NavinError>` - The data hash recorded at that status.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::ShipmentNotFound` - If the shipment doesn't exist.\\n* `NavinError::StatusHashNotFound` - If no hash was recorded for that status.\\n\\n# Examples\\n```rust\\n// let hash = contract.get_status_hash(&env, 1, &ShipmentStatus::InTransit)?;\\n```",
+      "doc": "Get the status hash for a shipment at a specific status point.\\nRead-only function, no authentication required.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - The ID of the shipment.\\n* `status` - The status to retrieve the hash for.\\n\\n# Returns\\n* `Result<BytesN<32>, AnchorError>` - The data hash recorded at that status.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::ShipmentNotFound` - If the shipment doesn't exist.\\n* `AnchorError::StatusHashNotFound` - If no hash was recorded for that status.\\n\\n# Examples\\n```rust\\n// let hash = contract.get_status_hash(&env, 1, &ShipmentStatus::InTransit)?;\\n```",
       "name": "get_status_hash",
       "inputs": [
         {
@@ -1433,7 +1433,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1443,7 +1443,7 @@
   },
   {
     "function_v0": {
-      "doc": "Reactivate a previously suspended role.\\n\\nOnly the admin can reactivate roles. This restores the address's\\nability to perform role-gated actions.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Contract admin executing the reactivation.\\n* `target` - The address whose role is being reactivated.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on successful reactivation.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::Unauthorized` - If called by a non-admin or target not suspended.\\n\\n# Examples\\n```rust\\n// contract.reactivate_role(&env, &admin, &target_addr);\\n```",
+      "doc": "Reactivate a previously suspended role.\\n\\nOnly the admin can reactivate roles. This restores the address's\\nability to perform role-gated actions.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Contract admin executing the reactivation.\\n* `target` - The address whose role is being reactivated.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on successful reactivation.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::Unauthorized` - If called by a non-admin or target not suspended.\\n\\n# Examples\\n```rust\\n// contract.reactivate_role(&env, &admin, &target_addr);\\n```",
       "name": "reactivate_role",
       "inputs": [
         {
@@ -1467,7 +1467,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1477,7 +1477,7 @@
   },
   {
     "function_v0": {
-      "doc": "Resolve a shipment dispute. Only the admin can call this.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Contract admin address.\\n* `shipment_id` - ID of the shipment.\\n* `resolution` - Target resolution (Release to Carrier or Refund to Company).\\n* `reason_hash` - SHA-256 hash of the off-chain justification document.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok if successfully resolved.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::ShipmentNotFound` - If the shipment doesn't exist.\\n* `NavinError::Unauthorized` - If called by a non-admin.\\n* `NavinError::DisputeResolutionReasonHashMissing` - If reason_hash is all zeros.",
+      "doc": "Resolve a shipment dispute. Only the admin can call this.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Contract admin address.\\n* `shipment_id` - ID of the shipment.\\n* `resolution` - Target resolution (Release to Carrier or Refund to Company).\\n* `reason_hash` - SHA-256 hash of the off-chain justification document.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok if successfully resolved.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::ShipmentNotFound` - If the shipment doesn't exist.\\n* `AnchorError::Unauthorized` - If called by a non-admin.\\n* `AnchorError::DisputeResolutionReasonHashMissing` - If reason_hash is all zeros.",
       "name": "resolve_dispute",
       "inputs": [
         {
@@ -1519,7 +1519,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1553,7 +1553,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1587,7 +1587,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1597,7 +1597,7 @@
   },
   {
     "function_v0": {
-      "doc": "Append a hash-only note to a shipment for commentary.\\nOnly the sender, receiver, assigned carrier, or admin can append notes.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `reporter` - The address appending the note.\\n* `shipment_id` - ID of the shipment.\\n* `note_hash` - SHA-256 hash of the off-chain note text.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok if successfully appended.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::ShipmentNotFound` - If the shipment doesn't exist.\\n* `NavinError::Unauthorized` - If the caller is not involved in the shipment or admin.",
+      "doc": "Append a hash-only note to a shipment for commentary.\\nOnly the sender, receiver, assigned carrier, or admin can append notes.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `reporter` - The address appending the note.\\n* `shipment_id` - ID of the shipment.\\n* `note_hash` - SHA-256 hash of the off-chain note text.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok if successfully appended.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::ShipmentNotFound` - If the shipment doesn't exist.\\n* `AnchorError::Unauthorized` - If the caller is not involved in the shipment or admin.",
       "name": "append_note_hash",
       "inputs": [
         {
@@ -1630,7 +1630,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1640,7 +1640,7 @@
   },
   {
     "function_v0": {
-      "doc": "Archive a shipment by moving it from persistent to temporary storage.\\nThis reduces state rent costs for completed shipments.\\nOnly admin can archive, and shipment must be in a terminal state (Delivered or Cancelled).\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Admin address performing the archival.\\n* `shipment_id` - ID of the shipment to archive.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok if successfully archived.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::Unauthorized` - If caller is not the admin.\\n* `NavinError::ShipmentNotFound` - If shipment does not exist.\\n* `NavinError::InvalidStatus` - If shipment is not in a terminal state (Delivered or Cancelled).\\n\\n# Examples\\n```rust\\n// contract.archive_shipment(&env, &admin, 1);\\n```",
+      "doc": "Archive a shipment by moving it from persistent to temporary storage.\\nThis reduces state rent costs for completed shipments.\\nOnly admin can archive, and shipment must be in a terminal state (Delivered or Cancelled).\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Admin address performing the archival.\\n* `shipment_id` - ID of the shipment to archive.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok if successfully archived.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::Unauthorized` - If caller is not the admin.\\n* `AnchorError::ShipmentNotFound` - If shipment does not exist.\\n* `AnchorError::InvalidStatus` - If shipment is not in a terminal state (Delivered or Cancelled).\\n\\n# Examples\\n```rust\\n// contract.archive_shipment(&env, &admin, 1);\\n```",
       "name": "archive_shipment",
       "inputs": [
         {
@@ -1664,7 +1664,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1674,7 +1674,7 @@
   },
   {
     "function_v0": {
-      "doc": "Confirm delivery of a shipment.\\nOnly the designated receiver can call this function.\\nShipment must be in InTransit or AtCheckpoint status.\\nStores the confirmation_hash (hash of proof-of-delivery data) and\\ntransitions the shipment status to Delivered.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `receiver` - Receiver address confirming the delivery.\\n* `shipment_id` - Identifier of delivered shipment.\\n* `confirmation_hash` - The proof-of-delivery hash.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on successful confirmation.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::ShipmentNotFound` - If shipment does not exist.\\n* `NavinError::Unauthorized` - If called by an address other than the shipment receiver.\\n* `NavinError::InvalidStatus` - If shipment is not in a transitable status to Delivered.\\n\\n# Examples\\n```rust\\n// contract.confirm_delivery(&env, &receiver_addr, 1, 5000000);\\n```",
+      "doc": "Confirm delivery of a shipment.\\nOnly the designated receiver can call this function.\\nShipment must be in InTransit or AtCheckpoint status.\\nStores the confirmation_hash (hash of proof-of-delivery data) and\\ntransitions the shipment status to Delivered.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `receiver` - Receiver address confirming the delivery.\\n* `shipment_id` - Identifier of delivered shipment.\\n* `confirmation_hash` - The proof-of-delivery hash.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on successful confirmation.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::ShipmentNotFound` - If shipment does not exist.\\n* `AnchorError::Unauthorized` - If called by an address other than the shipment receiver.\\n* `AnchorError::InvalidStatus` - If shipment is not in a transitable status to Delivered.\\n\\n# Examples\\n```rust\\n// contract.confirm_delivery(&env, &receiver_addr, 1, 5000000);\\n```",
       "name": "confirm_delivery",
       "inputs": [
         {
@@ -1707,7 +1707,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1717,7 +1717,7 @@
   },
   {
     "function_v0": {
-      "doc": "Execute a proposal that has met the approval threshold.\\nCan be called by anyone once threshold is met.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `proposal_id` - ID of the proposal to execute.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok if executed successfully.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::ProposalNotFound` - If proposal doesn't exist.\\n* `NavinError::ProposalExpired` - If proposal has expired.\\n* `NavinError::ProposalAlreadyExecuted` - If proposal was already executed.\\n* `NavinError::InsufficientApprovals` - If not enough approvals.\\n\\n# Examples\\n```rust\\n// contract.execute_proposal(&env, 1);\\n```",
+      "doc": "Execute a proposal that has met the approval threshold.\\nCan be called by anyone once threshold is met.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `proposal_id` - ID of the proposal to execute.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok if executed successfully.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::ProposalNotFound` - If proposal doesn't exist.\\n* `AnchorError::ProposalExpired` - If proposal has expired.\\n* `AnchorError::ProposalAlreadyExecuted` - If proposal was already executed.\\n* `AnchorError::InsufficientApprovals` - If not enough approvals.\\n\\n# Examples\\n```rust\\n// contract.execute_proposal(&env, 1);\\n```",
       "name": "execute_proposal",
       "inputs": [
         {
@@ -1736,7 +1736,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1746,7 +1746,7 @@
   },
   {
     "function_v0": {
-      "doc": "Handoff a shipment from current carrier to a new carrier.\\nOnly the current assigned carrier can initiate the handoff.\\nNew carrier must have Carrier role.\\n\\n# Arguments\\n* `env` - Execution environment context mapped tracking handler.\\n* `current_carrier` - Identity specifying event originating handlers instance.\\n* `new_carrier` - New carrier targeted parameter taking responsibility.\\n* `shipment_id` - Key object specifying mapping configurations instance sequence.\\n* `handoff_hash` - Validation mapping properties verification arrays format parameters payload.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on successful tracker identity assignment switch.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::Unauthorized` - If resolving executing bounds maps invalid permissions constraints checking.\\n* `NavinError::ShipmentNotFound` - If bound key identifiers specify missing pointer entries array fields values references maps values definitions constraints boundary pointers boundaries",
+      "doc": "Handoff a shipment from current carrier to a new carrier.\\nOnly the current assigned carrier can initiate the handoff.\\nNew carrier must have Carrier role.\\n\\n# Arguments\\n* `env` - Execution environment context mapped tracking handler.\\n* `current_carrier` - Identity specifying event originating handlers instance.\\n* `new_carrier` - New carrier targeted parameter taking responsibility.\\n* `shipment_id` - Key object specifying mapping configurations instance sequence.\\n* `handoff_hash` - Validation mapping properties verification arrays format parameters payload.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on successful tracker identity assignment switch.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::Unauthorized` - If resolving executing bounds maps invalid permissions constraints checking.\\n* `AnchorError::ShipmentNotFound` - If bound key identifiers specify missing pointer entries array fields values references maps values definitions constraints boundary pointers boundaries",
       "name": "handoff_shipment",
       "inputs": [
         {
@@ -1784,7 +1784,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1794,7 +1794,7 @@
   },
   {
     "function_v0": {
-      "doc": "Record a milestone for a shipment.\\nOnly registered carriers can record milestones.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `carrier` - Assigned carrier address triggering the recording.\\n* `shipment_id` - ID of the tracked shipment.\\n* `checkpoint` - Representation of progress milestone achieved.\\n* `data_hash` - Integrity hash associated with offchain progress indicators.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on successful tracking record update.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::Unauthorized` - If called by unassigned identity.\\n* `NavinError::CarrierSuspended` - If the carrier is suspended.\\n* `NavinError::ShipmentNotFound` - If shipment instance targets missing entry.\\n* `NavinError::InvalidStatus` - If tracked instance is not `InTransit`.\\n\\n# Examples\\n```rust\\n// contract.record_milestone(&env, &carrier, 1, Symbol::new(&env, \"warehouse\"), &hash);\\n```",
+      "doc": "Record a milestone for a shipment.\\nOnly registered carriers can record milestones.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `carrier` - Assigned carrier address triggering the recording.\\n* `shipment_id` - ID of the tracked shipment.\\n* `checkpoint` - Representation of progress milestone achieved.\\n* `data_hash` - Integrity hash associated with offchain progress indicators.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on successful tracking record update.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::Unauthorized` - If called by unassigned identity.\\n* `AnchorError::CarrierSuspended` - If the carrier is suspended.\\n* `AnchorError::ShipmentNotFound` - If shipment instance targets missing entry.\\n* `AnchorError::InvalidStatus` - If tracked instance is not `InTransit`.\\n\\n# Examples\\n```rust\\n// contract.record_milestone(&env, &carrier, 1, Symbol::new(&env, \"warehouse\"), &hash);\\n```",
       "name": "record_milestone",
       "inputs": [
         {
@@ -1832,7 +1832,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1842,7 +1842,7 @@
   },
   {
     "function_v0": {
-      "doc": "Verify that a given data hash matches what was recorded on-chain for a\\nshipment at a specific status point.\\nRead-only function, no authentication required.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - The ID of the shipment.\\n* `status` - The status to verify against.\\n* `expected_hash` - The hash to verify.\\n\\n# Returns\\n* `Result<bool, NavinError>` - True if the hash matches, false otherwise.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::ShipmentNotFound` - If the shipment doesn't exist.\\n* `NavinError::StatusHashNotFound` - If no hash was recorded for that status.\\n\\n# Examples\\n```rust\\n// let verified = contract.verify_data_hash(&env, 1, &ShipmentStatus::InTransit, &hash)?;\\n```",
+      "doc": "Verify that a given data hash matches what was recorded on-chain for a\\nshipment at a specific status point.\\nRead-only function, no authentication required.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - The ID of the shipment.\\n* `status` - The status to verify against.\\n* `expected_hash` - The hash to verify.\\n\\n# Returns\\n* `Result<bool, AnchorError>` - True if the hash matches, false otherwise.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::ShipmentNotFound` - If the shipment doesn't exist.\\n* `AnchorError::StatusHashNotFound` - If no hash was recorded for that status.\\n\\n# Examples\\n```rust\\n// let verified = contract.verify_data_hash(&env, 1, &ShipmentStatus::InTransit, &hash)?;\\n```",
       "name": "verify_data_hash",
       "inputs": [
         {
@@ -1875,7 +1875,7 @@
             "ok_type": "bool",
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1909,7 +1909,7 @@
   },
   {
     "function_v0": {
-      "doc": "Returns the current escrowed amount for a specific shipment.\\nReturns 0 if no escrow has been deposited.\\nReturns ShipmentNotFound if the shipment does not exist.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - ID of the shipment.\\n\\n# Returns\\n* `Result<i128, NavinError>` - Amount stored in escrow.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::ShipmentNotFound` - If shipment does not exist.\\n\\n# Examples\\n```rust\\n// let balance = contract.get_escrow_balance(&env, 1);\\n```",
+      "doc": "Returns the current escrowed amount for a specific shipment.\\nReturns 0 if no escrow has been deposited.\\nReturns ShipmentNotFound if the shipment does not exist.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - ID of the shipment.\\n\\n# Returns\\n* `Result<i128, AnchorError>` - Amount stored in escrow.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::ShipmentNotFound` - If shipment does not exist.\\n\\n# Examples\\n```rust\\n// let balance = contract.get_escrow_balance(&env, 1);\\n```",
       "name": "get_escrow_balance",
       "inputs": [
         {
@@ -1924,7 +1924,7 @@
             "ok_type": "i128",
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1953,7 +1953,7 @@
             "ok_type": "u32",
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -1987,7 +1987,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2021,7 +2021,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2055,7 +2055,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2065,7 +2065,7 @@
   },
   {
     "function_v0": {
-      "doc": "Extend the TTL of a shipment's persistent storage entries.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - Shipment ID to renew TTL.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on success.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// contract.extend_shipment_ttl(env, 1);\\n```",
+      "doc": "Extend the TTL of a shipment's persistent storage entries.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - Shipment ID to renew TTL.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on success.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// contract.extend_shipment_ttl(env, 1);\\n```",
       "name": "extend_shipment_ttl",
       "inputs": [
         {
@@ -2084,7 +2084,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2094,7 +2094,7 @@
   },
   {
     "function_v0": {
-      "doc": "Get the deterministic SHA-256 checksum of critical config fields.\\n\\nThis query exposes the config checksum to help indexers and operators\\ndetect unintended configuration drift. The checksum is computed from\\nall config fields serialized in a fixed order and is automatically\\nupdated whenever the config changes.\\n\\n# Serialization Order\\nFields are serialized in declaration order:\\n1. shipment_ttl_threshold (u32)\\n2. shipment_ttl_extension (u32)\\n3. min_status_update_interval (u64)\\n4. batch_operation_limit (u32)\\n5. max_metadata_entries (u32)\\n6. default_shipment_limit (u32)\\n7. multisig_min_admins (u32)\\n8. multisig_max_admins (u32)\\n9. proposal_expiry_seconds (u64)\\n10. deadline_grace_seconds (u64)\\n\\n# Arguments\\n* `env` - Execution environment.\\n\\n# Returns\\n* `Result<BytesN<32>, NavinError>` - The SHA-256 checksum of the config.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// let checksum = contract.get_config_checksum(&env)?;\\n// Indexer can verify: checksum == sha256(serializ",
+      "doc": "Get the deterministic SHA-256 checksum of critical config fields.\\n\\nThis query exposes the config checksum to help indexers and operators\\ndetect unintended configuration drift. The checksum is computed from\\nall config fields serialized in a fixed order and is automatically\\nupdated whenever the config changes.\\n\\n# Serialization Order\\nFields are serialized in declaration order:\\n1. shipment_ttl_threshold (u32)\\n2. shipment_ttl_extension (u32)\\n3. min_status_update_interval (u64)\\n4. batch_operation_limit (u32)\\n5. max_metadata_entries (u32)\\n6. default_shipment_limit (u32)\\n7. multisig_min_admins (u32)\\n8. multisig_max_admins (u32)\\n9. proposal_expiry_seconds (u64)\\n10. deadline_grace_seconds (u64)\\n\\n# Arguments\\n* `env` - Execution environment.\\n\\n# Returns\\n* `Result<BytesN<32>, AnchorError>` - The SHA-256 checksum of the config.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// let checksum = contract.get_config_checksum(&env)?;\\n// Indexer can verify: checksum == sha256(serializ",
       "name": "get_config_checksum",
       "inputs": [],
       "outputs": [
@@ -2107,7 +2107,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2117,7 +2117,7 @@
   },
   {
     "function_v0": {
-      "doc": "Get the current contract configuration.\\n\\n# Arguments\\n* `env` - Execution environment.\\n\\n# Returns\\n* `Result<ContractConfig, NavinError>` - The current configuration.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// let config = contract.get_config(&env);\\n```",
+      "doc": "Get the current contract configuration.\\n\\n# Arguments\\n* `env` - Execution environment.\\n\\n# Returns\\n* `Result<ContractConfig, AnchorError>` - The current configuration.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// let config = contract.get_config(&env);\\n```",
       "name": "get_contract_config",
       "inputs": [],
       "outputs": [
@@ -2130,7 +2130,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2140,7 +2140,7 @@
   },
   {
     "function_v0": {
-      "doc": "Get the multi-sig configuration.\\n\\n# Arguments\\n* `env` - Execution environment.\\n\\n# Returns\\n* `Result<(Vec<Address>, u32), NavinError>` - Tuple of (admin list, threshold).\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// let (admins, threshold) = contract.get_multisig_config(&env);\\n```",
+      "doc": "Get the multi-sig configuration.\\n\\n# Arguments\\n* `env` - Execution environment.\\n\\n# Returns\\n* `Result<(Vec<Address>, u32), AnchorError>` - Tuple of (admin list, threshold).\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// let (admins, threshold) = contract.get_multisig_config(&env);\\n```",
       "name": "get_multisig_config",
       "inputs": [],
       "outputs": [
@@ -2160,7 +2160,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2170,7 +2170,7 @@
   },
   {
     "function_v0": {
-      "doc": "Get the current shipment counter.\\n\\n# Arguments\\n* `env` - Execution environment.\\n\\n# Returns\\n* `Result<u64, NavinError>` - The total number of shipments created.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// let count = contract.get_shipment_counter(&env);\\n```",
+      "doc": "Get the current shipment counter.\\n\\n# Arguments\\n* `env` - Execution environment.\\n\\n# Returns\\n* `Result<u64, AnchorError>` - The total number of shipments created.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// let count = contract.get_shipment_counter(&env);\\n```",
       "name": "get_shipment_counter",
       "inputs": [],
       "outputs": [
@@ -2179,7 +2179,7 @@
             "ok_type": "u64",
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2189,7 +2189,7 @@
   },
   {
     "function_v0": {
-      "doc": "Retrieve the immutable creator identity for a shipment.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - ID of the shipment.\\n\\n# Returns\\n* `Result<Address, NavinError>` - Address that originally created the shipment.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::ShipmentNotFound` - If shipment does not exist.",
+      "doc": "Retrieve the immutable creator identity for a shipment.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - ID of the shipment.\\n\\n# Returns\\n* `Result<Address, AnchorError>` - Address that originally created the shipment.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::ShipmentNotFound` - If shipment does not exist.",
       "name": "get_shipment_creator",
       "inputs": [
         {
@@ -2204,7 +2204,7 @@
             "ok_type": "address",
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2229,7 +2229,7 @@
             "ok_type": "bool",
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2258,7 +2258,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2287,7 +2287,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2297,7 +2297,7 @@
   },
   {
     "function_v0": {
-      "doc": "Emergency admin-only force-cancel for a shipment.\\n\\nThis is a privileged override that bypasses the normal cancellation rules.\\nIt can cancel a shipment in **any non-terminal state** (including Disputed),\\nand it requires a mandatory, non-zero `reason_hash` to ensure an immutable\\naudit trail is always present.\\n\\nEscrow behaviour is deterministic:\\n- If escrow is held, the full remaining balance is refunded to the company\\nvia the token contract before the shipment is marked Cancelled.\\n- If no escrow is held, the shipment is cancelled with no token transfer.\\n\\nOnly the single admin or a multi-sig admin (via `propose_action` /\\n`approve_action`) may call this function directly. Regular companies and\\ncarriers are rejected with `Unauthorized`.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Admin address executing the force-cancel.\\n* `shipment_id` - ID of the shipment to force-cancel.\\n* `reason_hash` - Mandatory SHA-256 hash of the off-chain reason document.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on success",
+      "doc": "Emergency admin-only force-cancel for a shipment.\\n\\nThis is a privileged override that bypasses the normal cancellation rules.\\nIt can cancel a shipment in **any non-terminal state** (including Disputed),\\nand it requires a mandatory, non-zero `reason_hash` to ensure an immutable\\naudit trail is always present.\\n\\nEscrow behaviour is deterministic:\\n- If escrow is held, the full remaining balance is refunded to the company\\nvia the token contract before the shipment is marked Cancelled.\\n- If no escrow is held, the shipment is cancelled with no token transfer.\\n\\nOnly the single admin or a multi-sig admin (via `propose_action` /\\n`approve_action`) may call this function directly. Regular companies and\\ncarriers are rejected with `Unauthorized`.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Admin address executing the force-cancel.\\n* `shipment_id` - ID of the shipment to force-cancel.\\n* `reason_hash` - Mandatory SHA-256 hash of the off-chain reason document.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on success",
       "name": "force_cancel_shipment",
       "inputs": [
         {
@@ -2330,7 +2330,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2340,7 +2340,7 @@
   },
   {
     "function_v0": {
-      "doc": "Get on-chain metadata for this contract.\\nReturns version, admin, shipment count, and initialization status.\\nRead-only \\xe2\\x80\\x94 no authentication required.\\n\\n# Arguments\\n* `env` - Execution environment.\\n\\n# Returns\\n* `Result<ContractMetadata, NavinError>` - Snapshot of contract metadata.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// let metadata = contract.get_contract_metadata(&env);\\n```",
+      "doc": "Get on-chain metadata for this contract.\\nReturns version, admin, shipment count, and initialization status.\\nRead-only \\xe2\\x80\\x94 no authentication required.\\n\\n# Arguments\\n* `env` - Execution environment.\\n\\n# Returns\\n* `Result<ContractMetadata, AnchorError>` - Snapshot of contract metadata.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// let metadata = contract.get_contract_metadata(&env);\\n```",
       "name": "get_contract_metadata",
       "inputs": [],
       "outputs": [
@@ -2353,7 +2353,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2363,7 +2363,7 @@
   },
   {
     "function_v0": {
-      "doc": "Get the current integration nonce for a shipment.\\nNonce increments on critical transitions like status changes and escrow movements.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - ID of the shipment.\\n\\n# Returns\\n* `Result<u32, NavinError>` - The current nonce.",
+      "doc": "Get the current integration nonce for a shipment.\\nNonce increments on critical transitions like status changes and escrow movements.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - ID of the shipment.\\n\\n# Returns\\n* `Result<u32, AnchorError>` - The current nonce.",
       "name": "get_integration_nonce",
       "inputs": [
         {
@@ -2378,7 +2378,7 @@
             "ok_type": "u32",
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2388,7 +2388,7 @@
   },
   {
     "function_v0": {
-      "doc": "Retrieve the immutable receiver identity for a shipment.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - ID of the shipment.\\n\\n# Returns\\n* `Result<Address, NavinError>` - Address designated as shipment receiver at creation.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::ShipmentNotFound` - If shipment does not exist.",
+      "doc": "Retrieve the immutable receiver identity for a shipment.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `shipment_id` - ID of the shipment.\\n\\n# Returns\\n* `Result<Address, AnchorError>` - Address designated as shipment receiver at creation.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::ShipmentNotFound` - If shipment does not exist.",
       "name": "get_shipment_receiver",
       "inputs": [
         {
@@ -2403,7 +2403,7 @@
             "ok_type": "address",
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2413,7 +2413,7 @@
   },
   {
     "function_v0": {
-      "doc": "Report a geofence event for a shipment.\\nOnly registered carriers can report geofence events.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `carrier` - Carrier address reporting the event.\\n* `shipment_id` - ID of the tracked shipment.\\n* `zone_type` - Type of geofence event crossed.\\n* `data_hash` - Encrypted off-chain location data representation.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on successful report tracking.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::Unauthorized` - If caller isn't a Carrier role.\\n* `NavinError::ShipmentNotFound` - If tracking context specifies an invalid shipment.\\n\\n# Examples\\n```rust\\n// contract.report_geofence_event(&env, &carrier, 1, GeofenceEvent::ZoneEntry, &hash);\\n```",
+      "doc": "Report a geofence event for a shipment.\\nOnly registered carriers can report geofence events.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `carrier` - Carrier address reporting the event.\\n* `shipment_id` - ID of the tracked shipment.\\n* `zone_type` - Type of geofence event crossed.\\n* `data_hash` - Encrypted off-chain location data representation.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on successful report tracking.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::Unauthorized` - If caller isn't a Carrier role.\\n* `AnchorError::ShipmentNotFound` - If tracking context specifies an invalid shipment.\\n\\n# Examples\\n```rust\\n// contract.report_geofence_event(&env, &carrier, 1, GeofenceEvent::ZoneEntry, &hash);\\n```",
       "name": "report_geofence_event",
       "inputs": [
         {
@@ -2455,7 +2455,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2484,7 +2484,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2494,7 +2494,7 @@
   },
   {
     "function_v0": {
-      "doc": "Set metadata key-value pair for a shipment. Only Company (sender) or Admin can set.\\nMax 5 metadata entries allowed.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `caller` - The address attempting to set the metadata.\\n* `shipment_id` - ID of the shipment.\\n* `key` - The metadata key (max 32 chars).\\n* `value` - The metadata value (max 32 chars).\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok if successfully set.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::ShipmentNotFound` - If the shipment doesn't exist.\\n* `NavinError::Unauthorized` - If the caller is not the sender or admin.\\n* `NavinError::MetadataLimitExceeded` - If adding would exceed the 5 key limit.\\n\\n# Examples\\n```rust\\n// contract.set_shipment_metadata(&env, &caller, 1, &Symbol::new(&env, \"weight\"), &Symbol::new(&env, \"kg_100\"));\\n```",
+      "doc": "Set metadata key-value pair for a shipment. Only Company (sender) or Admin can set.\\nMax 5 metadata entries allowed.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `caller` - The address attempting to set the metadata.\\n* `shipment_id` - ID of the shipment.\\n* `key` - The metadata key (max 32 chars).\\n* `value` - The metadata value (max 32 chars).\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok if successfully set.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::ShipmentNotFound` - If the shipment doesn't exist.\\n* `AnchorError::Unauthorized` - If the caller is not the sender or admin.\\n* `AnchorError::MetadataLimitExceeded` - If adding would exceed the 5 key limit.\\n\\n# Examples\\n```rust\\n// contract.set_shipment_metadata(&env, &caller, 1, &Symbol::new(&env, \"weight\"), &Symbol::new(&env, \"kg_100\"));\\n```",
       "name": "set_shipment_metadata",
       "inputs": [
         {
@@ -2528,7 +2528,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2538,7 +2538,7 @@
   },
   {
     "function_v0": {
-      "doc": "Verify a proof-of-delivery hash against the stored confirmation hash.\\n\\nReturns `true` if `proof_hash` matches the hash stored during delivery confirmation,\\n`false` if delivered but hashes differ, and errors if the shipment does not exist.\\n\\n# Arguments\\n* `env` - Execution environment tracking mapped instances validation variables maps format boundary values fields mapped contexts matching references size parameter pointer definition format contexts.\\n* `shipment_id` - Identifying tracker mapping definitions arrays limits constraints binding values parameters mappings matches values matching variables scope sizes context properties configuration sequences format context rules bindings sequences arrays.\\n* `proof_hash` - Encrypted target references validating properties identifiers scope scopes variables.\\n\\n# Returns\\n* `Result<bool, NavinError>` - A boolean wrapper validating conditions logic identifiers values mappings rules limit format parameters checking sizes rules instances bindings context definitions matche",
+      "doc": "Verify a proof-of-delivery hash against the stored confirmation hash.\\n\\nReturns `true` if `proof_hash` matches the hash stored during delivery confirmation,\\n`false` if delivered but hashes differ, and errors if the shipment does not exist.\\n\\n# Arguments\\n* `env` - Execution environment tracking mapped instances validation variables maps format boundary values fields mapped contexts matching references size parameter pointer definition format contexts.\\n* `shipment_id` - Identifying tracker mapping definitions arrays limits constraints binding values parameters mappings matches values matching variables scope sizes context properties configuration sequences format context rules bindings sequences arrays.\\n* `proof_hash` - Encrypted target references validating properties identifiers scope scopes variables.\\n\\n# Returns\\n* `Result<bool, AnchorError>` - A boolean wrapper validating conditions logic identifiers values mappings rules limit format parameters checking sizes rules instances bindings context definitions matche",
       "name": "verify_delivery_proof",
       "inputs": [
         {
@@ -2562,7 +2562,7 @@
             "ok_type": "bool",
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2572,7 +2572,7 @@
   },
   {
     "function_v0": {
-      "doc": "Create multiple shipments in a single atomic transaction.\\nLimit: 10 shipments per batch.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `sender` - Company address creating shipments.\\n* `shipments` - Vector of shipment inputs.\\n\\n# Returns\\n* `Result<Vec<u64>, NavinError>` - Vector of newly created shipment IDs.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::Unauthorized` - If caller isn't a Company.\\n* `NavinError::BatchTooLarge` - If more than 10 shipments are submitted.\\n* `NavinError::InvalidShipmentInput` - If receiver matches carrier for any shipment.\\n* `NavinError::InvalidHash` - If any data_hash is all zeros.\\n* `NavinError::MilestoneSumInvalid` - If payment milestones are invalid per item.\\n* `NavinError::InvalidTimestamp` - If the deadline is not strictly in the future.\\n\\n# Examples\\n```rust\\n// let ids = contract.create_shipments_batch(&env, &sender, inputs_vec);\\n```",
+      "doc": "Create multiple shipments in a single atomic transaction.\\nLimit: 10 shipments per batch.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `sender` - Company address creating shipments.\\n* `shipments` - Vector of shipment inputs.\\n\\n# Returns\\n* `Result<Vec<u64>, AnchorError>` - Vector of newly created shipment IDs.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::Unauthorized` - If caller isn't a Company.\\n* `AnchorError::BatchTooLarge` - If more than 10 shipments are submitted.\\n* `AnchorError::InvalidShipmentInput` - If receiver matches carrier for any shipment.\\n* `AnchorError::InvalidHash` - If any data_hash is all zeros.\\n* `AnchorError::MilestoneSumInvalid` - If payment milestones are invalid per item.\\n* `AnchorError::InvalidTimestamp` - If the deadline is not strictly in the future.\\n\\n# Examples\\n```rust\\n// let ids = contract.create_shipments_batch(&env, &sender, inputs_vec);\\n```",
       "name": "create_shipments_batch",
       "inputs": [
         {
@@ -2604,7 +2604,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2629,7 +2629,7 @@
             "ok_type": "string",
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2639,7 +2639,7 @@
   },
   {
     "function_v0": {
-      "doc": "Check if a carrier is whitelisted for a company.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `company` - The company address.\\n* `carrier` - The carrier address in question.\\n\\n# Returns\\n* `Result<bool, NavinError>` - True if the carrier is whitelisted.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// let is_whitelisted = contract.is_carrier_whitelisted(&env, &company, &carrier);\\n```",
+      "doc": "Check if a carrier is whitelisted for a company.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `company` - The company address.\\n* `carrier` - The carrier address in question.\\n\\n# Returns\\n* `Result<bool, AnchorError>` - True if the carrier is whitelisted.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// let is_whitelisted = contract.is_carrier_whitelisted(&env, &company, &carrier);\\n```",
       "name": "is_carrier_whitelisted",
       "inputs": [
         {
@@ -2659,7 +2659,7 @@
             "ok_type": "bool",
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2718,7 +2718,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2728,7 +2728,7 @@
   },
   {
     "function_v0": {
-      "doc": "Record multiple milestones for a shipment in a single atomic transaction.\\nAllows a carrier to record multiple checkpoints at once, reducing gas costs.\\nLimit: 10 milestones per batch.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `carrier` - Assigned carrier address triggering the recording.\\n* `shipment_id` - ID of the tracked shipment.\\n* `milestones` - Vector of (checkpoint, data_hash) tuples.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok on successful batch recording.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::Unauthorized` - If called by unassigned identity.\\n* `NavinError::CarrierSuspended` - If the carrier is suspended.\\n* `NavinError::ShipmentNotFound` - If shipment instance targets missing entry.\\n* `NavinError::InvalidStatus` - If tracked instance is not `InTransit`.\\n* `NavinError::BatchTooLarge` - If more than 10 milestones are submitted.\\n\\n# Examples\\n```rust\\n// let milestones = vec![\\n//     (Symbol::new(&env, \"warehouse\"), hash1),\\n//     (Symbol::new(&env, \"p",
+      "doc": "Record multiple milestones for a shipment in a single atomic transaction.\\nAllows a carrier to record multiple checkpoints at once, reducing gas costs.\\nLimit: 10 milestones per batch.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `carrier` - Assigned carrier address triggering the recording.\\n* `shipment_id` - ID of the tracked shipment.\\n* `milestones` - Vector of (checkpoint, data_hash) tuples.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok on successful batch recording.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::Unauthorized` - If called by unassigned identity.\\n* `AnchorError::CarrierSuspended` - If the carrier is suspended.\\n* `AnchorError::ShipmentNotFound` - If shipment instance targets missing entry.\\n* `AnchorError::InvalidStatus` - If tracked instance is not `InTransit`.\\n* `AnchorError::BatchTooLarge` - If more than 10 milestones are submitted.\\n\\n# Examples\\n```rust\\n// let milestones = vec![\\n//     (Symbol::new(&env, \"warehouse\"), hash1),\\n//     (Symbol::new(&env, \"p",
       "name": "record_milestones_batch",
       "inputs": [
         {
@@ -2772,7 +2772,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2833,7 +2833,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2843,7 +2843,7 @@
   },
   {
     "function_v0": {
-      "doc": "Add a carrier to a company's whitelist.\\nOnly the company can add carriers to their own whitelist.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `company` - The company's address acting as caller.\\n* `carrier` - The carrier address to whitelist.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok if successfully registered.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// contract.add_carrier_to_whitelist(&env, &company, &carrier);\\n```",
+      "doc": "Add a carrier to a company's whitelist.\\nOnly the company can add carriers to their own whitelist.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `company` - The company's address acting as caller.\\n* `carrier` - The carrier address to whitelist.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok if successfully registered.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// contract.add_carrier_to_whitelist(&env, &company, &carrier);\\n```",
       "name": "add_carrier_to_whitelist",
       "inputs": [
         {
@@ -2867,7 +2867,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2877,7 +2877,7 @@
   },
   {
     "function_v0": {
-      "doc": "Add an evidence hash to an active shipment dispute.\\nOnly in Disputed state. Authorization: Sender, Receiver, Carrier, or Admin.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `reporter` - The address adding the evidence.\\n* `shipment_id` - ID of the shipment.\\n* `evidence_hash` - SHA-256 hash of the off-chain evidence.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok if successfully added.",
+      "doc": "Add an evidence hash to an active shipment dispute.\\nOnly in Disputed state. Authorization: Sender, Receiver, Carrier, or Admin.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `reporter` - The address adding the evidence.\\n* `shipment_id` - ID of the shipment.\\n* `evidence_hash` - SHA-256 hash of the off-chain evidence.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok if successfully added.",
       "name": "add_dispute_evidence_hash",
       "inputs": [
         {
@@ -2910,7 +2910,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2935,7 +2935,7 @@
             "ok_type": "u32",
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2973,7 +2973,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -2998,7 +2998,7 @@
             "ok_type": "u32",
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -3045,7 +3045,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -3055,7 +3055,7 @@
   },
   {
     "function_v0": {
-      "doc": "Scan all tracked shipments and return every consistency violation found.\\n\\nChecks per-shipment invariants across the full ledger:\\n- Escrow amounts match storage\\n- Finalized flag is only set on terminal shipments with zero escrow\\n- Paid milestones are a subset of the payment schedule\\n- Timestamps are non-decreasing\\n- Deadlines are strictly after creation time\\n\\nIntended for periodic admin audits; not safe to call on hot paths\\ndue to the O(n) scan over all shipments.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Admin or operator address (auth required).\\n\\n# Returns\\n* `Result<Vec<ConsistencyViolation>, NavinError>` - List of detected violations.\\nAn empty vec means all invariants hold.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n* `NavinError::Unauthorized` - If caller is not admin or operator.",
+      "doc": "Scan all tracked shipments and return every consistency violation found.\\n\\nChecks per-shipment invariants across the full ledger:\\n- Escrow amounts match storage\\n- Finalized flag is only set on terminal shipments with zero escrow\\n- Paid milestones are a subset of the payment schedule\\n- Timestamps are non-decreasing\\n- Deadlines are strictly after creation time\\n\\nIntended for periodic admin audits; not safe to call on hot paths\\ndue to the O(n) scan over all shipments.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `admin` - Admin or operator address (auth required).\\n\\n# Returns\\n* `Result<Vec<ConsistencyViolation>, AnchorError>` - List of detected violations.\\nAn empty vec means all invariants hold.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n* `AnchorError::Unauthorized` - If caller is not admin or operator.",
       "name": "check_consistency_violations",
       "inputs": [
         {
@@ -3078,7 +3078,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -3088,7 +3088,7 @@
   },
   {
     "function_v0": {
-      "doc": "Remove a carrier from a company's whitelist.\\nOnly the company can remove carriers from their own whitelist.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `company` - The company address removing the carrier.\\n* `carrier` - The carrier address to be removed.\\n\\n# Returns\\n* `Result<(), NavinError>` - Ok if successfully removed.\\n\\n# Errors\\n* `NavinError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// contract.remove_carrier_from_whitelist(&env, &company, &carrier);\\n```",
+      "doc": "Remove a carrier from a company's whitelist.\\nOnly the company can remove carriers from their own whitelist.\\n\\n# Arguments\\n* `env` - Execution environment.\\n* `company` - The company address removing the carrier.\\n* `carrier` - The carrier address to be removed.\\n\\n# Returns\\n* `Result<(), AnchorError>` - Ok if successfully removed.\\n\\n# Errors\\n* `AnchorError::NotInitialized` - If contract is not initialized.\\n\\n# Examples\\n```rust\\n// contract.remove_carrier_from_whitelist(&env, &company, &carrier);\\n```",
       "name": "remove_carrier_from_whitelist",
       "inputs": [
         {
@@ -3112,7 +3112,7 @@
             },
             "error_type": {
               "udt": {
-                "name": "NavinError"
+                "name": "AnchorError"
               }
             }
           }
@@ -4491,9 +4491,9 @@
   },
   {
     "udt_error_enum_v0": {
-      "doc": "Domain-specific error type for the Navin shipment contract.\\n\\nEach variant is assigned a unique `u32` discriminant starting from 1\\nso that the Soroban host can surface the code to clients without ambiguity.\\n\\n# Examples\\n```rust\\nuse crate::errors::NavinError;\\nlet error = NavinError::ShipmentNotFound;\\n```",
+      "doc": "Domain-specific error type for the Anchor shipment contract.\\n\\nEach variant is assigned a unique `u32` discriminant starting from 1\\nso that the Soroban host can surface the code to clients without ambiguity.\\n\\n# Examples\\n```rust\\nuse crate::errors::AnchorError;\\nlet error = AnchorError::ShipmentNotFound;\\n```",
       "lib": "",
-      "name": "NavinError",
+      "name": "AnchorError",
       "cases": [
         {
           "doc": "Contract is already initialized.",

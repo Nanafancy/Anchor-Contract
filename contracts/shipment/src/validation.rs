@@ -1,4 +1,4 @@
-use crate::errors::NavinError;
+use crate::errors::AnchorError;
 use crate::storage;
 use crate::types::{Shipment, ShipmentStatus};
 use soroban_sdk::{xdr::ToXdr, BytesN, Env, Symbol};
@@ -25,17 +25,17 @@ const MAX_FUTURE_OFFSET: u64 = 10 * 365 * 24 * 60 * 60;
 ///
 /// # Returns
 /// * `Ok(())` if the hash contains at least one non-zero byte.
-/// * `Err(NavinError::InvalidHash)` if every byte is zero.
+/// * `Err(AnchorError::InvalidHash)` if every byte is zero.
 ///
 /// # Examples
 /// ```rust
 /// validate_hash(&hash)?;
 /// ```
-pub fn validate_hash(hash: &BytesN<32>) -> Result<(), NavinError> {
+pub fn validate_hash(hash: &BytesN<32>) -> Result<(), AnchorError> {
     // BytesN::iter() is not available in no_std soroban; use to_array().
     let bytes: [u8; 32] = hash.to_array();
     if bytes.iter().all(|&b| b == 0) {
-        return Err(NavinError::InvalidHash);
+        return Err(AnchorError::InvalidHash);
     }
     Ok(())
 }
@@ -59,13 +59,13 @@ pub fn validate_hash(hash: &BytesN<32>) -> Result<(), NavinError> {
 ///
 /// # Returns
 /// * `Ok(())` if the symbol is valid.
-/// * `Err(NavinError::InvalidShipmentInput)` if the symbol is empty or exceeds max length.
+/// * `Err(AnchorError::InvalidShipmentInput)` if the symbol is empty or exceeds max length.
 ///
 /// # Examples
 /// ```rust
 /// validate_symbol(&env, &Symbol::new(&env, "warehouse"))?;
 /// ```
-pub fn validate_symbol(env: &Env, symbol: &Symbol) -> Result<(), NavinError> {
+pub fn validate_symbol(env: &Env, symbol: &Symbol) -> Result<(), AnchorError> {
     // XDR layout: 4-byte ScValType tag + 4-byte length field + content padded to 4-byte boundary.
     // Byte counts by character count:
     //   0 chars  →  8 bytes  (empty — rejected)
@@ -77,7 +77,7 @@ pub fn validate_symbol(env: &Env, symbol: &Symbol) -> Result<(), NavinError> {
     let len = symbol_bytes.len();
 
     if !(12..=20).contains(&len) {
-        return Err(NavinError::InvalidShipmentInput);
+        return Err(AnchorError::InvalidShipmentInput);
     }
 
     Ok(())
@@ -94,7 +94,7 @@ pub fn validate_symbol(env: &Env, symbol: &Symbol) -> Result<(), NavinError> {
 ///
 /// # Returns
 /// * `Ok(())` if all symbols are valid and unique.
-/// * `Err(NavinError::InvalidShipmentInput)` if any symbol is invalid or duplicated.
+/// * `Err(AnchorError::InvalidShipmentInput)` if any symbol is invalid or duplicated.
 ///
 /// # Examples
 /// ```rust
@@ -103,7 +103,7 @@ pub fn validate_symbol(env: &Env, symbol: &Symbol) -> Result<(), NavinError> {
 pub fn validate_milestone_symbols(
     env: &Env,
     milestones: &soroban_sdk::Vec<(Symbol, u32)>,
-) -> Result<(), NavinError> {
+) -> Result<(), AnchorError> {
     // Check each milestone symbol for validity
     for milestone in milestones.iter() {
         validate_symbol(env, &milestone.0)?;
@@ -117,7 +117,7 @@ pub fn validate_milestone_symbols(
             let other = &milestones.get_unchecked(j).0;
             let other_xdr = other.to_xdr(env);
             if current_xdr == other_xdr {
-                return Err(NavinError::DuplicatePaymentMilestone);
+                return Err(AnchorError::DuplicatePaymentMilestone);
             }
         }
     }
@@ -137,7 +137,7 @@ pub fn validate_milestone_symbols(
 ///
 /// # Returns
 /// * `Ok(())` if both symbols are valid.
-/// * `Err(NavinError::InvalidShipmentInput)` if either symbol is invalid.
+/// * `Err(AnchorError::InvalidShipmentInput)` if either symbol is invalid.
 ///
 /// # Examples
 /// ```rust
@@ -147,7 +147,7 @@ pub fn validate_metadata_symbols(
     env: &Env,
     key: &Symbol,
     value: &Symbol,
-) -> Result<(), NavinError> {
+) -> Result<(), AnchorError> {
     validate_symbol(env, key)?;
     validate_symbol(env, value)?;
     // Reject key == value: a self-referential entry is always a caller mistake
@@ -155,7 +155,7 @@ pub fn validate_metadata_symbols(
     // XDR representation (e.g., Symbol::new(&env, "weight") used as both key
     // and value).
     if key.to_xdr(env) == value.to_xdr(env) {
-        return Err(NavinError::MetadataSymbolCollision);
+        return Err(AnchorError::MetadataSymbolCollision);
     }
     Ok(())
 }
@@ -167,15 +167,15 @@ pub fn validate_metadata_symbols(
 ///
 /// # Returns
 /// * `Ok(())` if `0 < amount <= MAX_AMOUNT`.
-/// * `Err(NavinError::InvalidAmount)` otherwise.
+/// * `Err(AnchorError::InvalidAmount)` otherwise.
 ///
 /// # Examples
 /// ```rust
 /// validate_amount(5_000_000)?;
 /// ```
-pub fn validate_amount(amount: i128) -> Result<(), NavinError> {
+pub fn validate_amount(amount: i128) -> Result<(), AnchorError> {
     if amount <= 0 || amount > MAX_AMOUNT {
-        return Err(NavinError::InvalidAmount);
+        return Err(AnchorError::InvalidAmount);
     }
     Ok(())
 }
@@ -187,10 +187,10 @@ pub fn validate_amount(amount: i128) -> Result<(), NavinError> {
 ///
 /// # Returns
 /// * `Ok(())` if `amount > 0`.
-/// * `Err(NavinError::InvalidAmount)` otherwise.
-pub fn validate_positive_amount(amount: i128) -> Result<(), NavinError> {
+/// * `Err(AnchorError::InvalidAmount)` otherwise.
+pub fn validate_positive_amount(amount: i128) -> Result<(), AnchorError> {
     if amount <= 0 || amount > MAX_AMOUNT {
-        return Err(NavinError::InvalidAmount);
+        return Err(AnchorError::InvalidAmount);
     }
     Ok(())
 }
@@ -204,19 +204,19 @@ pub fn validate_positive_amount(amount: i128) -> Result<(), NavinError> {
 ///
 /// # Returns
 /// * `Ok(())` if the timestamp is within acceptable bounds.
-/// * `Err(NavinError::InvalidTimestamp)` otherwise.
+/// * `Err(AnchorError::InvalidTimestamp)` otherwise.
 ///
 /// # Examples
 /// ```rust
 /// validate_timestamp(&env, some_ts)?;
 /// ```
-pub fn validate_timestamp(env: &Env, timestamp: u64) -> Result<(), NavinError> {
+pub fn validate_timestamp(env: &Env, timestamp: u64) -> Result<(), AnchorError> {
     let now = env.ledger().timestamp();
     let earliest = now.saturating_sub(MAX_PAST_OFFSET);
     let latest = now.saturating_add(MAX_FUTURE_OFFSET);
 
     if timestamp < earliest || timestamp > latest {
-        return Err(NavinError::InvalidTimestamp);
+        return Err(AnchorError::InvalidTimestamp);
     }
     Ok(())
 }
@@ -229,14 +229,14 @@ pub fn validate_timestamp(env: &Env, timestamp: u64) -> Result<(), NavinError> {
 ///
 /// # Returns
 /// * `Ok(Shipment)` if the shipment exists in persistent storage.
-/// * `Err(NavinError::ShipmentNotFound)` if no shipment is stored under `id`.
+/// * `Err(AnchorError::ShipmentNotFound)` if no shipment is stored under `id`.
 ///
 /// # Examples
 /// ```rust
 /// let shipment = validate_shipment_exists(&env, shipment_id)?;
 /// ```
-pub fn validate_shipment_exists(env: &Env, id: u64) -> Result<Shipment, NavinError> {
-    storage::get_shipment(env, id).ok_or(NavinError::ShipmentNotFound)
+pub fn validate_shipment_exists(env: &Env, id: u64) -> Result<Shipment, AnchorError> {
+    storage::get_shipment(env, id).ok_or(AnchorError::ShipmentNotFound)
 }
 
 /// Preflight check for state-changing operations: ensures the shipment exists
@@ -258,9 +258,9 @@ pub fn validate_shipment_exists(env: &Env, id: u64) -> Result<Shipment, NavinErr
 ///
 /// # Returns
 /// * `Ok(Shipment)` - The shipment if available for mutation.
-/// * `Err(NavinError::ShipmentNotFound)` - If shipment doesn't exist in persistent storage.
-/// * `Err(NavinError::ShipmentUnavailable)` - If shipment is archived or expired.
-/// * `Err(NavinError::ShipmentFinalized)` - If shipment is finalized and locked.
+/// * `Err(AnchorError::ShipmentNotFound)` - If shipment doesn't exist in persistent storage.
+/// * `Err(AnchorError::ShipmentUnavailable)` - If shipment is archived or expired.
+/// * `Err(AnchorError::ShipmentFinalized)` - If shipment is finalized and locked.
 ///
 /// # Design Rationale
 ///
@@ -284,18 +284,18 @@ pub fn validate_shipment_exists(env: &Env, id: u64) -> Result<Shipment, NavinErr
 pub fn preflight_check_shipment_available(
     env: &Env,
     shipment_id: u64,
-) -> Result<Shipment, NavinError> {
+) -> Result<Shipment, AnchorError> {
     // Check if shipment exists in persistent storage
     let shipment: Option<Shipment> = env
         .storage()
         .persistent()
         .get(&crate::types::DataKey::Shipment(shipment_id));
 
-    let shipment = shipment.ok_or(NavinError::ShipmentNotFound)?;
+    let shipment = shipment.ok_or(AnchorError::ShipmentNotFound)?;
 
     // Check if shipment is finalized (locked)
     if shipment.finalized {
-        return Err(NavinError::ShipmentFinalized);
+        return Err(AnchorError::ShipmentFinalized);
     }
 
     Ok(shipment)
@@ -339,29 +339,29 @@ pub fn compute_offchain_payload_hash(
 ///
 /// This validator protects against impossible state combinations and is intended
 /// to be called on every write path before persisting shipment state.
-pub fn validate_shipment_invariants(shipment: &Shipment) -> Result<(), NavinError> {
+pub fn validate_shipment_invariants(shipment: &Shipment) -> Result<(), AnchorError> {
     if shipment.total_escrow < 0 || shipment.escrow_amount < 0 {
-        return Err(NavinError::InvalidStatus);
+        return Err(AnchorError::InvalidStatus);
     }
 
     if shipment.escrow_amount > shipment.total_escrow {
-        return Err(NavinError::InvalidStatus);
+        return Err(AnchorError::InvalidStatus);
     }
 
     if shipment.finalized {
         let terminal = shipment.status == ShipmentStatus::Delivered
             || shipment.status == ShipmentStatus::Cancelled;
         if !terminal || shipment.escrow_amount != 0 {
-            return Err(NavinError::InvalidStatus);
+            return Err(AnchorError::InvalidStatus);
         }
     }
 
     if shipment.status == ShipmentStatus::Disputed && shipment.finalized {
-        return Err(NavinError::InvalidStatus);
+        return Err(AnchorError::InvalidStatus);
     }
 
     if shipment.status == ShipmentStatus::Created && !shipment.paid_milestones.is_empty() {
-        return Err(NavinError::InvalidStatus);
+        return Err(AnchorError::InvalidStatus);
     }
 
     Ok(())
@@ -380,7 +380,7 @@ mod tests {
     fn test_validate_hash_all_zeros_fails() {
         let env = Env::default();
         let zero_hash: BytesN<32> = BytesN::from_array(&env, &[0u8; 32]);
-        assert_eq!(validate_hash(&zero_hash), Err(NavinError::InvalidHash));
+        assert_eq!(validate_hash(&zero_hash), Err(AnchorError::InvalidHash));
     }
 
     #[test]
@@ -450,19 +450,19 @@ mod tests {
 
         assert_eq!(
             validate_shipment_invariants(&shipment),
-            Err(NavinError::InvalidStatus)
+            Err(AnchorError::InvalidStatus)
         );
     }
 
     // validate_amount
     #[test]
     fn test_validate_amount_zero_fails() {
-        assert_eq!(validate_amount(0), Err(NavinError::InvalidAmount));
+        assert_eq!(validate_amount(0), Err(AnchorError::InvalidAmount));
     }
 
     #[test]
     fn test_validate_amount_negative_fails() {
-        assert_eq!(validate_amount(-1), Err(NavinError::InvalidAmount));
+        assert_eq!(validate_amount(-1), Err(AnchorError::InvalidAmount));
     }
 
     #[test]
@@ -476,7 +476,7 @@ mod tests {
     fn test_validate_amount_exceeds_max_fails() {
         assert_eq!(
             validate_amount(MAX_AMOUNT + 1),
-            Err(NavinError::InvalidAmount)
+            Err(AnchorError::InvalidAmount)
         );
     }
 
@@ -503,7 +503,7 @@ mod tests {
         let far_future = now + MAX_FUTURE_OFFSET + 1;
         assert_eq!(
             validate_timestamp(&env, far_future),
-            Err(NavinError::InvalidTimestamp)
+            Err(AnchorError::InvalidTimestamp)
         );
     }
 
@@ -518,7 +518,7 @@ mod tests {
         let far_past = env.ledger().timestamp() - MAX_PAST_OFFSET - 1;
         assert_eq!(
             validate_timestamp(&env, far_past),
-            Err(NavinError::InvalidTimestamp)
+            Err(AnchorError::InvalidTimestamp)
         );
     }
 
@@ -527,10 +527,10 @@ mod tests {
     fn test_validate_shipment_exists_missing_returns_error() {
         let env = Env::default();
         // Storage access requires a contract context in Soroban.
-        let result = env.as_contract(&env.register(crate::NavinShipment, ()), || {
+        let result = env.as_contract(&env.register(crate::AnchorShipment, ()), || {
             validate_shipment_exists(&env, 999)
         });
-        assert!(matches!(result, Err(NavinError::ShipmentNotFound)));
+        assert!(matches!(result, Err(AnchorError::ShipmentNotFound)));
     }
 
     // validate_symbol
@@ -606,7 +606,7 @@ mod tests {
         milestones.push_back((Symbol::new(&env, "warehouse"), 50_u32));
         assert_eq!(
             validate_milestone_symbols(&env, &milestones),
-            Err(NavinError::DuplicatePaymentMilestone)
+            Err(AnchorError::DuplicatePaymentMilestone)
         );
     }
 
@@ -785,7 +785,7 @@ mod symbol_validation_tests {
         let result = validate_milestone_symbols(&env, &milestones);
         assert_eq!(
             result,
-            Err(NavinError::DuplicatePaymentMilestone),
+            Err(AnchorError::DuplicatePaymentMilestone),
             "Duplicate milestone symbols should be rejected"
         );
     }
@@ -860,7 +860,7 @@ mod symbol_validation_tests {
         let result = validate_symbol(&env, &oversized_symbol);
         assert_eq!(
             result,
-            Err(NavinError::InvalidShipmentInput),
+            Err(AnchorError::InvalidShipmentInput),
             "Oversized symbol must return InvalidShipmentInput"
         );
     }
@@ -888,7 +888,7 @@ mod symbol_validation_tests {
         let value = Symbol::new(&env, &long);
         assert_eq!(
             validate_metadata_symbols(&env, &key, &value),
-            Err(NavinError::InvalidShipmentInput),
+            Err(AnchorError::InvalidShipmentInput),
             "13-char metadata value must be rejected"
         );
     }
@@ -913,7 +913,7 @@ mod symbol_validation_tests {
         let value = Symbol::new(&env, "ok");
         assert_eq!(
             validate_metadata_symbols(&env, &key, &value),
-            Err(NavinError::InvalidShipmentInput),
+            Err(AnchorError::InvalidShipmentInput),
             "13-char metadata key must be rejected"
         );
     }
@@ -940,7 +940,7 @@ mod symbol_validation_tests {
             let s: std::string::String = "A".repeat(len);
             assert_eq!(
                 validate_metadata_symbols(&env, &key, &Symbol::new(&env, &s)),
-                Err(NavinError::InvalidShipmentInput),
+                Err(AnchorError::InvalidShipmentInput),
                 "metadata value of length {len} must be rejected"
             );
         }
@@ -958,7 +958,7 @@ mod symbol_validation_tests {
 
         assert_eq!(
             result,
-            Err(NavinError::DuplicatePaymentMilestone),
+            Err(AnchorError::DuplicatePaymentMilestone),
             "Duplicate milestone should return DuplicatePaymentMilestone"
         );
     }

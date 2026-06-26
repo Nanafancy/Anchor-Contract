@@ -7,7 +7,7 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::{test_utils, NavinShipment, NavinShipmentClient};
+    use crate::{test_utils, AnchorShipment, AnchorShipmentClient};
     use soroban_sdk::{contract, contractimpl, testutils::Address as _, Address, Env, Vec};
 
     #[contract]
@@ -21,10 +21,10 @@ mod tests {
         }
     }
 
-    fn setup() -> (Env, NavinShipmentClient<'static>, Address) {
+    fn setup() -> (Env, AnchorShipmentClient<'static>, Address) {
         let (env, admin) = test_utils::setup_env();
-        let contract_id = env.register(NavinShipment, ());
-        let client = NavinShipmentClient::new(&env, &contract_id);
+        let contract_id = env.register(AnchorShipment, ());
+        let client = AnchorShipmentClient::new(&env, &contract_id);
         let token_id = env.register(MockToken, ());
         client.initialize(&admin, &token_id);
         (env, client, admin)

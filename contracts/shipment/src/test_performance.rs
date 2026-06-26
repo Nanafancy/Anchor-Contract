@@ -9,7 +9,7 @@
 
 extern crate std;
 
-use crate::{test_utils, types::ShipmentInput, NavinShipment, NavinShipmentClient, ShipmentStatus};
+use crate::{test_utils, types::ShipmentInput, AnchorShipment, AnchorShipmentClient, ShipmentStatus};
 use soroban_sdk::{contract, contractimpl, testutils::Address as _, Address, BytesN, Env, Vec};
 
 // ── Mock token ────────────────────────────────────────────────────────────────
@@ -27,7 +27,7 @@ impl PerfMockToken {
 
 struct PerfCtx {
     env: Env,
-    client: NavinShipmentClient<'static>,
+    client: AnchorShipmentClient<'static>,
     company: Address,
     carrier: Address,
 }
@@ -35,7 +35,7 @@ struct PerfCtx {
 fn setup_perf() -> PerfCtx {
     let (env, admin) = test_utils::setup_env();
     let token = env.register(PerfMockToken {}, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
     client.initialize(&admin, &token);
     let company = Address::generate(&env);
     let carrier = Address::generate(&env);

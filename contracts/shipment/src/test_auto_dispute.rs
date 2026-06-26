@@ -9,7 +9,7 @@
 
 extern crate std;
 
-use crate::{BreachType, NavinShipment, NavinShipmentClient, Severity, ShipmentStatus};
+use crate::{BreachType, AnchorShipment, AnchorShipmentClient, Severity, ShipmentStatus};
 use soroban_sdk::{contract, contractimpl, testutils::Address as _, Address, BytesN, Env};
 
 // ── Minimal mock token ────────────────────────────────────────────────────────
@@ -29,15 +29,15 @@ impl MockToken {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-fn setup() -> (Env, NavinShipmentClient<'static>, Address, Address) {
+fn setup() -> (Env, AnchorShipmentClient<'static>, Address, Address) {
     let (env, admin) = super::test_utils::setup_env();
     let token = env.register(MockToken {}, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
     (env, client, admin, token)
 }
 
 /// Enable `auto_dispute_breach` by calling `update_config`.
-fn enable_auto_dispute(client: &NavinShipmentClient, admin: &Address) {
+fn enable_auto_dispute(client: &AnchorShipmentClient, admin: &Address) {
     let mut cfg = client.get_contract_config();
     cfg.auto_dispute_breach = true;
     client.update_config(admin, &cfg);
@@ -46,7 +46,7 @@ fn enable_auto_dispute(client: &NavinShipmentClient, admin: &Address) {
 /// Create a shipment and return its ID. Carrier is registered as a carrier role.
 fn create_test_shipment(
     env: &Env,
-    client: &NavinShipmentClient,
+    client: &AnchorShipmentClient,
     admin: &Address,
     token: &Address,
 ) -> (u64, Address, Address, Address) {

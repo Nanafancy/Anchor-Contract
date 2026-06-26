@@ -7,7 +7,7 @@
 
 extern crate std;
 
-use crate::{NavinShipment, NavinShipmentClient, ShipmentStatus};
+use crate::{AnchorShipment, AnchorShipmentClient, ShipmentStatus};
 use soroban_sdk::{
     contract, contractimpl,
     testutils::{Address as _, Ledger as _},
@@ -35,11 +35,11 @@ impl MockToken {
 // Test Setup Helpers
 // ─────────────────────────────────────────────────────────────────────────────
 
-fn setup_env() -> (Env, NavinShipmentClient<'static>, Address, Address) {
+fn setup_env() -> (Env, AnchorShipmentClient<'static>, Address, Address) {
     let (env, admin) = crate::test_utils::setup_env();
     let token_contract = env.register(MockToken {}, ());
-    let contract_id = env.register(NavinShipment, ());
-    let client = NavinShipmentClient::new(&env, &contract_id);
+    let contract_id = env.register(AnchorShipment, ());
+    let client = AnchorShipmentClient::new(&env, &contract_id);
     client.initialize(&admin, &token_contract);
     (env, client, admin, token_contract)
 }
@@ -92,8 +92,8 @@ fn test_add_company_not_initialized() {
     let admin = Address::generate(&env);
     let company = Address::generate(&env);
     let _token = env.register(MockToken {}, ());
-    let contract_id = env.register(NavinShipment, ());
-    let client = NavinShipmentClient::new(&env, &contract_id);
+    let contract_id = env.register(AnchorShipment, ());
+    let client = AnchorShipmentClient::new(&env, &contract_id);
 
     env.mock_all_auths();
     let result = client.try_add_company(&admin, &company);

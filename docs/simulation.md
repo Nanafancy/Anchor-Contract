@@ -1,6 +1,6 @@
 # Transaction Simulation Guide
 
-Simulate Navin Shipment contract calls to estimate success/failure and resource
+Simulate Anchor Shipment contract calls to estimate success/failure and resource
 usage **before** submitting real transactions. No ledger state is modified and
 no fees are charged during simulation.
 
@@ -155,7 +155,7 @@ The same path is used internally when you run `stellar contract invoke` without
 ❌ Simulation failed: Error(Contract, #4) — ShipmentNotFound
 ```
 
-Error codes map directly to `NavinError` variants in
+Error codes map directly to `AnchorError` variants in
 [`contracts/shipment/src/errors.rs`](../contracts/shipment/src/errors.rs).
 
 ### Resource fields explained

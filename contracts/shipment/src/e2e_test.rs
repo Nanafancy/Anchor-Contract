@@ -1,5 +1,5 @@
 // =============================================================================
-// End-to-End Integration Test: NavinShipment + NavinToken (Real Token Contract)
+// End-to-End Integration Test: AnchorShipment + AnchorToken (Real Token Contract)
 //
 // Covers four lifecycle paths, all with real token balance verification:
 //   1. HAPPY PATH          — deposit → milestones (100 %) → delivery → full release
@@ -14,8 +14,8 @@
 
 extern crate std;
 
-use crate::{test_utils::setup_env, NavinShipment, NavinShipmentClient, ShipmentStatus};
-use navin_token::{NavinToken, NavinTokenClient};
+use crate::{test_utils::setup_env, AnchorShipment, AnchorShipmentClient, ShipmentStatus};
+use Anchor_token::{AnchorToken, AnchorTokenClient};
 use soroban_sdk::{
     testutils::{Address as _, Events, Ledger as _},
     Address, BytesN, Env, FromVal, String, Symbol, Vec,
@@ -31,14 +31,14 @@ fn advance_time(env: &Env, seconds: u64) {
 }
 
 // ---------------------------------------------------------------------------
-// Helper: deploy + initialise NavinToken, giving admin the initial supply
+// Helper: deploy + initialise AnchorToken, giving admin the initial supply
 // ---------------------------------------------------------------------------
-fn deploy_token<'a>(env: &'a Env, admin: &Address) -> (Address, NavinTokenClient<'a>) {
-    let token_id = env.register(NavinToken, ());
-    let token = NavinTokenClient::new(env, &token_id);
+fn deploy_token<'a>(env: &'a Env, admin: &Address) -> (Address, AnchorTokenClient<'a>) {
+    let token_id = env.register(AnchorToken, ());
+    let token = AnchorTokenClient::new(env, &token_id);
     token.initialize(
         admin,
-        &String::from_str(env, "NavinToken"),
+        &String::from_str(env, "AnchorToken"),
         &String::from_str(env, "NVN"),
         &1_000_000_i128,
     );
@@ -46,15 +46,15 @@ fn deploy_token<'a>(env: &'a Env, admin: &Address) -> (Address, NavinTokenClient
 }
 
 // ---------------------------------------------------------------------------
-// Helper: deploy + initialise NavinShipment
+// Helper: deploy + initialise AnchorShipment
 // ---------------------------------------------------------------------------
 fn deploy_shipment<'a>(
     env: &'a Env,
     admin: &Address,
     token_id: &Address,
-) -> NavinShipmentClient<'a> {
-    let contract_id = env.register(NavinShipment, ());
-    let client = NavinShipmentClient::new(env, &contract_id);
+) -> AnchorShipmentClient<'a> {
+    let contract_id = env.register(AnchorShipment, ());
+    let client = AnchorShipmentClient::new(env, &contract_id);
     client.initialize(admin, token_id);
     client
 }

@@ -1,4 +1,4 @@
-name: Navin Smart Contracts CI
+name: Anchor Smart Contracts CI
 
 on:
   push:

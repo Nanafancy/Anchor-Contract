@@ -3,7 +3,7 @@
 /// This module ensures that zero-amount and negative-amount escrow operations
 /// are rejected consistently across all escrow call paths, preventing silent
 /// acceptance of invalid amounts and maintaining bounded, predictable behavior.
-use crate::{NavinShipment, NavinShipmentClient, ShipmentStatus};
+use crate::{AnchorShipment, AnchorShipmentClient, ShipmentStatus};
 use soroban_sdk::{testutils::Address as _, Address, BytesN, Env, Vec};
 
 #[soroban_sdk::contract]
@@ -20,7 +20,7 @@ impl MockToken {
 
 fn setup_escrow_env() -> (
     Env,
-    NavinShipmentClient<'static>,
+    AnchorShipmentClient<'static>,
     Address,
     Address,
     Address,
@@ -28,7 +28,7 @@ fn setup_escrow_env() -> (
 ) {
     let (env, admin) = crate::test_utils::setup_env();
     let token_contract = env.register(MockToken {}, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
 
     let company = Address::generate(&env);
     let receiver = Address::generate(&env);

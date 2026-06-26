@@ -2,7 +2,7 @@
 
 extern crate std;
 
-use crate::{types::DataKey, NavinError, NavinShipment, NavinShipmentClient};
+use crate::{types::DataKey, AnchorError, AnchorShipment, AnchorShipmentClient};
 use soroban_sdk::{testutils::Address as _, Address, BytesN, Env, Vec};
 
 #[soroban_sdk::contract]
@@ -19,7 +19,7 @@ impl MockToken {
 
 fn setup_counter_env() -> (
     Env,
-    NavinShipmentClient<'static>,
+    AnchorShipmentClient<'static>,
     Address,
     Address,
     Address,
@@ -27,7 +27,7 @@ fn setup_counter_env() -> (
 ) {
     let (env, admin) = crate::test_utils::setup_env();
     let token_contract = env.register(MockToken {}, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
 
     let company = Address::generate(&env);
     let receiver = Address::generate(&env);
@@ -150,7 +150,7 @@ fn test_shipment_counter_overflow_rejected_at_max() {
     match result {
         Ok(Err(e)) => {
             let expected_error =
-                soroban_sdk::Error::from_contract_error(NavinError::CounterOverflow as u32);
+                soroban_sdk::Error::from_contract_error(AnchorError::CounterOverflow as u32);
             let err_str = std::format!("{:?}", e);
             let expected_str = std::format!("{:?}", expected_error);
             assert!(
