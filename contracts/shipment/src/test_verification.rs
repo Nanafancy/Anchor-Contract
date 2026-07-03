@@ -52,7 +52,7 @@ fn test_frontend_verification_flow() {
     println!("---------------------------");
 
     // 2. Verification Step: Verify Contract ID
-    // A frontend would check if the event's contractId matches the known Navin contract address.
+    // A frontend would check if the event's contractId matches the known Anchor contract address.
     assert_eq!(shipment_created_event.0, client.address);
 
     // 3. Verification Step: Verify Topics

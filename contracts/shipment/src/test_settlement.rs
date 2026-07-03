@@ -1,5 +1,5 @@
 use crate::types::*;
-use crate::{NavinShipment, NavinShipmentClient};
+use crate::{AnchorShipment, AnchorShipmentClient};
 use soroban_sdk::testutils::Address as _;
 use soroban_sdk::{contract, contractimpl, contracterror, Address, BytesN, Env};
 
@@ -86,11 +86,11 @@ mod mock_token {
     }
 }
 
-fn setup_shipment_env() -> (Env, NavinShipmentClient<'static>, Address, Address) {
+fn setup_shipment_env() -> (Env, AnchorShipmentClient<'static>, Address, Address) {
     let (env, admin) = crate::test_utils::setup_env();
     let token_contract = env.register(MockToken {}, ());
     let token_contract = env.register(mock_token::MockToken, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
     client.initialize(&admin, &token_contract);
 
     (env, client, admin, token_contract)
@@ -112,12 +112,12 @@ mod failing_mock_token {
     }
 }
 
-fn setup_shipment_env_with_failing_token() -> (Env, NavinShipmentClient<'static>, Address, Address)
+fn setup_shipment_env_with_failing_token() -> (Env, AnchorShipmentClient<'static>, Address, Address)
 {
     let (env, admin) = crate::test_utils::setup_env();
     let token_contract = env.register(failing_token::FailingMockToken {}, ());
     let token_contract = env.register(failing_mock_token::FailingMockToken, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
     client.initialize(&admin, &token_contract);
 
     (env, client, admin, token_contract)

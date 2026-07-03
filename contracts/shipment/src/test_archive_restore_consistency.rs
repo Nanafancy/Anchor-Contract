@@ -9,7 +9,7 @@
 #[cfg(test)]
 mod tests {
     extern crate std;
-    use crate::{test_utils, NavinError, NavinShipment, NavinShipmentClient, ShipmentStatus};
+    use crate::{test_utils, AnchorError, AnchorShipment, AnchorShipmentClient, ShipmentStatus};
     use soroban_sdk::{contract, contractimpl, testutils::Address as _, Address, BytesN, Env, Vec};
 
     #[contract]
@@ -31,10 +31,10 @@ mod tests {
         }
     }
 
-    fn setup() -> (Env, NavinShipmentClient<'static>, Address) {
+    fn setup() -> (Env, AnchorShipmentClient<'static>, Address) {
         let (env, admin) = test_utils::setup_env();
-        let contract_id = env.register(NavinShipment, ());
-        let client = NavinShipmentClient::new(&env, &contract_id);
+        let contract_id = env.register(AnchorShipment, ());
+        let client = AnchorShipmentClient::new(&env, &contract_id);
         let token_id = env.register(MockToken, ());
         client.initialize(&admin, &token_id);
         (env, client, admin)
@@ -44,7 +44,7 @@ mod tests {
     /// Returns (shipment_id, company, receiver, carrier, data_hash).
     fn create_and_archive(
         env: &Env,
-        client: &NavinShipmentClient<'static>,
+        client: &AnchorShipmentClient<'static>,
         admin: &Address,
         seed: u8,
     ) -> (u64, Address, Address, Address, BytesN<32>) {
@@ -226,7 +226,7 @@ mod tests {
         match result {
             Ok(Err(e)) => {
                 let expected_error =
-                    soroban_sdk::Error::from_contract_error(NavinError::ShipmentNotFound as u32);
+                    soroban_sdk::Error::from_contract_error(AnchorError::ShipmentNotFound as u32);
                 let err_str = std::format!("{:?}", e);
                 let expected_str = std::format!("{:?}", expected_error);
                 assert!(

@@ -1,6 +1,6 @@
 # Testnet Deployment Guide
 
-This guide walks you through deploying the Navin shipment tracking contracts to Stellar testnet.
+This guide walks you through deploying the Anchor shipment tracking contracts to Stellar testnet.
 
 ## Prerequisites
 
@@ -32,7 +32,7 @@ The deployment scripts use the following environment variables:
 
 | Variable                     | Default                                   | Description                                        |
 | ---------------------------- | ----------------------------------------- | -------------------------------------------------- |
-| `STELLAR_IDENTITY`           | `navin-testnet`                           | Stellar CLI identity name for signing transactions |
+| `STELLAR_IDENTITY`           | `Anchor-testnet`                           | Stellar CLI identity name for signing transactions |
 | `STELLAR_RPC_URL`            | `https://soroban-testnet.stellar.org:443` | Stellar testnet RPC endpoint                       |
 | `STELLAR_NETWORK_PASSPHRASE` | `Test SDF Network ; September 2015`       | Network passphrase for testnet                     |
 
@@ -55,7 +55,7 @@ Build both contracts to optimized WASM:
 
 This will:
 
-- Compile both `navin-token` and `shipment` contracts
+- Compile both `Anchor-token` and `shipment` contracts
 - Verify WASM files are generated
 - Display file sizes
 
@@ -64,7 +64,7 @@ Expected output:
 ```
 Building Soroban contracts...
 Build successful!
-Token WASM: target/wasm32-unknown-unknown/release/navin_token.wasm (XXX KB)
+Token WASM: target/wasm32-unknown-unknown/release/Anchor_token.wasm (XXX KB)
 Shipment WASM: target/wasm32-unknown-unknown/release/shipment.wasm (XXX KB)
 ```
 
@@ -87,7 +87,7 @@ Expected output:
 
 ```
 Deploying contracts to Stellar testnet...
-Identity: navin-testnet
+Identity: Anchor-testnet
 RPC URL: https://soroban-testnet.stellar.org:443
 Deploying token contract...
 Token contract deployed: CXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -109,7 +109,7 @@ Initialize both contracts with default parameters:
 This will:
 
 - Initialize the token contract with:
-  - Name: "Navin Token"
+  - Name: "Anchor Token"
   - Symbol: "NAV"
   - Total supply: 1,000,000,000.0000000 (10^16 stroops, 7 decimals)
 - Initialize the shipment contract with the token contract address
@@ -243,4 +243,4 @@ If any step fails, fix issues before release.
 ### Escrow Reentrancy Guard Signals
 
 - Storage lock key: `DataKey::ReentrancyLock`
-- Error on lock contention: `NavinError::ReentrancyDetected`
+- Error on lock contention: `AnchorError::ReentrancyDetected`

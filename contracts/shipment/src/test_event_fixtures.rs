@@ -1,7 +1,7 @@
 //! # #299 — Deterministic Snapshot Assertions for Event Payloads
 //!
 //! Asserts the **exact structure and field count** of every key event emitted
-//! by the Navin shipment contract.  Any change to an event payload (added
+//! by the Anchor shipment contract.  Any change to an event payload (added
 //! field, removed field, reordered tuple) will cause one of these tests to
 //! fail, gating CI on snapshot drift.
 //!
@@ -26,7 +26,7 @@
 
 extern crate std;
 
-use crate::{test_utils, NavinShipment, NavinShipmentClient};
+use crate::{test_utils, AnchorShipment, AnchorShipmentClient};
 use soroban_sdk::{
     contract, contractimpl,
     testutils::{Address as _, Events},
@@ -52,7 +52,7 @@ impl FixtureReplayToken {
 
 fn fixture_env() -> (
     Env,
-    NavinShipmentClient<'static>,
+    AnchorShipmentClient<'static>,
     Address, // admin
     Address, // company
     Address, // carrier
@@ -69,8 +69,8 @@ fn fixture_env() -> (
 
     StellarAssetClient::new(&env, &token_address).mint(&company, &10_000_000i128);
 
-    let shipment_addr = env.register(NavinShipment, ());
-    let client = NavinShipmentClient::new(&env, &shipment_addr);
+    let shipment_addr = env.register(AnchorShipment, ());
+    let client = AnchorShipmentClient::new(&env, &shipment_addr);
     client.initialize(&admin, &token_address);
     client.add_company(&admin, &company);
     client.add_carrier(&admin, &carrier);
@@ -857,7 +857,7 @@ fn test_idempotency_keys_differ_by_event_counter() {
 fn test_event_replay_blocked_by_salt_reuse() {
     let (env, admin) = test_utils::setup_env();
     let token = env.register(FixtureReplayToken {}, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
     client.initialize(&admin, &token);
 
     // Set up multisig (need ≥ 2 admins).

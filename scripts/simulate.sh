@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# simulate.sh — Simulate Navin Shipment contract method calls before submitting
+# simulate.sh — Simulate Anchor Shipment contract method calls before submitting
 #
 # Usage:
 #   ./scripts/simulate.sh [METHOD]
@@ -187,7 +187,7 @@ sim_get_contract_config() {
 check_deps
 
 echo ""
-echo "Navin Shipment Contract — Transaction Simulation"
+echo "Anchor Shipment Contract — Transaction Simulation"
 echo "Network  : $NETWORK ($RPC_URL)"
 echo "Identity : $IDENTITY"
 echo "Contract : ${CONTRACT_ID:-<not set>}"

@@ -1,10 +1,10 @@
 extern crate std;
 
-use crate::{test::setup_shipment_env, NavinError, ShipmentStatus};
+use crate::{test::setup_shipment_env, AnchorError, ShipmentStatus};
 use soroban_sdk::{testutils::Address as _, Address, BytesN, Vec};
 
 fn create_shipment_for(
-    client: &crate::NavinShipmentClient<'static>,
+    client: &crate::AnchorShipmentClient<'static>,
     env: &soroban_sdk::Env,
     sender: &Address,
     receiver: &Address,
@@ -59,7 +59,7 @@ fn test_get_shipments_batch_rejects_requests_over_hard_limit() {
     }
 
     let result = client.try_get_shipments_batch(&ids);
-    assert!(matches!(result, Err(Ok(NavinError::BatchTooLarge))));
+    assert!(matches!(result, Err(Ok(AnchorError::BatchTooLarge))));
 }
 
 #[test]
@@ -138,7 +138,7 @@ fn test_get_shipments_by_status_rejects_zero_limit() {
     client.initialize(&admin, &token_contract);
 
     let result = client.try_get_shipments_by_status(&ShipmentStatus::Created, &0);
-    assert!(matches!(result, Err(Ok(NavinError::InvalidConfig))));
+    assert!(matches!(result, Err(Ok(AnchorError::InvalidConfig))));
 }
 
 // ── Batch vs. single-read consistency (issue #445) ───────────────────────────

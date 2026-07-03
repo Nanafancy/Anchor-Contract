@@ -1,6 +1,6 @@
 //! # Events Module — Hash-and-Emit Pattern
 //!
-//! The heart of Navin's off-chain data architecture. Instead of storing heavy
+//! The heart of Anchor's off-chain data architecture. Instead of storing heavy
 //! payloads (GPS traces, sensor readings, metadata) on-chain, the contract
 //! emits structured events containing only the `shipment_id`, relevant
 //! identifiers, and a `data_hash` (SHA-256 of the full off-chain payload).

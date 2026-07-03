@@ -1,6 +1,6 @@
 # Shipment Contract — Event Schema Reference
 
-> **Architectures note:** Navin uses a **Hash-and-Emit** pattern. Heavy payloads (GPS traces,
+> **Architecture note:** Anchor uses a **Hash-and-Emit** pattern. Heavy payloads (GPS traces,
 > sensor readings, dispute evidence, milestone metadata) are stored **off-chain**. The contract
 > emits only the `shipment_id`, relevant identifiers, and a `BytesN<32>` SHA-256 hash of the
 > full payload. The backend indexer verifies integrity by re-hashing the stored payload and
@@ -874,7 +874,7 @@ interface NotificationEvent {
 
 // ─── Union of All Events ──────────────────────────────────────────────────────
 
-type NavinContractEvent =
+type AnchorContractEvent =
   | ShipmentCreatedEvent
   | StatusUpdatedEvent
   | MilestoneRecordedEvent
@@ -897,25 +897,25 @@ type NavinContractEvent =
 // ─── Horizon Stream Parser Helper ─────────────────────────────────────────────
 
 /**
- * Parses a raw Horizon contract event into a typed NavinContractEvent.
+ * Parses a raw Horizon contract event into a typed AnchorContractEvent.
  * The `topic[0]` symbol is used as the discriminator.
  *
  * @example
  * const stream = await server.getEvents({ contractId });
  * for (const raw of stream.records) {
- *   const event = parseNavinEvent(raw);
+ *   const event = parseAnchorEvent(raw);
  *   if (event.topic === "shipment_created") {
  *     console.log("New shipment:", event.shipmentId);
  *   }
  * }
  */
-function parseNavinEvent(raw: {
+function parseAnchorEvent(raw: {
   topic: unknown[];
   value: unknown;
-}): NavinContractEvent {
+}): AnchorContractEvent {
   const topic = (raw.topic[0] as { symbol: string }).symbol;
   // Map raw XDR/JSON value fields to the typed interface based on topic.
   // Implementation depends on your Soroban SDK version and XDR decoding library.
-  throw new Error(`parseNavinEvent: implement decoding for topic "${topic}"`);
+  throw new Error(`parseAnchorEvent: implement decoding for topic "${topic}"`);
 }
 ```

@@ -99,7 +99,7 @@ Schema compatibility tests live in
 [`contracts/shipment/src/schema_compat.rs`](../contracts/shipment/src/schema_compat.rs).
 
 They guard:
-- `NavinError` discriminant values (31 variants, codes 1–31)
+- `AnchorError` discriminant values (31 variants, codes 1–31)
 - `ShipmentStatus` FSM transition table
 - All enum variant sets (`Role`, `BreachType`, `GeofenceEvent`, `DisputeResolution`, `NotificationType`, `AdminAction`)
 - Struct field names and types (`Shipment`, `ShipmentInput`, `ContractMetadata`, `Analytics`)

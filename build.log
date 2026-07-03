@@ -6,5 +6,5 @@
    
     Checking soroban-env-host v22.1.3
     Checking soroban-ledger-snapshot v22.0.7
-    Checking shipment v0.0.0 (/home/izk/Documents/DRIPS/navin-contracts/contracts/shipment)
+    Checking shipment v0.0.0 (/home/izk/Documents/DRIPS/Anchor-contracts/contracts/shipment)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 44.61s

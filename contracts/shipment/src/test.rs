@@ -3,7 +3,7 @@
 extern crate std;
 
 use crate::{
-    types::DataKey, BreachType, GeofenceEvent, NavinError, NavinShipment, NavinShipmentClient,
+    types::DataKey, BreachType, GeofenceEvent, AnchorError, AnchorShipment, AnchorShipmentClient,
     PersistentRestoreDiagnostics, Severity, ShipmentInput, ShipmentStatus, StoragePresenceState,
 };
 use soroban_sdk::{
@@ -96,19 +96,19 @@ mod invalid_token_high_decimals {
     }
 }
 
-pub fn setup_shipment_env() -> (Env, NavinShipmentClient<'static>, Address, Address) {
+pub fn setup_shipment_env() -> (Env, AnchorShipmentClient<'static>, Address, Address) {
     let (env, admin) = super::test_utils::setup_env();
     let token_contract = env.register(MockToken {}, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
 
     (env, client, admin, token_contract)
 }
 
 pub fn setup_shipment_env_with_failing_token(
-) -> (Env, NavinShipmentClient<'static>, Address, Address) {
+) -> (Env, AnchorShipmentClient<'static>, Address, Address) {
     let (env, admin) = super::test_utils::setup_env();
     let token_contract = env.register(failing_token::FailingMockToken {}, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
 
     (env, client, admin, token_contract)
 }
@@ -116,10 +116,10 @@ pub fn setup_shipment_env_with_failing_token(
 /// Creates a fully-initialized shipment environment ready for use.
 /// Calls `initialize` on the client so tests can call contract methods
 /// directly without an extra initialization step.
-pub fn setup_initialized_shipment_env() -> (Env, NavinShipmentClient<'static>, Address, Address) {
+pub fn setup_initialized_shipment_env() -> (Env, AnchorShipmentClient<'static>, Address, Address) {
     let (env, admin) = super::test_utils::setup_env();
     let token_contract = env.register(MockToken {}, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
     client.initialize(&admin, &token_contract);
     (env, client, admin, token_contract)
 }
@@ -127,10 +127,10 @@ pub fn setup_initialized_shipment_env() -> (Env, NavinShipmentClient<'static>, A
 /// Like `setup_initialized_shipment_env` but uses a token that always
 /// fails transfers — useful for testing rollback / failure paths.
 pub fn setup_initialized_shipment_env_with_failing_token(
-) -> (Env, NavinShipmentClient<'static>, Address, Address) {
+) -> (Env, AnchorShipmentClient<'static>, Address, Address) {
     let (env, admin) = super::test_utils::setup_env();
     let token_contract = env.register(failing_token::FailingMockToken {}, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
     client.initialize(&admin, &token_contract);
     (env, client, admin, token_contract)
 }
@@ -191,7 +191,7 @@ fn test_admin_is_stored_correctly() {
 #[test]
 fn test_scaffold() {
     let env = Env::default();
-    let _client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let _client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
 }
 
 #[test]
@@ -248,7 +248,7 @@ fn test_deposit_escrow_maps_token_transfer_failure() {
 
     let result = client.try_deposit_escrow(&company, &shipment_id, &500);
 
-    assert_eq!(result, Err(Ok(crate::NavinError::TokenTransferFailed)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::TokenTransferFailed)));
     assert_eq!(client.get_shipment(&shipment_id).escrow_amount, 0);
 }
 
@@ -263,7 +263,7 @@ fn test_token_mint_helper_maps_failure() {
 
     let result = super::invoke_token_mint(&env, &token_contract, &admin, &recipient, 250);
 
-    assert_eq!(result, Err(crate::NavinError::TokenMintFailed));
+    assert_eq!(result, Err(crate::AnchorError::TokenMintFailed));
 }
 
 #[test]
@@ -827,7 +827,7 @@ fn test_suspend_and_reactivate_carrier_for_status_updates() {
         &ShipmentStatus::AtCheckpoint,
         &update_hash,
     );
-    assert_eq!(res, Err(Ok(crate::NavinError::CarrierSuspended)));
+    assert_eq!(res, Err(Ok(crate::AnchorError::CarrierSuspended)));
 
     client.reactivate_carrier(&admin, &carrier);
     assert!(!client.is_carrier_suspended(&carrier));
@@ -849,7 +849,7 @@ fn test_suspend_carrier_requires_admin() {
 
     client.initialize(&admin, &token_contract);
     let res = client.try_suspend_carrier(&outsider, &carrier);
-    assert_eq!(res, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(res, Err(Ok(crate::AnchorError::Unauthorized)));
 }
 
 // ============= Get Escrow Balance Tests =============
@@ -1537,7 +1537,7 @@ fn test_update_eta_unauthorized() {
 
 fn setup_shipment_with_status(
     env: &Env,
-    client: &NavinShipmentClient,
+    client: &AnchorShipmentClient,
     admin: &Address,
     token_contract: &Address,
     status: crate::ShipmentStatus,
@@ -1733,7 +1733,7 @@ fn test_confirm_partial_delivery_rejects_over_release() {
         &BytesN::from_array(&env, &[13u8; 32]),
         &60,
     );
-    assert_eq!(result, Err(Ok(NavinError::InvalidAmount)));
+    assert_eq!(result, Err(Ok(AnchorError::InvalidAmount)));
 }
 
 #[test]
@@ -2576,12 +2576,12 @@ fn test_suspended_carrier_blocked_from_milestone_handlers() {
 
     let checkpoint = Symbol::new(&env, "port_arrival");
     let single_res = client.try_record_milestone(&carrier, &shipment_id, &checkpoint, &data_hash);
-    assert_eq!(single_res, Err(Ok(crate::NavinError::CarrierSuspended)));
+    assert_eq!(single_res, Err(Ok(crate::AnchorError::CarrierSuspended)));
 
     let mut milestones = soroban_sdk::Vec::new(&env);
     milestones.push_back((checkpoint, BytesN::from_array(&env, &[22u8; 32])));
     let batch_res = client.try_record_milestones_batch(&carrier, &shipment_id, &milestones);
-    assert_eq!(batch_res, Err(Ok(crate::NavinError::CarrierSuspended)));
+    assert_eq!(batch_res, Err(Ok(crate::AnchorError::CarrierSuspended)));
 }
 
 // ============= Batch Milestone Recording Tests =============
@@ -3557,7 +3557,7 @@ fn test_milestone_payment_duplicate_record_no_double_pay() {
     // Record Milestone 1 AGAIN — must be rejected to prevent double-pay
     let dup_result =
         client.try_record_milestone(&carrier, &shipment_id, &Symbol::new(&env, "m1"), &data_hash);
-    assert_eq!(dup_result, Err(Ok(crate::NavinError::MilestoneAlreadyPaid)));
+    assert_eq!(dup_result, Err(Ok(crate::AnchorError::MilestoneAlreadyPaid)));
     // Escrow must still be 500 — no double payment
     assert_eq!(client.get_shipment(&shipment_id).escrow_amount, 500);
 }
@@ -4375,11 +4375,11 @@ fn test_only_admin_can_assign_roles() {
     // Non-admin cannot add company
     env.mock_all_auths();
     let result = client.try_add_company(&outsider, &Address::generate(&env));
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 
     // Non-admin cannot add carrier
     let result = client.try_add_carrier(&outsider, &Address::generate(&env));
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 }
 
 #[test]
@@ -4416,7 +4416,7 @@ fn test_only_company_can_create_shipments() {
         &soroban_sdk::Vec::new(&env),
         &deadline,
     );
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 
     // Outsider cannot create shipment
     // Outsider cannot create shipment
@@ -4428,7 +4428,7 @@ fn test_only_company_can_create_shipments() {
         &soroban_sdk::Vec::new(&env),
         &deadline,
     );
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 }
 
 #[test]
@@ -4479,7 +4479,7 @@ fn test_only_carrier_can_update_status_and_record_milestones() {
         &ShipmentStatus::AtCheckpoint,
         &update_hash,
     );
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 
     // Other carrier (not assigned) cannot record milestone
     let result = client.try_record_milestone(
@@ -4488,7 +4488,7 @@ fn test_only_carrier_can_update_status_and_record_milestones() {
         &Symbol::new(&env, "checkpoint"),
         &update_hash,
     );
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 
     // Admin can update status (as seen in lib.rs)
     client.update_status(
@@ -4552,15 +4552,15 @@ fn test_only_receiver_can_confirm_delivery() {
 
     // Admin cannot confirm delivery (only designated receiver)
     let result = client.try_confirm_delivery(&admin, &shipment_id_2, &delivery_hash);
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 
     // Carrier cannot confirm delivery
     let result = client.try_confirm_delivery(&carrier, &shipment_id_2, &delivery_hash);
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 
     // Outsider cannot confirm delivery
     let result = client.try_confirm_delivery(&outsider, &shipment_id_2, &delivery_hash);
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 }
 
 #[test]
@@ -4581,16 +4581,16 @@ fn test_unassigned_addresses_are_rejected() {
         &soroban_sdk::Vec::new(&env),
         &deadline,
     );
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 
     // Unassigned cannot add carrier to whitelist
     let result = client.try_add_carrier_to_whitelist(&outsider, &Address::generate(&env));
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 
     // Unassigned cannot report geofence event
     let result =
         client.try_report_geofence_event(&outsider, &1, &GeofenceEvent::ZoneEntry, &data_hash);
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 }
 
 #[test]
@@ -4623,15 +4623,15 @@ fn test_rbac_all_gated_functions_with_wrong_role() {
         &Symbol::new(&env, "key"),
         &Symbol::new(&env, "val"),
     );
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 
     // add_carrier_to_whitelist: company only
     let result = client.try_add_carrier_to_whitelist(&carrier, &Address::generate(&env));
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 
     // deposit_escrow: Company only
     let result = client.try_deposit_escrow(&carrier, &shipment_id, &1000);
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 
     // report_geofence_event: Carrier only
     let result = client.try_report_geofence_event(
@@ -4640,19 +4640,19 @@ fn test_rbac_all_gated_functions_with_wrong_role() {
         &GeofenceEvent::ZoneEntry,
         &data_hash,
     );
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 
     // update_eta: assigned carrier only
     let result = client.try_update_eta(&company, &shipment_id, &1000000000, &data_hash);
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 
     // cancel_shipment: sender or admin only
     let result = client.try_cancel_shipment(&carrier, &shipment_id, &data_hash);
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 
     // raise_dispute: sender, receiver, or carrier only
     let result = client.try_raise_dispute(&outsider, &shipment_id, &data_hash);
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 
     // resolve_dispute: admin only
     let result = client.try_resolve_dispute(
@@ -4661,12 +4661,12 @@ fn test_rbac_all_gated_functions_with_wrong_role() {
         &crate::DisputeResolution::ReleaseToCarrier,
         &BytesN::from_array(&env, &[1u8; 32]),
     );
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 
     // handoff_shipment: current carrier only
     let result =
         client.try_handoff_shipment(&company, &Address::generate(&env), &shipment_id, &data_hash);
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 
     // update_status: carrier or admin only (Company cannot update status)
     let result = client.try_update_status(
@@ -4675,7 +4675,7 @@ fn test_rbac_all_gated_functions_with_wrong_role() {
         &ShipmentStatus::InTransit,
         &data_hash,
     );
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 }
 
 // ============= Admin Transfer Tests =============
@@ -4702,7 +4702,7 @@ fn test_successful_admin_transfer() {
 
     // Attempting to add a company with the old admin should now fail
     let result = client.try_add_company(&admin, &company);
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 }
 
 #[test]
@@ -5357,7 +5357,7 @@ fn test_delivery_before_deadline() {
 
     // Attempting to crank check_deadline on a safely completed shipment errors appropriately (Error 9)
     let res = client.try_check_deadline(&shipment_id);
-    assert_eq!(res, Err(Ok(crate::NavinError::ShipmentAlreadyCompleted)));
+    assert_eq!(res, Err(Ok(crate::AnchorError::ShipmentAlreadyCompleted)));
 }
 
 #[test]
@@ -6330,7 +6330,7 @@ fn test_company_shipment_limit_override_takes_precedence() {
         &soroban_sdk::Vec::new(&env),
         &deadline,
     );
-    assert_eq!(result, Err(Ok(NavinError::ShipmentLimitReached)));
+    assert_eq!(result, Err(Ok(AnchorError::ShipmentLimitReached)));
 }
 
 #[test]
@@ -6372,7 +6372,7 @@ fn test_company_limit_falls_back_to_global_limit() {
         &soroban_sdk::Vec::new(&env),
         &deadline,
     );
-    assert_eq!(result, Err(Ok(NavinError::ShipmentLimitReached)));
+    assert_eq!(result, Err(Ok(AnchorError::ShipmentLimitReached)));
 }
 
 // ============= Dispute Evidence Tests =============
@@ -6401,7 +6401,7 @@ fn test_add_dispute_evidence_hash_success() {
 
     // Initial state is Created, not Disputed
     let res = client.try_add_dispute_evidence_hash(&company, &shipment_id, &evidence_hash);
-    assert_eq!(res, Err(Ok(crate::NavinError::InvalidStatus)));
+    assert_eq!(res, Err(Ok(crate::AnchorError::InvalidStatus)));
 
     // Change to Disputed
     client.raise_dispute(&company, &shipment_id, &data_hash);
@@ -6464,7 +6464,7 @@ fn test_resolve_dispute_fails_without_reason_hash() {
         &crate::DisputeResolution::ReleaseToCarrier,
         &empty_hash,
     );
-    assert_eq!(res, Err(Ok(crate::NavinError::DisputeReasonHashMissing)));
+    assert_eq!(res, Err(Ok(crate::AnchorError::DisputeReasonHashMissing)));
 }
 
 #[test]
@@ -6745,9 +6745,9 @@ fn test_count_decrements_on_deadline_expiration() {
 }
 
 // ============================================================================
-// COMPREHENSIVE NEGATIVE TEST SUITE - Testing All NavinError Variants
+// COMPREHENSIVE NEGATIVE TEST SUITE - Testing All AnchorError Variants
 // ============================================================================
-// This section systematically tests every NavinError variant to ensure
+// This section systematically tests every AnchorError variant to ensure
 // proper error handling across all contract functions.
 // ============================================================================
 
@@ -9460,7 +9460,7 @@ fn test_get_shipment_reference_collision_free() {
 /// deadline. Returns the shipment ID.
 fn setup_shipment_with_deadline(
     env: &Env,
-    client: &NavinShipmentClient,
+    client: &AnchorShipmentClient,
     admin: &Address,
     token_contract: &Address,
     deadline: u64,
@@ -9600,7 +9600,7 @@ fn test_update_config_rejects_grace_period_exceeding_max() {
 /// return (env, client, admin, token_contract, company, shipment_id).
 fn setup_force_cancel_env() -> (
     Env,
-    NavinShipmentClient<'static>,
+    AnchorShipmentClient<'static>,
     Address,
     Address,
     Address,
@@ -10574,7 +10574,7 @@ fn test_operator_can_manage_roles() {
 
     let outsider = Address::generate(&env);
     let result = client.try_add_company(&outsider, &Address::generate(&env));
-    assert_eq!(result, Err(Ok(crate::NavinError::Unauthorized)));
+    assert_eq!(result, Err(Ok(crate::AnchorError::Unauthorized)));
 }
 
 #[test]
@@ -10711,14 +10711,14 @@ fn test_report_condition_breach_limit_exceeded() {
         &data_hash,
     );
 
-    assert_eq!(res, Err(Ok(crate::NavinError::BreachLimitExceeded)));
+    assert_eq!(res, Err(Ok(crate::AnchorError::BreachLimitExceeded)));
 }
 
 #[test]
 fn test_deposit_escrow_invalid_token_decimals() {
     let (env, admin) = super::test_utils::setup_env();
     let token_contract = env.register(invalid_token::MockTokenInvalidDecimals {}, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
 
     client.initialize(&admin, &token_contract);
 
@@ -10744,7 +10744,7 @@ fn test_deposit_escrow_invalid_token_decimals() {
     );
 
     let res = client.try_deposit_escrow(&company, &shipment_id, &1000);
-    assert_eq!(res, Err(Ok(crate::NavinError::InvalidTokenDecimals)));
+    assert_eq!(res, Err(Ok(crate::AnchorError::InvalidTokenDecimals)));
 }
 
 #[test]
@@ -10761,7 +10761,7 @@ fn test_get_expected_token_decimals_policy() {
 fn test_deposit_escrow_invalid_token_high_decimals() {
     let (env, admin) = super::test_utils::setup_env();
     let token_contract = env.register(invalid_token_high_decimals::MockTokenHighDecimals {}, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
 
     client.initialize(&admin, &token_contract);
 
@@ -10787,7 +10787,7 @@ fn test_deposit_escrow_invalid_token_high_decimals() {
     );
 
     let res = client.try_deposit_escrow(&company, &shipment_id, &1000);
-    assert_eq!(res, Err(Ok(crate::NavinError::InvalidTokenDecimals)));
+    assert_eq!(res, Err(Ok(crate::AnchorError::InvalidTokenDecimals)));
 }
 
 #[test]
@@ -10880,7 +10880,7 @@ fn test_finalized_shipment_rejects_update_status() {
 
     let result = client.try_update_status(&carrier, &id, &ShipmentStatus::InTransit, &data_hash);
     assert!(
-        matches!(result, Err(Ok(NavinError::ShipmentFinalized))),
+        matches!(result, Err(Ok(AnchorError::ShipmentFinalized))),
         "update_status must be rejected after finalization"
     );
 }
@@ -10910,7 +10910,7 @@ fn test_finalized_shipment_rejects_deposit_escrow() {
 
     let result = client.try_deposit_escrow(&company, &id, &1000_i128);
     assert!(
-        matches!(result, Err(Ok(NavinError::ShipmentFinalized))),
+        matches!(result, Err(Ok(AnchorError::ShipmentFinalized))),
         "deposit_escrow must be rejected after finalization"
     );
 }
@@ -10992,7 +10992,7 @@ fn test_rate_limit_exhaustion_blocks_action() {
         "rapid update should be blocked by rate limit"
     );
     assert!(
-        matches!(result, Err(Ok(NavinError::RateLimitExceeded))),
+        matches!(result, Err(Ok(AnchorError::RateLimitExceeded))),
         "should return RateLimitExceeded error"
     );
 }

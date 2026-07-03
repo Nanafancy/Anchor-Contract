@@ -1,6 +1,6 @@
 //! # Event Topic Constants
 //!
-//! Centralised `&str` constants for every event topic emitted by the Navin
+//! Centralised `&str` constants for every event topic emitted by the Anchor
 //! Shipment contract.  Using named constants instead of inline string literals
 //! prevents typo-drift, makes refactoring safe (a rename is a single-line
 //! change here), and provides a single source of truth for off-chain consumers

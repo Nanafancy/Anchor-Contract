@@ -5,7 +5,7 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::{test_utils, NavinShipment, NavinShipmentClient};
+    use crate::{test_utils, AnchorShipment, AnchorShipmentClient};
     use soroban_sdk::{contract, contractimpl, testutils::Address as _, Address, Env, Vec};
 
     #[contract]
@@ -20,10 +20,10 @@ mod tests {
         }
     }
 
-    fn setup() -> (Env, NavinShipmentClient<'static>, Address) {
+    fn setup() -> (Env, AnchorShipmentClient<'static>, Address) {
         let (env, admin) = test_utils::setup_env();
-        let contract_id = env.register(NavinShipment, ());
-        let client = NavinShipmentClient::new(&env, &contract_id);
+        let contract_id = env.register(AnchorShipment, ());
+        let client = AnchorShipmentClient::new(&env, &contract_id);
         let token_id = env.register(MockToken, ());
         client.initialize(&admin, &token_id);
         (env, client, admin)
@@ -31,7 +31,7 @@ mod tests {
 
     fn add_company_and_carrier(
         env: &Env,
-        client: &NavinShipmentClient,
+        client: &AnchorShipmentClient,
         admin: &Address,
     ) -> (Address, Address) {
         let company = Address::generate(env);
@@ -190,18 +190,18 @@ mod tests {
 
     #[test]
     fn list_rejects_invalid_page_size() {
-        use crate::NavinError;
+        use crate::AnchorError;
         let (env, client, admin) = setup();
         let (company, _) = add_company_and_carrier(&env, &client, &admin);
         let candidates = Vec::new(&env);
 
         // page_size = 0
         let result = client.try_list_company_carriers(&company, &candidates, &0, &0);
-        assert_eq!(result, Err(Ok(NavinError::InvalidConfig)));
+        assert_eq!(result, Err(Ok(AnchorError::InvalidConfig)));
 
         // page_size = 51
         let result = client.try_list_company_carriers(&company, &candidates, &0, &51);
-        assert_eq!(result, Err(Ok(NavinError::InvalidConfig)));
+        assert_eq!(result, Err(Ok(AnchorError::InvalidConfig)));
     }
 
     #[test]

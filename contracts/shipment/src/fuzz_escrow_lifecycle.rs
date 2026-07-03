@@ -20,7 +20,7 @@
 
 extern crate std;
 
-use crate::{NavinShipment, NavinShipmentClient};
+use crate::{AnchorShipment, AnchorShipmentClient};
 use soroban_sdk::{
     contract, contractimpl,
     testutils::{Address as _, Ledger as _},
@@ -46,10 +46,10 @@ impl EscrowLifecycleToken {
 // Helpers
 // ─────────────────────────────────────────────────────────────────────────────
 
-fn setup() -> (Env, NavinShipmentClient<'static>, Address) {
+fn setup() -> (Env, AnchorShipmentClient<'static>, Address) {
     let (env, admin) = crate::test_utils::setup_env();
     let token = env.register(EscrowLifecycleToken {}, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
     client.initialize(&admin, &token);
     client.set_shipment_limit(&admin, &10_000u32);
     (env, client, admin)
@@ -78,7 +78,7 @@ fn hash_from_seed(env: &Env, seed: u64) -> BytesN<32> {
 }
 
 fn create_shipment(
-    client: &NavinShipmentClient,
+    client: &AnchorShipmentClient,
     env: &Env,
     company: &Address,
     receiver: &Address,

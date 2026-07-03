@@ -1,7 +1,7 @@
 warning: unused import: `types::ShipmentStatus`
  --> contracts/shipment/src/test_event_fixtures.rs:5:25
   |
-5 | use crate::{test_utils, types::ShipmentStatus, NavinShipment, Na...
+5 | use crate::{test_utils, types::ShipmentStatus, AnchorShipment, Na...
   |                         ^^^^^^^^^^^^^^^^^^^^^
   |
   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default

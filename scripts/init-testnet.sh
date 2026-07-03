@@ -35,7 +35,7 @@ stellar contract invoke \
   -- \
   initialize \
   --admin "$ADMIN_ADDRESS" \
-  --name "Navin Token" \
+  --name "Anchor Token" \
   --symbol "NAV" \
   --total_supply 10000000000000000
 

@@ -12,7 +12,7 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::{test_utils, NavinShipment, NavinShipmentClient, ShipmentStatus};
+    use crate::{test_utils, AnchorShipment, AnchorShipmentClient, ShipmentStatus};
     use soroban_sdk::{contract, contractimpl, testutils::Address as _, Address, BytesN, Env, Vec};
 
     #[contract]
@@ -26,10 +26,10 @@ mod tests {
         }
     }
 
-    fn setup() -> (Env, NavinShipmentClient<'static>, Address) {
+    fn setup() -> (Env, AnchorShipmentClient<'static>, Address) {
         let (env, admin) = test_utils::setup_env();
-        let contract_id = env.register(NavinShipment, ());
-        let client = NavinShipmentClient::new(&env, &contract_id);
+        let contract_id = env.register(AnchorShipment, ());
+        let client = AnchorShipmentClient::new(&env, &contract_id);
         let token_id = env.register(MockToken, ());
         client.initialize(&admin, &token_id);
         (env, client, admin)
@@ -39,7 +39,7 @@ mod tests {
     /// Returns (company, receiver, carrier, shipment_id, data_hash).
     fn create_in_transit_shipment(
         env: &Env,
-        client: &NavinShipmentClient<'static>,
+        client: &AnchorShipmentClient<'static>,
         admin: &Address,
     ) -> (Address, Address, Address, u64, BytesN<32>) {
         let company = Address::generate(env);

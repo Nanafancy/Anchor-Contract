@@ -1,6 +1,6 @@
 # Quick Start Guide for Contributors
 
-This guide will help you get started contributing to Navin in minutes.
+This guide will help you get started contributing to Anchor in minutes.
 
 ## Prerequisites Check
 
@@ -17,13 +17,13 @@ make check-setup
 2. Clone your fork:
 
    ```bash
-   git clone https://github.com/YOUR_USERNAME/navin-contracts.git
-   cd navin-contracts
+   git clone https://github.com/YOUR_USERNAME/Anchor-contracts.git
+   cd Anchor-contracts
    ```
 
 3. Add upstream remote:
    ```bash
-   git remote add upstream https://github.com/Navin-xmr/navin-contracts.git
+   git remote add upstream https://github.com/Anchor-xmr/Anchor-contracts.git
    ```
 
 ## Making Your First Contribution

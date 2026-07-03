@@ -11,7 +11,7 @@
 //! - Clear error messages on quota exceeded
 //! - No panic paths in rate limit code
 
-use crate::{errors::NavinError, types::*};
+use crate::{errors::AnchorError, types::*};
 use soroban_sdk::{contracttype, Address, Env};
 
 /// Rate limit configuration for an actor (company or carrier)
@@ -83,7 +83,7 @@ impl QuotaTracker {
         current_time: u64,
         config: &RateLimitConfig,
         operations: u32,
-    ) -> Result<(), NavinError> {
+    ) -> Result<(), AnchorError> {
         // Check if window has expired
         if current_time >= self.window_start + config.window_seconds {
             // Reset window
@@ -95,10 +95,10 @@ impl QuotaTracker {
         let new_count = self
             .operations_count
             .checked_add(operations)
-            .ok_or(NavinError::CounterOverflow)?;
+            .ok_or(AnchorError::CounterOverflow)?;
 
         if new_count > config.max_operations {
-            return Err(NavinError::RateLimitExceeded);
+            return Err(AnchorError::RateLimitExceeded);
         }
 
         // Update tracker
@@ -128,7 +128,7 @@ impl QuotaTracker {
 ///
 /// # Returns
 /// * `Ok(())` if within quota
-/// * `Err(NavinError::RateLimitExceeded)` if quota exceeded
+/// * `Err(AnchorError::RateLimitExceeded)` if quota exceeded
 ///
 /// # Examples
 /// ```rust
@@ -140,7 +140,7 @@ pub fn check_rate_limit(
     actor: &Address,
     operation_count: u32,
     config: &RateLimitConfig,
-) -> Result<(), NavinError> {
+) -> Result<(), AnchorError> {
     if operation_count == 0 {
         return Ok(());
     }
@@ -173,13 +173,13 @@ pub fn check_rate_limit(
 ///
 /// # Returns
 /// * `Ok(())` on success
-/// * `Err(NavinError)` if not authorized
+/// * `Err(AnchorError)` if not authorized
 #[allow(dead_code)]
-pub fn reset_quota(env: &Env, admin: &Address, actor: &Address) -> Result<(), NavinError> {
+pub fn reset_quota(env: &Env, admin: &Address, actor: &Address) -> Result<(), AnchorError> {
     // Verify admin authorization
     admin.require_auth();
     if !crate::storage::is_admin(env, admin) {
-        return Err(NavinError::Unauthorized);
+        return Err(AnchorError::Unauthorized);
     }
 
     let quota_key = DataKey::ActorQuota(actor.clone());
@@ -223,13 +223,13 @@ pub fn get_quota_status(env: &Env, actor: &Address, config: &RateLimitConfig) ->
 ///
 /// # Returns
 /// * `Ok(())` if within quota
-/// * `Err(NavinError)` if quota exceeded or not authorized
+/// * `Err(AnchorError)` if quota exceeded or not authorized
 #[allow(dead_code)]
 pub fn enforce_batch_creation_limit(
     env: &Env,
     company: &Address,
     batch_size: u32,
-) -> Result<(), NavinError> {
+) -> Result<(), AnchorError> {
     // Get default rate limit config (100 per hour)
     let config = RateLimitConfig::default();
     check_rate_limit(env, company, batch_size, &config)
@@ -244,13 +244,13 @@ pub fn enforce_batch_creation_limit(
 ///
 /// # Returns
 /// * `Ok(())` if within quota
-/// * `Err(NavinError)` if quota exceeded or not authorized
+/// * `Err(AnchorError)` if quota exceeded or not authorized
 #[allow(dead_code)]
 pub fn enforce_bulk_update_limit(
     env: &Env,
     carrier: &Address,
     update_count: u32,
-) -> Result<(), NavinError> {
+) -> Result<(), AnchorError> {
     // Get stricter rate limit for status updates (50 per hour)
     let config = RateLimitConfig::new(50, 3600);
     check_rate_limit(env, carrier, update_count, &config)

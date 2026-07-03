@@ -1,6 +1,6 @@
 extern crate std;
 
-use crate::{NavinShipment, NavinShipmentClient};
+use crate::{AnchorShipment, AnchorShipmentClient};
 use soroban_sdk::{
     contract, contractimpl,
     testutils::{storage::Persistent, Address as _, Ledger},
@@ -18,11 +18,11 @@ impl TtlMockToken {
     pub fn transfer(_env: Env, _from: Address, _to: Address, _amount: i128) {}
 }
 
-fn setup_shipment_env() -> (Env, NavinShipmentClient<'static>, Address, Address) {
+fn setup_shipment_env() -> (Env, AnchorShipmentClient<'static>, Address, Address) {
     let (env, admin) = crate::test_utils::setup_env();
     let token = env.register(TtlMockToken {}, ());
-    let cid = env.register(NavinShipment, ());
-    let client = NavinShipmentClient::new(&env, &cid);
+    let cid = env.register(AnchorShipment, ());
+    let client = AnchorShipmentClient::new(&env, &cid);
 
     // Extend contract instance TTL immediately after registration to a huge value
     env.as_contract(&cid, || {
@@ -34,7 +34,7 @@ fn setup_shipment_env() -> (Env, NavinShipmentClient<'static>, Address, Address)
 }
 
 fn create_test_shipment(
-    client: &NavinShipmentClient,
+    client: &AnchorShipmentClient,
     env: &Env,
     company: &Address,
     carrier: &Address,
@@ -133,7 +133,7 @@ fn test_ttl_health_summary_deterministic() {
 #[should_panic(expected = "Error(Contract, #2)")]
 fn test_ttl_health_summary_not_initialized() {
     let (env, _client, _admin, _token_contract) = setup_shipment_env();
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
 
     client.get_status_summary();
 }

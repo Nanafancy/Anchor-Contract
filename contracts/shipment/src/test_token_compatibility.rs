@@ -1,14 +1,14 @@
 //! # Token Compatibility Integration Suite
 //!
 //! Validates the shipment contract's escrow and payment flows against both
-//! Stellar Asset Contract (SAC) tokens and custom token contracts (NavinToken).
+//! Stellar Asset Contract (SAC) tokens and custom token contracts (AnchorToken).
 #![allow(deprecated)]
 
-use crate::{test_utils, types::ShipmentStatus, NavinError, NavinShipment, NavinShipmentClient};
+use crate::{test_utils, types::ShipmentStatus, AnchorError, AnchorShipment, AnchorShipmentClient};
 use soroban_sdk::{testutils::Address as _, Address, BytesN, Env, IntoVal, Vec};
 
 // Import custom token client
-use navin_token::NavinTokenClient;
+use Anchor_token::AnchorTokenClient;
 
 /// Matrix of token variants to test against.
 #[derive(Clone, Copy)]
@@ -19,7 +19,7 @@ enum TokenVariant {
 
 struct TestContext {
     env: Env,
-    shipment_client: NavinShipmentClient<'static>,
+    shipment_client: AnchorShipmentClient<'static>,
     token_address: Address,
     variant: TokenVariant,
     admin: Address,
@@ -41,12 +41,12 @@ fn setup_test(variant: TokenVariant) -> TestContext {
                 .address()
         }
         TokenVariant::Custom => {
-            // Register NavinToken
-            let token_addr = env.register(navin_token::NavinToken, ());
-            let token_client = NavinTokenClient::new(&env, &token_addr);
+            // Register AnchorToken
+            let token_addr = env.register(Anchor_token::AnchorToken, ());
+            let token_client = AnchorTokenClient::new(&env, &token_addr);
             token_client.initialize(
                 &admin,
-                &soroban_sdk::String::from_str(&env, "Navin Token"),
+                &soroban_sdk::String::from_str(&env, "Anchor Token"),
                 &soroban_sdk::String::from_str(&env, "NVN"),
                 &1_000_000_000,
             );
@@ -54,8 +54,8 @@ fn setup_test(variant: TokenVariant) -> TestContext {
         }
     };
 
-    let shipment_addr = env.register(NavinShipment, ());
-    let shipment_client = NavinShipmentClient::new(&env, &shipment_addr);
+    let shipment_addr = env.register(AnchorShipment, ());
+    let shipment_client = AnchorShipmentClient::new(&env, &shipment_addr);
     shipment_client.initialize(&admin, &token_address);
 
     // Roles setup
@@ -86,7 +86,7 @@ fn mint_tokens(ctx: &TestContext, to: &Address, amount: i128) {
             args.push_back(amount.into_val(&ctx.env));
         }
         TokenVariant::Custom => {
-            // NavinToken mint(admin, to, amount)
+            // AnchorToken mint(admin, to, amount)
             args.push_back(ctx.admin.clone().into_val(&ctx.env));
             args.push_back(to.clone().into_val(&ctx.env));
             args.push_back(amount.into_val(&ctx.env));
@@ -298,7 +298,7 @@ fn run_insufficient_funds_test(variant: TokenVariant) {
 
     assert!(result.is_err());
     let err = result.unwrap_err().unwrap();
-    assert_eq!(err, NavinError::TokenTransferFailed);
+    assert_eq!(err, AnchorError::TokenTransferFailed);
 }
 
 // ── Behavioral Assumptions ──────────────────────────────────────────────────
@@ -312,7 +312,7 @@ fn run_insufficient_funds_test(variant: TokenVariant) {
 //
 // 3. Error Mapping: Any failure in the token's transfer method (due to
 //    insufficient balance, frozen accounts, etc.) is captured by the shipment
-//    contract and returned as NavinError::TokenTransferFailed.
+//    contract and returned as AnchorError::TokenTransferFailed.
 //
 // 4. Escrow Custody: The shipment contract acts as the custodian of escrowed tokens.
 //    It must have been authorized (via approve or being the target of transfer)
@@ -391,7 +391,7 @@ fn test_token_with_6_decimals_deposit_fails_with_invalid_token_decimals() {
     // A token with 6 decimals must be rejected at deposit_escrow time.
     let (env, admin) = test_utils::setup_env();
     let token = env.register(mock_six_decimals::SixDecimalsToken {}, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
     client.initialize(&admin, &token);
 
     let company = Address::generate(&env);
@@ -415,7 +415,7 @@ fn test_token_with_6_decimals_deposit_fails_with_invalid_token_decimals() {
     let result = client.try_deposit_escrow(&company, &shipment_id, &500i128);
     assert_eq!(
         result,
-        Err(Ok(NavinError::InvalidTokenDecimals)),
+        Err(Ok(AnchorError::InvalidTokenDecimals)),
         "Token with 6 decimals must be rejected with InvalidTokenDecimals"
     );
 }
@@ -425,7 +425,7 @@ fn test_token_with_8_decimals_deposit_fails_with_invalid_token_decimals() {
     // A token with 8 decimals must also be rejected at deposit_escrow time.
     let (env, admin) = test_utils::setup_env();
     let token = env.register(mock_eight_decimals::EightDecimalsToken {}, ());
-    let client = NavinShipmentClient::new(&env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(&env, &env.register(AnchorShipment, ()));
     client.initialize(&admin, &token);
 
     let company = Address::generate(&env);
@@ -449,7 +449,7 @@ fn test_token_with_8_decimals_deposit_fails_with_invalid_token_decimals() {
     let result = client.try_deposit_escrow(&company, &shipment_id, &500i128);
     assert_eq!(
         result,
-        Err(Ok(NavinError::InvalidTokenDecimals)),
+        Err(Ok(AnchorError::InvalidTokenDecimals)),
         "Token with 8 decimals must be rejected with InvalidTokenDecimals"
     );
 }

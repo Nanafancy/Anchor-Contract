@@ -1,4 +1,4 @@
-use crate::{NavinShipment, NavinShipmentClient};
+use crate::{AnchorShipment, AnchorShipmentClient};
 use soroban_sdk::{
     contract, contractimpl, testutils::Address as _, Address, BytesN, Env, Symbol, Vec,
 };
@@ -17,10 +17,10 @@ impl MockToken {
     }
 }
 
-fn setup_test(env: &Env) -> (NavinShipmentClient<'static>, Address, Address) {
+fn setup_test(env: &Env) -> (AnchorShipmentClient<'static>, Address, Address) {
     let admin = Address::generate(env);
     let token_contract = env.register(MockToken {}, ());
-    let client = NavinShipmentClient::new(env, &env.register(NavinShipment, ()));
+    let client = AnchorShipmentClient::new(env, &env.register(AnchorShipment, ()));
     client.initialize(&admin, &token_contract);
     (client, admin, token_contract)
 }

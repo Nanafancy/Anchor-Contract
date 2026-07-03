@@ -1,6 +1,6 @@
 # Frontend RPC Verification Flow
 
-This document outlines the canonical procedure for a frontend to verify Navin contract events and transaction results directly via a Stellar RPC node. This ensures that the frontend can operate without trusting the backend (Express indexer) by verifying data against the ledger.
+This document outlines the canonical procedure for a frontend to verify Anchor contract events and transaction results directly via a Stellar RPC node. This ensures that the frontend can operate without trusting the backend (Express indexer) by verifying data against the ledger.
 
 ## 1. Step-by-Step Verification Procedure
 
@@ -10,13 +10,13 @@ When a user performs an action (e.g., creating a shipment), the frontend receive
 2. Verify that the transaction status is `SUCCESS`.
 
 ### B. Extract and Verify Events
-1. From the transaction meta (or using `getEvents` RPC method), extract events emitted by the Navin contract.
-2. **Filter by Contract ID**: Ensure the `contractId` of the event matches the known Navin contract address.
+1. From the transaction meta (or using `getEvents` RPC method), extract events emitted by the Anchor contract.
+2. **Filter by Contract ID**: Ensure the `contractId` of the event matches the known Anchor contract address.
 3. **Verify Topics**:
    - The first topic (index 0) is the event type (e.g., `shipment_created`, `status_updated`).
    - Match this against the expected event type for the action performed.
 4. **Verify Data Fields**:
-   - Navin events follow a consistent data structure.
+   - Anchor events follow a consistent data structure.
    - For `shipment_created`, the data array contains:
      `[shipment_id, sender, receiver, data_hash, version, counter, idempotency_key]`
    - Verify that `sender` and `receiver` match the expected addresses.
@@ -103,11 +103,11 @@ Frontends can recompute this hash to ensure the event's metadata hasn't been tam
 
 ## 4. Verification Implementation (Rust/Pseudo-code)
 
-See the reference test in [test_verification.rs](file:///Users/mac/Desktop/navin/navin-contracts/contracts/shipment/src/test_verification.rs) for the complete verification logic implementation.
+See the reference test in [test_verification.rs](file:///Users/mac/Desktop/Anchor/Anchor-contracts/contracts/shipment/src/test_verification.rs) for the complete verification logic implementation.
 
 ```rust
 // Verify Contract ID
-assert_eq!(event.contract_id, NAVIN_CONTRACT_ID);
+assert_eq!(event.contract_id, Anchor_CONTRACT_ID);
 
 // Verify Topics
 assert_eq!(event.topics[0], "shipment_created");
