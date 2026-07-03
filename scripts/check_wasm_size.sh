@@ -7,6 +7,9 @@ BUDGETS=(
     "shipment.wasm:200"
 )
 
+
+
+
 WASM_DIR="target/wasm32-unknown-unknown/release"
 EXIT_CODE=0
 

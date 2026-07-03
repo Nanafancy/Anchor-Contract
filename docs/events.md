@@ -8,6 +8,10 @@
 
 ---
 
+
+
+
+
 ## Table of Contents
 
 1. [Event Format](#event-format)
@@ -232,7 +236,7 @@ Emitted when a carrier reports a transit checkpoint. The full milestone payload 
 
 ### `delivery_success`
 
-Emitted when the receiver confirms that a shipment has been successfully delivered. Used by the analytics pipeline to compute carrier punctuality metrics.
+Emitteds when the receiver confirms that the shipment has been successfully delivered. Used by the analytics pipeline to compute carrier punctuality metrics.
 
 **Topic:** `"delivery_success"`
 **Emitted by:** `confirm_delivery`

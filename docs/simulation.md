@@ -8,6 +8,8 @@ no fees are charged during simulation.
 
 ## Why simulate?
 
+
+
 | Concern | What simulation tells you |
 |---|---|
 | Will the call succeed? | Returns the same error the live call would return |
@@ -18,6 +20,10 @@ no fees are charged during simulation.
 ---
 
 ## Prerequisites
+
+
+
+
 
 1. **Stellar CLI** installed
    ```

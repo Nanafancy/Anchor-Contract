@@ -10,6 +10,9 @@ This document defines a migration-safe registry for `DataKey` usage in `contract
 
 ## Policy
 
+
+
+
 - Do not reorder or repurpose existing `DataKey` variants.
 - New variants are append-only and must include a clear doc comment.
 - Removed keys are marked as deprecated in docs; on-chain discriminants remain reserved.
